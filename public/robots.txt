@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://vpnnews.com/sitemap.xml
+Sitemap: https://vpnnews.com/news-sitemap.xml
+
+# RSS Feed
+# Feed available at: https://vpnnews.com/feed.xml

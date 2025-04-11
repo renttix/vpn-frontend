@@ -1,0 +1,68 @@
+[images]
+  remote_images = ["https://source.unsplash.com/.*", "https://images.unsplash.com/.*", "https://ext.same-assets.com/.*", "https://ugc.same-assets.com/.*", "https://cdn.sanity.io/.*"]
+  quality = 85
+  formats = ["webp", "avif"]
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Disable notifications in production
+  NEXT_PUBLIC_NOTIFICATIONS_ENABLED = "false"
+  NETLIFY = "true"
+  # Sanity Configuration
+  NEXT_PUBLIC_SANITY_PROJECT_ID = "g7f0f6rs"
+  # Security-sensitive tokens should be set in Netlify dashboard, not in this file
+  SANITY_API_TOKEN = ""
+  # Web Push Notification Keys
+  NEXT_PUBLIC_VAPID_PUBLIC_KEY = ""
+  VAPID_PRIVATE_KEY = ""
+  VAPID_CONTACT_EMAIL = ""
+  NOTIFICATIONS_API_KEY = ""
+  # Other environment variables
+  NEXT_PUBLIC_SITE_URL = "https://vpnldn.netlify.app"
+  NEXT_PUBLIC_GA_MEASUREMENT_ID = ""
+  # Database connection string should be set in Netlify dashboard, not in this file
+  MONGODB_URI = ""
+
+
+
+
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Cache static assets for a year
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache images for a week with stale-while-revalidate
+[[headers]]
+  for = "/_next/image*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, stale-while-revalidate=86400"
+
+# Cache fonts for a month
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000, immutable"
+
+# Cache API responses for 5 minutes with stale-while-revalidate
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300, stale-while-revalidate=3600"
+
+# Add security headers for all pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

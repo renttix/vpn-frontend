@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Test Admin Login</h1>
+  
+  <div class="form-group">
+    <label for="username">Username:</label>
+    <input type="text" id="username" value="admin">
+  </div>
+  
+  <div class="form-group">
+    <label for="password">Password:</label>
+    <input type="password" id="password" value="secure-password-here">
+  </div>
+  
+  <button id="loginButton">Login</button>
+  
+  <div id="result"></div>
+  
+  <script>
+    document.getElementById('loginButton').addEventListener('click', async () => {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const resultDiv = document.getElementById('result');
+      
+      resultDiv.style.display = 'block';
+      resultDiv.innerHTML = 'Attempting to login...';
+      
+      try {
+        // Make a direct POST request to the credentials endpoint
+        const response = await fetch('http://localhost:3012/api/auth/callback/credentials', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username,
+            password,
+            callbackUrl: 'http://localhost:3012/admin',
+            json: true
+          }),
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          resultDiv.innerHTML = `Login successful! Response: ${JSON.stringify(data)}`;
+        } else {
+          resultDiv.innerHTML = `Login failed: ${JSON.stringify(data)}`;
+        }
+      } catch (error) {
+        resultDiv.innerHTML = `Error: ${error.message}`;
+        console.error('Login error:', error);
+      }
+    });
+  </script>
+</body>
+</html>

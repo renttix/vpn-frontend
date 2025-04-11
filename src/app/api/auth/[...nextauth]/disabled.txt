@@ -1,0 +1,4 @@
+This file is here to indicate that the NextAuth.js configuration has been disabled.
+We are now using a custom authentication system with cookies instead.
+
+The NextAuth.js configuration is kept for reference but is not being used.

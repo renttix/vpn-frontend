@@ -1,0 +1,3 @@
+This is a placeholder file. Please replace this with the actual black VPN logo image.
+
+The script expects this file to be named 'black-logo.png' (not black-logo.png.txt).

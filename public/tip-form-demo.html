@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tip Form Demo</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .disclaimer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .disclaimer-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .hidden {
+      display: none;
+    }
+    .thank-you-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .thank-you-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      max-width: 600px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">Submit a Tip</h1>
+    
+    <!-- Tip Form -->
+    <div id="tip-form" class="bg-white p-6 rounded-lg shadow-md">
+      <form id="submit-tip-form" class="space-y-6">
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium mb-1">
+            Your email address
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+            placeholder="your.email@example.com"
+          />
+        </div>
+
+        <!-- Subject -->
+        <div>
+          <label for="subject" class="block text-sm font-medium mb-1">
+            Subject
+          </label>
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded text-sm"
+            placeholder="Brief summary of your tip"
+          />
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="description" class="block text-sm font-medium mb-1">
+            Description
+          </label>
+          <div class="border border-gray-300 rounded">
+            <!-- Editor toolbar - simplified version -->
+            <div class="flex items-center p-2 border-b border-gray-300 bg-gray-50">
+              <button type="button" class="p-1 hover:bg-gray-200 rounded mr-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M8.21 13c2.106 0 3.412-1.087 3.412-2.823 0-1.306-.984-2.283-2.324-2.386v-.055a2.176 2.176 0 0 0 1.852-2.14c0-1.51-1.162-2.46-3.014-2.46H3.843V13H8.21zM5.908 4.674h1.696c.963 0 1.517.451 1.517 1.244 0 .834-.629 1.32-1.73 1.32H5.908V4.673zm0 6.788V8.598h1.73c1.217 0 1.88.492 1.88 1.415 0 .943-.643 1.449-1.832 1.449H5.907z"/>
+                </svg>
+              </button>
+              <button type="button" class="p-1 hover:bg-gray-200 rounded mr-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M7.991 11.674 9.53 4.455c.123-.595.246-.71 1.347-.807l.11-.52H7.211l-.11.52c1.06.096 1.128.212 1.005.807L6.57 11.674c-.123.595-.246.71-1.346.806l-.11.52h3.774l.11-.52c-1.06-.095-1.129-.211-1.006-.806z"/>
+                </svg>
+              </button>
+              <button type="button" class="p-1 hover:bg-gray-200 rounded mr-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                  <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                </svg>
+              </button>
+            </div>
+            <textarea
+              id="description"
+              name="description"
+              required
+              class="w-full px-3 py-2 border-0 text-sm min-h-[200px]"
+              placeholder="Please provide detailed information about your tip..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Attachments -->
+        <div>
+          <label class="block text-sm font-medium mb-1">
+            Attachments (optional)
+          </label>
+          <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+            <div class="space-y-1 text-center">
+              <svg
+                class="mx-auto h-12 w-12 text-gray-400"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 48 48"
+                aria-hidden="true"
+              >
+                <path
+                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <div class="flex text-sm text-gray-600">
+                <label
+                  for="file-upload"
+                  class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"
+                >
+                  <span class="px-2">Upload files</span>
+                  <input
+                    id="file-upload"
+                    name="file-upload"
+                    type="file"
+                    multiple
+                    class="sr-only"
+                  />
+                </label>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-gray-500">
+                PNG, JPG, PDF, DOC up to 10MB each
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit button -->
+        <div class="flex justify-end">
+          <button
+            type="submit"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-2 rounded"
+          >
+            Submit Tip
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Disclaimer Overlay -->
+  <div id="disclaimer-overlay" class="disclaimer-overlay">
+    <div class="disclaimer-content">
+      <h2 class="text-xl font-bold mb-4">
+        PLEASE READ BEFORE SUBMITTING A TIP
+      </h2>
+      <div class="prose max-w-none text-sm">
+        <p>
+          Video Production News is a UK-based investigative news platform with a focus on public interest reporting. Our editorial and legal resources are limited. If you or someone you know is in immediate danger or experiencing an emergency, please contact emergency services by dialling 999. This tip line is not intended for urgent matters requiring immediate intervention, and we cannot respond to or act upon emergency submissions.
+        </p>
+        <p class="font-medium mt-4">
+          By submitting information to Video Production News, you confirm that:
+        </p>
+        <ul class="list-disc pl-5 space-y-2">
+          <li>
+            You are not submitting any content that is unlawful, obtained through illegal means, or in breach of the Data Protection Act 2018, Official Secrets Act 1989, or other applicable UK laws.
+          </li>
+          <li>
+            You are not sharing unsolicited creative works, including scripts, pitches, or proprietary material not specifically requested by our editorial team.
+          </li>
+          <li>
+            The information and/or material you provide was legally acquired, and Video Production News had no involvement in its acquisition.
+          </li>
+        </ul>
+        <p class="mt-4">
+          We recognise that whistleblowers and concerned citizens play a crucial role in holding power to account. Submitting tips can involve personal risk, and we appreciate the courage it may take to share newsworthy information with us. Our team treats all credible submissions with the seriousness they deserve.
+        </p>
+        <p class="mt-4">
+          We are committed to protecting the anonymity of our sources wherever possible and operate in line with Section 10 of the Contempt of Court Act 1981, which provides qualified protection for journalistic sources. While Video Production News is not your legal adviser, you may wish to seek independent legal advice before submitting sensitive information. You can also learn more about source protection in the UK via the NUJ or Index on Censorship.
+        </p>
+        <p class="font-medium mt-4">
+          By making a submission, you agree that:
+        </p>
+        <ul class="list-disc pl-5 space-y-2">
+          <li>
+            Any materials or information shared with Video Production News may be used at our discretion for journalistic purposes, including but not limited to reporting, investigation, and publication.
+          </li>
+          <li>
+            You grant us a non-exclusive, royalty-free, worldwide licence to use the submitted material as we see fit, with no obligation to credit, compensate, or follow up.
+          </li>
+          <li>
+            You waive any and all claims against Video Production News relating to the use, non-use, or publication of the submitted content.
+          </li>
+        </ul>
+      </div>
+      <div class="mt-6 flex items-center">
+        <input
+          type="checkbox"
+          id="accept-terms"
+          class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        />
+        <label for="accept-terms" class="ml-2 block text-sm font-medium">
+          By submitting a tip, I confirm I have read, understood, and agreed to the above terms.
+        </label>
+      </div>
+      <div class="mt-6">
+        <button
+          id="continue-button"
+          disabled
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded disabled:opacity-50"
+        >
+          Continue to Form
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thank You Overlay -->
+  <div id="thank-you-overlay" class="thank-you-overlay hidden">
+    <div class="thank-you-content">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-16 w-16 text-green-500 mx-auto mb-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 13l4 4L19 7"
+        />
+      </svg>
+      <h2 class="text-2xl font-bold mb-4">
+        Thank You for Your Submission
+      </h2>
+      <p class="text-lg mb-6">
+        Your tip has been successfully submitted to our editorial team. We appreciate you taking the time to share this information with us.
+      </p>
+      <p class="mb-6">
+        While we review all submissions, due to the volume we receive, we may not be able to respond to every tip individually. If our team determines your information warrants further investigation, we may contact you using the email address you provided.
+      </p>
+      <div class="mt-8">
+        <button id="return-home-button" class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-2 rounded">
+          Return to Homepage
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Disclaimer functionality
+    const disclaimerOverlay = document.getElementById('disclaimer-overlay');
+    const acceptTermsCheckbox = document.getElementById('accept-terms');
+    const continueButton = document.getElementById('continue-button');
+    const tipForm = document.getElementById('tip-form');
+    const submitTipForm = document.getElementById('submit-tip-form');
+    const thankYouOverlay = document.getElementById('thank-you-overlay');
+    const returnHomeButton = document.getElementById('return-home-button');
+
+    // Initially hide the form
+    tipForm.style.display = 'none';
+
+    // Enable/disable continue button based on checkbox
+    acceptTermsCheckbox.addEventListener('change', function() {
+      continueButton.disabled = !this.checked;
+    });
+
+    // Continue to form
+    continueButton.addEventListener('click', function() {
+      if (acceptTermsCheckbox.checked) {
+        disclaimerOverlay.style.display = 'none';
+        tipForm.style.display = 'block';
+      }
+    });
+
+    // Form submission
+    submitTipForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // In a real implementation, this would send data to the server
+      // For demo purposes, just show the thank you message
+      thankYouOverlay.classList.remove('hidden');
+    });
+
+    // Return home button
+    returnHomeButton.addEventListener('click', function() {
+      thankYouOverlay.classList.add('hidden');
+      // In a real implementation, this would redirect to the homepage
+      // For demo purposes, just reset the form and show the disclaimer
+      submitTipForm.reset();
+      tipForm.style.display = 'none';
+      acceptTermsCheckbox.checked = false;
+      continueButton.disabled = true;
+      disclaimerOverlay.style.display = 'flex';
+    });
+  </script>
+</body>
+</html>
