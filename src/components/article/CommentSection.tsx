@@ -29,7 +29,7 @@ export default function CommentSection({ articleId }: CommentSectionProps) {
 
   return (
     <div className="mt-12 pt-8 border-t border-border">
-      <h3 className="font-headline font-bold text-xl mb-6 text-foreground">Comments</h3>
+      <h3 className="font-heading font-bold text-xl mb-6 text-foreground">Comments</h3>
       
       {/* Sample comments */}
       <div className="space-y-6 mb-8">

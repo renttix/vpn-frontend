@@ -40,13 +40,13 @@ export default function ArticleCard({
       {/* Image Container */}
       {imageUrl && (
         <Link href={`/${slug}`} className="block overflow-hidden">
-          <div className={`relative ${isFeature ? 'aspect-[1200/630]' : 'aspect-[1200/630]'} overflow-hidden`}>
+          <div className={`relative ${isFeature ? 'aspect-[1200/600]' : 'aspect-[1200/600]'} overflow-hidden`}>
             <Image
               src={imageUrl}
               alt={imageAlt}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-contain w-full h-full transition-transform duration-300 group-hover:scale-105"
+              className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
               priority={isFeature}
             />
           </div>
@@ -71,7 +71,7 @@ export default function ArticleCard({
 
         <Link href={`/${slug}`} className="group">
           <h2
-            className={`font-headline font-bold text-vpn-gray dark:text-gray-100 ${
+            className={`font-heading font-bold text-vpn-gray dark:text-gray-100 ${
               isFeature
                 ? 'text-xl md:text-2xl lg:text-3xl leading-tight'
                 : 'text-base md:text-lg leading-tight'

@@ -1,12 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link"; // Import Link
 import Image from "next/image";
 import OptimizedImage from "@/components/ui/OptimizedImage";
-import { formatDate, calculatePortableTextReadingTime } from "@/lib/utils"; // Import reading time utility
+import { formatDate, calculatePortableTextReadingTime, extractTextFromPortableText } from "@/lib/utils"; // Import utilities
 import { PortableText } from "@portabletext/react"; // Import PortableText
 import { Clock } from "lucide-react"; // Import Clock icon
+import ShareButtons from "./ShareButtons"; // Import ShareButtons component
+import TextToSpeech from "./TextToSpeech"; // Import TextToSpeech component
 
 // Define the Sanity Article type (or import if defined elsewhere)
 // Ensure this matches the structure fetched in [slug]/page.tsx
@@ -36,16 +38,16 @@ const ptComponents = {
     },
     // Heading styles
     h1: ({children}: any) => {
-      return <h1 className="font-headline text-3xl md:text-4xl font-bold mt-8 mb-6 text-vpn-gray dark:text-white">{children}</h1>;
+      return <h1 className="font-body text-3xl md:text-4xl font-bold mt-8 mb-6 text-vpn-gray dark:text-white">{children}</h1>;
     },
     h2: ({children}: any) => {
-      return <h2 className="font-headline text-2xl md:text-3xl font-bold mt-8 mb-4 text-vpn-gray dark:text-white">{children}</h2>;
+      return <h2 className="font-heading text-2xl md:text-3xl font-bold mt-8 mb-4 text-vpn-gray dark:text-white">{children}</h2>;
     },
     h3: ({children}: any) => {
-      return <h3 className="font-headline text-xl md:text-2xl font-bold mt-6 mb-4 text-vpn-gray dark:text-white">{children}</h3>;
+      return <h3 className="font-heading text-xl md:text-2xl font-bold mt-6 mb-4 text-vpn-gray dark:text-white">{children}</h3>;
     },
     h4: ({children}: any) => {
-      return <h4 className="font-headline text-lg md:text-xl font-bold mt-6 mb-3 text-vpn-gray dark:text-white">{children}</h4>;
+      return <h4 className="font-heading text-lg md:text-xl font-bold mt-6 mb-3 text-vpn-gray dark:text-white">{children}</h4>;
     },
     // Blockquote styling
     blockquote: ({children}: any) => {
@@ -179,13 +181,13 @@ export default function ArticleContent({ article }: ArticleContentProps) {
     <article className="prose prose-lg dark:prose-invert max-w-none">
       {/* Article Header */}
       <header className="mb-8">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-headline font-bold text-vpn-gray dark:text-white mb-4 leading-tight">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-body font-bold text-vpn-gray dark:text-white mb-4 leading-tight">
           {article.title}
         </h1>
 
         {/* Use subtitle from Sanity if available */}
         {article.subtitle && (
-          <p className="text-xl md:text-2xl text-vpn-gray-light dark:text-gray-300 font-headline mb-6 leading-relaxed">
+          <p className="text-xl md:text-2xl text-vpn-gray-light dark:text-gray-300 font-heading mb-6 leading-relaxed">
             {article.subtitle}
           </p>
         )}
@@ -240,6 +242,14 @@ export default function ArticleContent({ article }: ArticleContentProps) {
             </>
           )}
         </div>
+        
+        {/* Text-to-Speech Player - added right after the metadata */}
+        {article.body && (
+          <TextToSpeech 
+            title={article.title} 
+            content={extractTextFromPortableText(article.body)} 
+          />
+        )}
       </header>
 
       {/* Hero Image - Use mainImage from Sanity with OptimizedImage */}
@@ -296,22 +306,10 @@ export default function ArticleContent({ article }: ArticleContentProps) {
       )}
       
       {/* Share buttons */}
-      <div className="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold font-body text-vpn-gray-light dark:text-gray-400">Share this article:</h3>
-          <div className="flex space-x-4">
-            <button className="font-body text-vpn-gray-light hover:text-vpn-blue dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-              Twitter
-            </button>
-            <button className="font-body text-vpn-gray-light hover:text-vpn-blue dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-              Facebook
-            </button>
-            <button className="font-body text-vpn-gray-light hover:text-vpn-blue dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-              LinkedIn
-            </button>
-          </div>
-        </div>
-      </div>
+      <ShareButtons 
+        url={typeof window !== 'undefined' ? window.location.href : `https://vpnews.com/${article.slug.current}`} 
+        title={article.title} 
+      />
     </article>
   );
 }

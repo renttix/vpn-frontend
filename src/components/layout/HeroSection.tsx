@@ -69,7 +69,7 @@ export default async function HeroSection() {
     return (
       <section className="bg-vpn-bg dark:bg-gray-900 py-8">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+          <h2 className="text-3xl font-heading text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
             LATEST COURT REPORTS
           </h2>
           <div className="bg-white dark:bg-gray-800 p-4 border border-gray-200 dark:border-gray-700">
@@ -91,7 +91,7 @@ export default async function HeroSection() {
   return (
     <section className="bg-vpn-bg dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+        <h2 className="text-3xl font-heading text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
           LATEST COURT REPORTS
         </h2>
         
@@ -126,7 +126,7 @@ export default async function HeroSection() {
                       COURT NEWS
                     </a>
                     <a className="group" href={`/${post.slug.current}`}>
-                      <h2 className="font-headline font-bold text-vpn-gray dark:text-gray-100 text-base md:text-lg leading-tight group-hover:text-vpn-blue dark:group-hover:text-yellow-500 transition-colors duration-200 mb-2">
+                      <h2 className="font-heading font-bold text-vpn-gray dark:text-gray-100 text-base md:text-lg leading-tight group-hover:text-vpn-blue dark:group-hover:text-yellow-500 transition-colors duration-200 mb-2">
                         {post.title}
                       </h2>
                     </a>

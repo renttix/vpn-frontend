@@ -63,7 +63,7 @@ export default function TopStoriesList({ posts }: TopStoriesListProps) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md h-full">
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+        <h2 className="text-3xl font-heading text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
           TOP STORIES
         </h2>
       </div>
@@ -100,12 +100,12 @@ export default function TopStoriesList({ posts }: TopStoriesListProps) {
                 <div className="flex-1 min-w-0">
                   {post.slug?.current ? (
                     <Link href={`/${post.slug.current}`}>
-                      <h3 className="font-headline font-bold text-vpn-gray dark:text-white text-sm sm:text-base leading-tight mb-1 hover:text-vpn-blue dark:hover:text-blue-400">
+                      <h3 className="font-heading font-bold text-vpn-gray dark:text-white text-sm sm:text-base leading-tight mb-1 hover:text-vpn-blue dark:hover:text-blue-400">
                         {post.title || "Untitled Article"}
                       </h3>
                     </Link>
                   ) : (
-                    <h3 className="font-headline font-bold text-vpn-gray dark:text-white text-sm sm:text-base leading-tight mb-1">
+                    <h3 className="font-heading font-bold text-vpn-gray dark:text-white text-sm sm:text-base leading-tight mb-1">
                       {post.title || "Untitled Article"}
                     </h3>
                   )}

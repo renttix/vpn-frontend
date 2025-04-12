@@ -16,6 +16,7 @@ export default function robots(): MetadataRoute.Robots {
     sitemap: [
       'https://vpnnews.com/sitemap.xml',
       'https://vpnnews.com/news-sitemap.xml',
+      'https://vpnnews.com/image-sitemap.xml',
     ],
     host: 'https://vpnnews.com',
   };

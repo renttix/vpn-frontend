@@ -15,6 +15,35 @@ export function cn(...inputs: ClassValue[]) {
  * @param blocks - Portable Text blocks
  * @returns Estimated reading time in minutes
  */
+/**
+ * Extracts plain text from Portable Text blocks
+ * @param blocks - Portable Text blocks
+ * @returns Plain text content
+ */
+export function extractTextFromPortableText(blocks: any[]): string {
+  if (!blocks || !Array.isArray(blocks)) {
+    return ''; // Return empty string if no valid blocks
+  }
+  
+  // Process each block and extract text
+  return blocks.map(block => {
+    // Handle text blocks
+    if (block._type === 'block' && block.children) {
+      return block.children
+        .map((child: any) => {
+          if (child._type === 'span' && typeof child.text === 'string') {
+            return child.text;
+          }
+          return '';
+        })
+        .join(' ');
+    }
+    
+    // Skip non-text blocks like images
+    return '';
+  }).join(' ');
+}
+
 export function calculatePortableTextReadingTime(blocks: any[]): number {
   if (!blocks || !Array.isArray(blocks)) {
     return 1; // Default to 1 minute if no valid blocks

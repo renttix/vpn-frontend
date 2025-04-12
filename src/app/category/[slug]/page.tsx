@@ -2,11 +2,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { groq } from 'next-sanity';
 import { client } from '@/lib/sanity.client';
+import { getSortOrder, validateSortParam } from '@/lib/sorting';
 import Layout from '@/components/layout/Layout';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import BreadcrumbJsonLd, { generateCategoryBreadcrumbs } from '@/components/seo/BreadcrumbJsonLd';
 import { generateCategoryMetadata } from '@/lib/metadata';
+import ArticleCardList from '@/components/ui/ArticleCardList';
+import { fetchMorePosts } from './actions';
 
 // Make this page fully dynamic
 export const dynamic = 'force-dynamic';
@@ -35,9 +38,13 @@ interface CategoryPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-// Function to fetch category and posts
-// Modify getCategoryData to accept slug directly
-async function getCategoryData(slug: string | undefined, sortBy: string = 'date_desc'): Promise<{ category: Category | null; posts: Post[]; allCategories: Category[] }> {
+// Function to fetch category and posts with pagination
+async function getCategoryData(
+  slug: string | undefined, 
+  sortBy: string = 'date_desc',
+  skip: number = 0,
+  limit: number = 12
+): Promise<{ category: Category | null; posts: Post[]; allCategories: Category[]; totalCount: number }> {
   // Try to find category by slug first
   const categoryQuery = groq`*[_type == "category" && slug.current == $slug][0]{
     _id,
@@ -77,19 +84,17 @@ async function getCategoryData(slug: string | undefined, sortBy: string = 'date_
 
   // Handle case where category is not found
   if (!category) {
-    return { category: null, posts: [], allCategories: allCategories || [] };
+    return { category: null, posts: [], allCategories: allCategories || [], totalCount: 0 };
   }
 
-  // Determine post ordering based on sortBy parameter
-  let postOrder = 'publishedAt desc'; // Default sort
-  if (sortBy === 'title_asc') postOrder = 'title asc';
-  if (sortBy === 'title_desc') postOrder = 'title desc';
-  if (sortBy === 'date_asc') postOrder = 'publishedAt asc';
-  if (sortBy === 'author_asc') postOrder = 'author.name asc';
-  if (sortBy === 'author_desc') postOrder = 'author.name desc';
+  // Validate and get sort order
+  const validSortBy = validateSortParam(sortBy);
+  const postOrder = getSortOrder(validSortBy);
 
-  // Fetch posts for the category with dynamic ordering and limit
-  // Modified query to check for category title in categories array
+  // Count total posts for this category
+  const countQuery = groq`count(*[_type == "post" && $categoryTitle in categories[]->title])`;
+
+  // Fetch posts for the category with dynamic ordering and pagination
   const postsQuery = groq`*[_type == "post" && $categoryTitle in categories[]->title]{
     _id,
     title,
@@ -99,22 +104,27 @@ async function getCategoryData(slug: string | undefined, sortBy: string = 'date_
     publishedAt,
     excerpt,
     "categoryTitles": categories[]->title
-  } | order(${postOrder}) [0...12]`; // Use dynamic order, limit to 12
+  } | order(${postOrder}) [${skip}...${skip + limit}]`; // Use dynamic order with pagination
 
-  console.log(`[getCategoryData] Fetching posts for category: ${category.title} (ID: ${category._id})`);
-  const posts = await client.fetch<Post[]>(postsQuery, { 
-    categoryId: category._id,
-    categoryTitle: category.title 
-  });
-  console.log(`[getCategoryData] Found ${posts.length} posts for category: ${category.title}`);
+  // Fetch posts and count concurrently
+  const [posts, totalCount] = await Promise.all([
+    client.fetch<Post[]>(postsQuery, { 
+      categoryId: category._id,
+      categoryTitle: category.title 
+    }),
+    client.fetch<number>(countQuery, {
+      categoryTitle: category.title
+    })
+  ]);
+
+  console.log(`[getCategoryData] Fetched ${posts.length} posts (${skip}-${skip + limit} of ${totalCount}) for category: ${category.title}`);
   
-  // Log the titles of posts found for debugging
-  if (posts.length > 0) {
-    console.log(`[getCategoryData] Post titles: ${posts.map(p => p.title).join(', ')}`);
-    console.log(`[getCategoryData] Post categories: ${JSON.stringify(posts.map(p => p.categoryTitles))}`);
-  }
-
-  return { category, posts: posts || [], allCategories: allCategories || [] };
+  return { 
+    category, 
+    posts: posts || [], 
+    allCategories: allCategories || [],
+    totalCount: totalCount || 0
+  };
 }
 
 // Generate Metadata for the page
@@ -169,8 +179,8 @@ export default async function CategoryPage({ params, searchParams }: any) {
       notFound(); // If no slug, trigger 404
   }
   
-  // Access searchParams directly - it's not a Promise
-  const sortBy = typeof searchParams.sort === 'string' ? searchParams.sort : 'date_desc';
+  // Access and validate searchParams
+  const sortBy = validateSortParam(typeof searchParams.sort === 'string' ? searchParams.sort : 'date_desc');
   
   console.log(`[CategoryPage] Fetching data for slug: ${slug}, sort: ${sortBy}`);
   const { category, posts, allCategories } = await getCategoryData(slug, sortBy); // Pass the extracted slug string
@@ -200,12 +210,12 @@ export default async function CategoryPage({ params, searchParams }: any) {
     // Use the correct category path format
     const href = `/category/${slug}?sort=${sortValue}`;
     return (
-      <Link
+      <a
         href={href}
         className={`font-body px-3 py-1 text-xs rounded ${isActive ? 'bg-vpn-blue text-white font-bold' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'}`}
       >
         {children}
-      </Link>
+      </a>
     );
   };
 
@@ -242,70 +252,14 @@ export default async function CategoryPage({ params, searchParams }: any) {
           {/* Main Content Column - Wider on desktop */}
           <div className="lg:col-span-8 order-1">
             {posts.length > 0 ? (
-              <div className="content-section p-6">
-                <div className="grid grid-cols-1 gap-8"> {/* Outer grid for spacing between rows */}
-                  {/* Iterate through posts and create rows of 2 */}
-                  {Array.from({ length: Math.ceil(posts.length / 2) }).map((_, rowIndex) => (
-                    <div key={`row-${rowIndex}`} className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      {posts.slice(rowIndex * 2, rowIndex * 2 + 2).map(p => (
-                        <article key={p._id} className="article-card flex flex-col h-full">
-                          <Link href={`/${p.slug?.current ?? '#'}`} className="block overflow-hidden">
-                            {p.mainImage?.asset?.url ? (
-                              <div className="relative aspect-[16/9] overflow-hidden rounded-sm">
-                                <img
-                                  src={p.mainImage.asset.url}
-                                  alt={p.mainImage.asset.alt || p.title || 'Article image'}
-                                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                                  width="600"
-                                  height="338"
-                                  loading="lazy"
-                                />
-                              </div>
-                            ) : (
-                              // Placeholder if no image
-                              <div className="relative aspect-[16/9] bg-gray-300 dark:bg-gray-700 flex items-center justify-center rounded-sm">
-                                <span className="text-gray-500 text-xs">No Image</span>
-                              </div>
-                            )}
-                          </Link>
-                          <div className="p-5 flex flex-col flex-grow">
-                            {/* Add category tag if available */}
-                            {p.categoryTitles && p.categoryTitles.length > 0 && p.categoryTitles[0] !== category.title && (
-                              <Link
-                                href={`/category/${p.categoryTitles[0].toLowerCase().replace(/\s+/g, '-')}`}
-                                className="uppercase text-xs font-bold font-body text-vpn-blue dark:text-blue-400 mb-1 block"
-                              >
-                                {p.categoryTitles[0]}
-                              </Link>
-                            )}
-                            <Link href={`/${p.slug?.current ?? '#'}`} className="group">
-                              <h3 className="font-heading font-bold text-vpn-gray dark:text-vpn-gray-dark text-lg md:text-xl leading-tight group-hover:text-vpn-blue dark:group-hover:text-blue-400 mb-3">
-                                {p.title || 'Untitled Post'}
-                              </h3>
-                            </Link>
-                            {p.excerpt && (
-                              <p className="font-body text-vpn-gray dark:text-vpn-gray-dark/80 text-base mb-4 line-clamp-3 flex-grow">
-                                {p.excerpt}
-                              </p>
-                            )}
-                            {/* Footer of card */}
-                            <div className="mt-auto font-body text-sm text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-200 dark:border-gray-700">
-                              {p.author?.name && <span>By {p.author.name} • </span>}
-                              {formatDate(p.publishedAt)}
-                            </div>
-                          </div>
-                        </article>
-                      ))}
-                      {/* Add placeholders if the last row doesn't have 2 items */}
-                      {posts.slice(rowIndex * 2, rowIndex * 2 + 2).length < 2 &&
-                        Array.from({ length: 2 - posts.slice(rowIndex * 2, rowIndex * 2 + 2).length }).map((_, placeholderIndex) => (
-                          <div key={`placeholder-${rowIndex}-${placeholderIndex}`} className="hidden md:block"></div> // Empty div to maintain grid structure
-                        ))
-                      }
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <ArticleCardList
+                initialPosts={posts}
+                fetchMorePosts={async (skip: number, limit: number) => {
+                  "use server";
+                  return fetchMorePosts(slug, skip, limit, sortBy);
+                }}
+                categoryTitle={category.title}
+              />
             ) : (
               // Message when no posts are found
               <div className="content-section p-6">
@@ -314,7 +268,6 @@ export default async function CategoryPage({ params, searchParams }: any) {
                 </p>
               </div>
             )}
-            
           </div>
 
           {/* Right Sidebar - Ads and Related Content */}
@@ -325,7 +278,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
               
               {/* Related Categories Box */}
               <div className="content-section p-5 mt-8">
-                <h3 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-4 tracking-wider">
+                <h3 className="text-3xl font-heading text-yellow-500 dark:text-yellow-300 uppercase mb-4 tracking-wider">
                   Related Categories
                 </h3>
                 <ul className="space-y-3">

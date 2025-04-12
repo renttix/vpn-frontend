@@ -68,7 +68,7 @@ export default function RecommendedArticles({ currentArticleId }: RecommendedArt
   if (loading) {
     return (
       <div className="bg-card border border-border rounded-md p-4 mt-8">
-        <h3 className="font-headline font-bold text-lg mb-4 text-foreground">Recommended For You</h3>
+        <h3 className="font-heading font-bold text-lg mb-4 text-foreground">Recommended For You</h3>
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="flex gap-3">
@@ -92,7 +92,7 @@ export default function RecommendedArticles({ currentArticleId }: RecommendedArt
 
   return (
     <div className="bg-card border border-border rounded-md p-4 mt-8">
-      <h3 className="font-headline font-bold text-lg mb-4 text-foreground">Recommended For You</h3>
+      <h3 className="font-heading font-bold text-lg mb-4 text-foreground">Recommended For You</h3>
       
       <div className="space-y-4">
         {articles.map((article) => (

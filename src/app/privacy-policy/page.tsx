@@ -1,16 +1,49 @@
 import React from 'react';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { groq } from 'next-sanity';
+import { client } from '@/lib/sanity.client';
+import Layout from '@/components/layout/Layout';
+
+// Define Category type
+interface Category {
+  _id: string;
+  title: string;
+  slug: {
+    current: string;
+  };
+}
+
+// Fetch categories from Sanity
+async function getCategories(): Promise<Category[]> {
+  const query = groq`*[_type == "category"]{
+    _id,
+    title,
+    slug
+  }`;
+  
+  try {
+    const categories = await client.fetch(query);
+    return categories || [];
+  } catch (error) {
+    console.error("Failed to fetch categories:", error);
+    return [];
+  }
+}
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Video Production News',
   description: 'Learn about how Video Production News handles your personal data and privacy.',
 };
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  // Fetch categories for the Layout component
+  const categories = await getCategories();
+  
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-3xl mx-auto">
+    <Layout categories={categories}>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-heading font-bold text-vpn-gray dark:text-vpn-gray-dark mb-6">
           Privacy Policy
         </h1>
@@ -149,7 +182,7 @@ export default function PrivacyPolicyPage() {
             If you have any questions about this Privacy Policy, please contact us at:
           </p>
           <p>
-            Email: privacy@vpnnews.com<br />
+            Email: citydesk@vpnldn.co.uk<br />
             Address: 123 News Street, London, UK
           </p>
           
@@ -159,7 +192,8 @@ export default function PrivacyPolicyPage() {
             </Link>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 }

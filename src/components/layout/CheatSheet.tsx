@@ -48,7 +48,7 @@ export default async function CheatSheet() {
   return (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
       <div className="mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="font-headline font-bold text-vpn-blue dark:text-yellow-500 text-xl uppercase tracking-wider">Legal Commentary</h2>
+        <h2 className="font-heading font-bold text-vpn-blue dark:text-yellow-500 text-xl uppercase tracking-wider">Legal Commentary</h2>
         <p className="text-sm text-vpn-gray dark:text-gray-400 mt-1">Expert Analysis & Opinion</p>
       </div>
 
@@ -58,7 +58,7 @@ export default async function CheatSheet() {
             <li key={post._id} className="border-b border-gray-100 dark:border-gray-700 pb-3 last:border-0">
               <Link href={`/${post.slug.current}`} className="group block">
                 <div>
-                  <h3 className="font-headline font-bold text-sm text-vpn-gray dark:text-gray-100 group-hover:text-vpn-blue dark:group-hover:text-yellow-500 transition-colors duration-200">
+                  <h3 className="font-heading font-bold text-sm text-vpn-gray dark:text-gray-100 group-hover:text-vpn-blue dark:group-hover:text-yellow-500 transition-colors duration-200">
                     {post.title}
                   </h3>
                   <div className="flex justify-between items-center mt-1">

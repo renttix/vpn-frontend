@@ -142,7 +142,7 @@ export default function TipForm() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 className="text-3xl font-headline font-bold text-vpn-gray dark:text-vpn-gray-dark mb-6">
+      <h1 className="text-3xl font-heading font-bold text-vpn-gray dark:text-vpn-gray-dark mb-6">
         Submit a Tip
       </h1>
       

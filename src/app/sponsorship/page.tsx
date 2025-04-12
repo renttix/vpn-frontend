@@ -106,7 +106,7 @@ export default async function SponsorshipPage() {
               To discuss sponsorship opportunities, please contact our business team:
             </p>
             <p className="mt-4">
-              <strong>Email:</strong> <a href="mailto:business@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">business@vpnldn.co.uk</a>
+              <strong>Email:</strong> <a href="mailto:citydesk@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">citydesk@vpnldn.co.uk</a>
             </p>
             <p>
               <strong>Telephone:</strong> <a href="tel:+442036334699" className="text-vpn-blue dark:text-blue-400 hover:underline">+44 20 3633 4699</a>

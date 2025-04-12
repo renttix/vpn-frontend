@@ -44,7 +44,7 @@ export default async function ContactUsPage() {
                   For general questions, feedback, or information about VPN News, please contact us at:
                 </p>
                 <p className="mt-4">
-                  <strong>Email:</strong> <a href="mailto:info@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">info@vpnldn.co.uk</a>
+                  <strong>Email:</strong> <a href="mailto:citydesk@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">citydesk@vpnldn.co.uk</a>
                 </p>
                 <p>
                   <strong>Telephone:</strong> <a href="tel:+442036334699" className="text-vpn-blue dark:text-blue-400 hover:underline">+44 20 3633 4699</a>
@@ -93,7 +93,7 @@ export default async function ContactUsPage() {
                 pages or contact our business team at:
               </p>
               <p className="mt-4">
-                <strong>Email:</strong> <a href="mailto:business@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">business@vpnldn.co.uk</a>
+                <strong>Email:</strong> <a href="mailto:citydesk@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">citydesk@vpnldn.co.uk</a>
               </p>
             </div>
             

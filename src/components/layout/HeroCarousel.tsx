@@ -130,7 +130,7 @@ export default function HeroCarousel({ posts }: HeroCarouselProps) {
                 ? currentItem.categories[0].title 
                 : "NEWS"}
             </span>
-            <h2 className="font-headline font-bold text-lg sm:text-2xl md:text-3xl lg:text-4xl max-w-3xl mb-2 sm:mb-4">
+            <h2 className="font-heading font-bold text-lg sm:text-2xl md:text-3xl lg:text-4xl max-w-3xl mb-2 sm:mb-4">
               {currentItem.title}
             </h2>
             <Link 
