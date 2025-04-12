@@ -69,8 +69,8 @@ export default async function HeroSection() {
     return (
       <section className="bg-vpn-bg dark:bg-gray-900 py-8">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-headline font-bold text-vpn-blue dark:text-yellow-500 uppercase mb-6 pb-2 border-b border-gray-300 dark:border-gray-700 tracking-wider">
-            Latest Court Reports
+          <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+            LATEST COURT REPORTS
           </h2>
           <div className="bg-white dark:bg-gray-800 p-4 border border-gray-200 dark:border-gray-700">
             <p className="text-center text-gray-500 dark:text-gray-400">No Court News articles available</p>
@@ -91,8 +91,8 @@ export default async function HeroSection() {
   return (
     <section className="bg-vpn-bg dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-headline font-bold text-vpn-blue dark:text-yellow-500 uppercase mb-6 pb-2 border-b border-gray-300 dark:border-gray-700 tracking-wider">
-          Latest Court Reports
+        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+          LATEST COURT REPORTS
         </h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

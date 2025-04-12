@@ -1,22 +1,19 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import { groq } from 'next-sanity';
 import { client } from '@/lib/sanity.client';
 import Layout from '@/components/layout/Layout';
 import { Metadata } from 'next';
-import Script from 'next/script';
-import BreadcrumbJsonLd, { generateCategoryBreadcrumbs } from '@/components/seo/BreadcrumbJsonLd';
-import { generateCategoryMetadata } from '@/lib/metadata';
+import { generateStaticPageMetadata } from '@/lib/metadata';
+import BreadcrumbJsonLd from '@/components/seo/BreadcrumbJsonLd';
 
 // Make this page fully dynamic
 export const dynamic = 'force-dynamic';
 
-// Define types (can be moved later)
+// Define types
 interface Category {
   _id: string;
   title: string;
   slug: { current: string };
-  description?: string;
 }
 
 interface Post {
@@ -24,61 +21,31 @@ interface Post {
   title: string;
   slug: { current: string };
   mainImage?: { asset: { url: string; alt?: string } };
-  author?: { name: string };
+  author?: { name: string; slug?: { current: string } };
   publishedAt: string;
   excerpt?: string;
-  categoryTitles?: string[]; // Added for debugging
+  categories?: Category[];
 }
 
-interface CategoryPageProps {
-  params: { slug: string };
+interface LatestPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-// Function to fetch category and posts
-// Modify getCategoryData to accept slug directly
-async function getCategoryData(slug: string | undefined, sortBy: string = 'date_desc'): Promise<{ category: Category | null; posts: Post[]; allCategories: Category[] }> {
-  // Try to find category by slug first
-  const categoryQuery = groq`*[_type == "category" && slug.current == $slug][0]{
-    _id,
-    title,
-    slug,
-    description
-  }`;
+// Define metadata for the page
+export const metadata: Metadata = generateStaticPageMetadata(
+  'Latest Articles - VPN News',
+  'Browse all the latest articles from VPN News, covering crime news, court reports, and legal commentary.',
+  'latest'
+);
 
-  // If not found by slug, try to find by title matching the slug pattern
-  const titleFromSlugQuery = groq`*[_type == "category" && title match $titlePattern][0]{
-    _id,
-    title,
-    slug,
-    description
-  }`;
-
+// Function to fetch all posts and categories
+async function getAllData(sortBy: string = 'date_desc'): Promise<{ posts: Post[]; allCategories: Category[] }> {
+  // Fetch all categories
   const allCategoriesQuery = groq`*[_type == "category"]{
     _id,
     title,
     slug
   }`;
-
-  // Fetch category and all categories concurrently
-  const [categoryBySlug, allCategories] = await Promise.all([
-    client.fetch<Category | null>(categoryQuery, { slug }),
-    client.fetch<Category[]>(allCategoriesQuery)
-  ]);
-
-  // If category not found by slug, try to find by title
-  let category = categoryBySlug;
-  if (!category) {
-    // Convert slug to title format (e.g., "crime-news" -> "Crime News")
-    const titlePattern = slug?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    console.log(`[getCategoryData] Category not found by slug, trying title pattern: ${titlePattern}`);
-    category = await client.fetch<Category | null>(titleFromSlugQuery, { titlePattern: `^${titlePattern}$` });
-  }
-
-  // Handle case where category is not found
-  if (!category) {
-    return { category: null, posts: [], allCategories: allCategories || [] };
-  }
 
   // Determine post ordering based on sortBy parameter
   let postOrder = 'publishedAt desc'; // Default sort
@@ -88,100 +55,43 @@ async function getCategoryData(slug: string | undefined, sortBy: string = 'date_
   if (sortBy === 'author_asc') postOrder = 'author.name asc';
   if (sortBy === 'author_desc') postOrder = 'author.name desc';
 
-  // Fetch posts for the category with dynamic ordering and limit
-  // Modified query to check for category title in categories array
-  const postsQuery = groq`*[_type == "post" && $categoryTitle in categories[]->title]{
+  // Fetch all posts with dynamic ordering
+  const postsQuery = groq`*[_type == "post"]{
     _id,
     title,
     slug,
     mainImage{ asset->{url, alt} },
-    author->{name},
+    author->{name, slug},
     publishedAt,
     excerpt,
-    "categoryTitles": categories[]->title
-  } | order(${postOrder}) [0...12]`; // Use dynamic order, limit to 12
+    categories[]->{
+      _id,
+      title,
+      slug
+    }
+  } | order(${postOrder})`;
 
-  console.log(`[getCategoryData] Fetching posts for category: ${category.title} (ID: ${category._id})`);
-  const posts = await client.fetch<Post[]>(postsQuery, { 
-    categoryId: category._id,
-    categoryTitle: category.title 
-  });
-  console.log(`[getCategoryData] Found ${posts.length} posts for category: ${category.title}`);
+  // Fetch data concurrently
+  const [allCategories, posts] = await Promise.all([
+    client.fetch<Category[]>(allCategoriesQuery, {}, { cache: 'no-store' }),
+    client.fetch<Post[]>(postsQuery, {}, { cache: 'no-store' })
+  ]);
+
+  console.log(`[LatestPage] Fetched ${posts.length} posts and ${allCategories.length} categories`);
   
-  // Log the titles of posts found for debugging
-  if (posts.length > 0) {
-    console.log(`[getCategoryData] Post titles: ${posts.map(p => p.title).join(', ')}`);
-    console.log(`[getCategoryData] Post categories: ${JSON.stringify(posts.map(p => p.categoryTitles))}`);
-  }
-
-  return { category, posts: posts || [], allCategories: allCategories || [] };
+  return { 
+    posts: posts || [], 
+    allCategories: allCategories || [] 
+  };
 }
 
-// Generate Metadata for the page
-export async function generateMetadata({ params }: any): Promise<Metadata> {
-  // Access params directly - it's not a Promise
-  const slug = params.slug; // Extract slug here
-  
-  if (!slug) return { title: 'Invalid Request' };
-  const { category } = await getCategoryData(slug); // Pass the extracted slug string
-
-  if (!category) {
-    return {
-      title: 'Category Not Found',
-    };
-  }
-
-  return generateCategoryMetadata(category);
-}
-
-// Return empty array to make this page fully dynamic
-export async function generateStaticParams() {
-  // In production builds on Netlify, return empty array to avoid API calls
-  if (process.env.NETLIFY || process.env.NODE_ENV === 'production') {
-    console.log('[CategoryPage] Skipping generateStaticParams in production/Netlify environment');
-    return [];
-  }
-  
-  try {
-    // Get all category slugs
-    const categorySlugsQuery = groq`*[_type == "category" && defined(slug.current)][].slug.current`;
-    const categorySlugs = await client.fetch<string[]>(categorySlugsQuery);
-    
-    return categorySlugs.map((slug) => ({
-      slug,
-    }));
-  } catch (error) {
-    console.error('[CategoryPage] Error generating static params:', error);
-    return []; // Fallback to empty array on error
-  }
-}
-
-// The Category Page Component
-export default async function CategoryPage({ params, searchParams }: any) {
-  console.log(`[CategoryPage] Rendering for params:`, params); // Log received params
-  
-  // Access params directly - it's not a Promise
-  const slug = params.slug; // Extract slug here
-  
-  console.log(`[CategoryPage] Extracted slug: ${slug}`); // Log extracted slug
-  if (!slug) {
-      console.log(`[CategoryPage] No slug found, calling notFound().`);
-      notFound(); // If no slug, trigger 404
-  }
-  
-  // Access searchParams directly - it's not a Promise
+// The Latest Articles Page Component
+export default async function LatestPage({ searchParams }: LatestPageProps) {
+  // Get sort parameter from URL or use default
   const sortBy = typeof searchParams.sort === 'string' ? searchParams.sort : 'date_desc';
   
-  console.log(`[CategoryPage] Fetching data for slug: ${slug}, sort: ${sortBy}`);
-  const { category, posts, allCategories } = await getCategoryData(slug, sortBy); // Pass the extracted slug string
-  console.log(`[CategoryPage] Fetched category:`, category ? category.title : 'null'); // Log fetched category result
-
-  // If category fetch returned null, trigger 404
-  if (!category) {
-    console.log(`[CategoryPage] Category not found for slug "${slug}", calling notFound().`);
-    notFound();
-  }
-  console.log(`[CategoryPage] Rendering page for category: ${category.title}`); // Log successful rendering start
+  // Fetch data
+  const { posts, allCategories } = await getAllData(sortBy);
 
   // Helper function to format dates
   const formatDate = (dateString: string) => {
@@ -197,8 +107,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
   // Helper component for rendering sorting links
   const SortLink = ({ sortValue, currentSort, children }: { sortValue: string; currentSort: string; children: React.ReactNode }) => {
     const isActive = sortValue === currentSort;
-    // Use the correct category path format
-    const href = `/category/${slug}?sort=${sortValue}`;
+    const href = `/latest?sort=${sortValue}`;
     return (
       <Link
         href={href}
@@ -215,15 +124,14 @@ export default async function CategoryPage({ params, searchParams }: any) {
         {/* Empty space for top margin */}
         <div className="mb-8"></div>
         
-        {/* Category Header Section */}
+        {/* Page Header Section */}
         <div className="mb-8 pb-4 border-b border-gray-300 dark:border-gray-700">
           <h1 className="text-3xl md:text-4xl font-heading font-bold text-vpn-blue dark:text-blue-400 uppercase mb-2">
-            {/* Apply title override */}
-            {category.title === 'Video' ? 'Legal Commentary' : category.title}
+            Latest Articles
           </h1>
-          {category.description && (
-            <p className="text-lg font-body text-gray-600 dark:text-gray-400">{category.description}</p>
-          )}
+          <p className="text-lg font-body text-gray-600 dark:text-gray-400">
+            Browse all the latest articles from VPN News
+          </p>
         </div>
 
         {/* Sorting Controls Section */}
@@ -237,13 +145,13 @@ export default async function CategoryPage({ params, searchParams }: any) {
           <SortLink sortValue="author_desc" currentSort={sortBy}>Author (Z-A)</SortLink>
         </div>
 
-        {/* Main Layout Grid - Improved spacing */}
+        {/* Main Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Main Content Column - Wider on desktop */}
+          {/* Main Content Column */}
           <div className="lg:col-span-8 order-1">
             {posts.length > 0 ? (
               <div className="content-section p-6">
-                <div className="grid grid-cols-1 gap-8"> {/* Outer grid for spacing between rows */}
+                <div className="grid grid-cols-1 gap-8">
                   {/* Iterate through posts and create rows of 2 */}
                   {Array.from({ length: Math.ceil(posts.length / 2) }).map((_, rowIndex) => (
                     <div key={`row-${rowIndex}`} className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -269,15 +177,16 @@ export default async function CategoryPage({ params, searchParams }: any) {
                             )}
                           </Link>
                           <div className="p-5 flex flex-col flex-grow">
-                            {/* Add category tag if available */}
-                            {p.categoryTitles && p.categoryTitles.length > 0 && p.categoryTitles[0] !== category.title && (
+                            {/* Category tag if available */}
+                            {p.categories && p.categories.length > 0 && (
                               <Link
-                                href={`/category/${p.categoryTitles[0].toLowerCase().replace(/\s+/g, '-')}`}
+                                href={`/category/${p.categories[0].slug?.current || p.categories[0].title.toLowerCase().replace(/\s+/g, '-')}`}
                                 className="uppercase text-xs font-bold font-body text-vpn-blue dark:text-blue-400 mb-1 block"
                               >
-                                {p.categoryTitles[0]}
+                                {p.categories[0].title}
                               </Link>
                             )}
+                            
                             <Link href={`/${p.slug?.current ?? '#'}`} className="group">
                               <h3 className="font-heading font-bold text-vpn-gray dark:text-vpn-gray-dark text-lg md:text-xl leading-tight group-hover:text-vpn-blue dark:group-hover:text-blue-400 mb-3">
                                 {p.title || 'Untitled Post'}
@@ -290,7 +199,17 @@ export default async function CategoryPage({ params, searchParams }: any) {
                             )}
                             {/* Footer of card */}
                             <div className="mt-auto font-body text-sm text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-200 dark:border-gray-700">
-                              {p.author?.name && <span>By {p.author.name} • </span>}
+                              {p.author?.name && (
+                                <span>
+                                  By {p.author.slug ? (
+                                    <Link href={`/author/${p.author.slug.current}`} className="hover:text-vpn-blue dark:hover:text-blue-400">
+                                      {p.author.name}
+                                    </Link>
+                                  ) : (
+                                    p.author.name
+                                  )} • 
+                                </span>
+                              )}
                               {formatDate(p.publishedAt)}
                             </div>
                           </div>
@@ -310,28 +229,23 @@ export default async function CategoryPage({ params, searchParams }: any) {
               // Message when no posts are found
               <div className="content-section p-6">
                 <p className="font-body text-center text-gray-500 dark:text-gray-400 py-10">
-                  No posts found in this category yet.
+                  No articles found.
                 </p>
               </div>
             )}
-            
           </div>
 
-          {/* Right Sidebar - Ads and Related Content */}
+          {/* Right Sidebar - Categories and Related Content */}
           <div className="lg:col-span-4 order-2">
             <div className="sticky top-[156px]">
-              {/* Empty space for sidebar layout */}
-              <div className="w-full"></div>
-              
-              {/* Related Categories Box */}
-              <div className="content-section p-5 mt-8">
+              {/* Categories Box */}
+              <div className="content-section p-5">
                 <h3 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-4 tracking-wider">
-                  Related Categories
+                  Categories
                 </h3>
                 <ul className="space-y-3">
                   {allCategories
-                    .filter(cat => cat._id !== category._id)
-                    .slice(0, 5)
+                    .slice(0, 10)
                     .map(cat => (
                       <li key={cat._id}>
                         <Link 
@@ -344,6 +258,35 @@ export default async function CategoryPage({ params, searchParams }: any) {
                     ))
                   }
                 </ul>
+              </div>
+              
+              {/* Newsletter Box */}
+              <div className="content-section p-5 mt-8">
+                <h3 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-4 tracking-wider">
+                  Newsletter
+                </h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                  Get caught up in minutes with our speedy summary of today's must-read stories.
+                </p>
+
+                <form className="space-y-3">
+                  <input
+                    type="email"
+                    placeholder="Your Email"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded text-sm"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="w-full bg-vpn-blue text-white font-bold py-2 px-4 rounded text-sm hover:bg-opacity-90"
+                  >
+                    SUBSCRIBE
+                  </button>
+                </form>
+
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+                  By subscribing, you agree to our Terms of Use and Privacy Policy
+                </p>
               </div>
             </div>
           </div>

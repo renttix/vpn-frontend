@@ -129,7 +129,11 @@ export default {
                     '2xl': '1536px',
                 },
             },
+            zIndex: {
+                '100': '100',
+                '999': '999',
+            },
         }
     },
-    plugins: [require("tailwindcss-animate")],
+    plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;

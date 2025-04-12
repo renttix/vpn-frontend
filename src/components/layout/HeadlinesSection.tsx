@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { client } from "@/lib/sanity.client";
@@ -68,7 +70,7 @@ function FeaturedArticle({ article }: { article: Post }) {
             alt={article.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-contain transition-transform duration-300 group-hover:scale-105"
             priority
           />
         </div>
@@ -102,7 +104,7 @@ function SmallArticleCard({ article }: { article: Post }) {
               alt={article.title}
               fill
               sizes="96px"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-contain transition-transform duration-300 group-hover:scale-105"
             />
           </div>
         </Link>
@@ -126,9 +128,63 @@ function SmallArticleCard({ article }: { article: Post }) {
   );
 }
 
-export default async function HeadlinesSection() {
-  // Fetch latest posts
-  const posts = await getLatestPosts();
+export default function HeadlinesSection() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const fetchedPosts = await getLatestPosts();
+        setPosts(fetchedPosts);
+      } catch (error) {
+        console.error("Error fetching headlines:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchPosts();
+  }, []);
+  
+  // If still loading, show a loading state
+  if (loading) {
+    return (
+      <section className="bg-vpn-blue dark:bg-gray-900 text-white dark:text-gray-100 py-8">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+            HEADLINES
+          </h2>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Featured article loading skeleton */}
+            <div className="lg:col-span-7">
+              <div className="animate-pulse">
+                <div className="relative aspect-[16/9] bg-gray-700 mb-4"></div>
+                <div className="h-8 bg-gray-700 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-gray-700 rounded w-1/4"></div>
+              </div>
+            </div>
+            
+            {/* Smaller articles loading skeleton */}
+            <div className="lg:col-span-5">
+              <div className="space-y-6">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="flex items-start space-x-4 animate-pulse">
+                    <div className="relative w-24 h-24 bg-gray-700"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-700 rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-gray-700 rounded w-1/2"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
   
   // If no posts are found, don't render the section
   if (!posts || posts.length === 0) {

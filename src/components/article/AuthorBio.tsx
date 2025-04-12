@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 // Remove import of AuthorType from "@/lib/authors"
@@ -55,7 +57,7 @@ export default function AuthorBio({ author }: AuthorBioProps) {
           </div>
         )}
         <div className="flex-grow">
-          <h3 className="text-lg font-heading font-semibold mb-1">{author.name}</h3>
+          <h3 className="text-lg font-headline font-semibold mb-1">{author.name}</h3>
           {/* Render bio using PortableText */}
           {author.bio ? (
              <div className="font-body text-sm text-muted-foreground mb-3 prose prose-sm dark:prose-invert max-w-none prose-p:my-1"> {/* Basic prose styling */}

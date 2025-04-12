@@ -168,8 +168,8 @@ export default async function LatestArticles() {
   return (
     <section className="bg-vpn-bg dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-headline font-bold text-vpn-blue dark:text-yellow-500 uppercase mb-6 pb-2 border-b border-gray-300 dark:border-gray-700 tracking-wider">
-          This Week at VPN
+        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+          THIS WEEK AT VPN
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -36,16 +36,16 @@ const ptComponents = {
     },
     // Heading styles
     h1: ({children}: any) => {
-      return <h1 className="font-heading text-3xl md:text-4xl font-bold mt-8 mb-6 text-vpn-gray dark:text-white">{children}</h1>;
+      return <h1 className="font-headline text-3xl md:text-4xl font-bold mt-8 mb-6 text-vpn-gray dark:text-white">{children}</h1>;
     },
     h2: ({children}: any) => {
-      return <h2 className="font-heading text-2xl md:text-3xl font-bold mt-8 mb-4 text-vpn-gray dark:text-white">{children}</h2>;
+      return <h2 className="font-headline text-2xl md:text-3xl font-bold mt-8 mb-4 text-vpn-gray dark:text-white">{children}</h2>;
     },
     h3: ({children}: any) => {
-      return <h3 className="font-heading text-xl md:text-2xl font-bold mt-6 mb-4 text-vpn-gray dark:text-white">{children}</h3>;
+      return <h3 className="font-headline text-xl md:text-2xl font-bold mt-6 mb-4 text-vpn-gray dark:text-white">{children}</h3>;
     },
     h4: ({children}: any) => {
-      return <h4 className="font-heading text-lg md:text-xl font-bold mt-6 mb-3 text-vpn-gray dark:text-white">{children}</h4>;
+      return <h4 className="font-headline text-lg md:text-xl font-bold mt-6 mb-3 text-vpn-gray dark:text-white">{children}</h4>;
     },
     // Blockquote styling
     blockquote: ({children}: any) => {
@@ -179,13 +179,13 @@ export default function ArticleContent({ article }: ArticleContentProps) {
     <article className="prose prose-lg dark:prose-invert max-w-none">
       {/* Article Header */}
       <header className="mb-8">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold text-vpn-gray dark:text-white mb-4 leading-tight">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-headline font-bold text-vpn-gray dark:text-white mb-4 leading-tight">
           {article.title}
         </h1>
 
         {/* Use subtitle from Sanity if available */}
         {article.subtitle && (
-          <p className="text-xl md:text-2xl text-vpn-gray-light dark:text-gray-300 font-heading mb-6 leading-relaxed">
+          <p className="text-xl md:text-2xl text-vpn-gray-light dark:text-gray-300 font-headline mb-6 leading-relaxed">
             {article.subtitle}
           </p>
         )}

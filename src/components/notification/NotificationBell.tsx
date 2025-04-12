@@ -9,6 +9,7 @@ import {
   getSubscription,
   NOTIFICATIONS_ENABLED
 } from '@/lib/notification';
+import Portal from "@/components/ui/Portal";
 
 export default function NotificationBell() {
   // Don't render the bell if notifications are disabled
@@ -145,76 +146,78 @@ export default function NotificationBell() {
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div 
-          id={notificationMenuId}
-          className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-sm shadow-lg border border-gray-200 dark:border-gray-700 z-50"
-          role="dialog"
-          aria-labelledby="notification-settings-title"
-          aria-modal="true"
-        >
-          <div className="p-4">
-            <h3 
-              id="notification-settings-title"
-              className="text-lg font-bold text-vpn-gray dark:text-vpn-gray-dark mb-3"
-            >
-              Notification Settings
-            </h3>
-            
-            {permissionState === 'denied' ? (
-              <div 
-                className="text-sm text-gray-600 dark:text-gray-400 mb-4"
-                role="alert"
+        <Portal>
+          <div 
+            id={notificationMenuId}
+            className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-sm shadow-lg border border-gray-200 dark:border-gray-700 z-999"
+            role="dialog"
+            aria-labelledby="notification-settings-title"
+            aria-modal="true"
+          >
+            <div className="p-4">
+              <h3 
+                id="notification-settings-title"
+                className="text-lg font-bold text-vpn-gray dark:text-vpn-gray-dark mb-3"
               >
-                <p className="mb-2">
-                  Notifications are blocked. Please update your browser settings to enable notifications.
-                </p>
-                <a 
-                  href="https://support.google.com/chrome/answer/3220216?hl=en" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-vpn-blue dark:text-blue-400 hover:underline"
+                Notification Settings
+              </h3>
+              
+              {permissionState === 'denied' ? (
+                <div 
+                  className="text-sm text-gray-600 dark:text-gray-400 mb-4"
+                  role="alert"
                 >
-                  Learn how to enable notifications
-                </a>
-              </div>
-            ) : (
-              <>
-                <div className="flex items-center justify-between mb-4">
-                  <span 
-                    className="text-sm text-gray-600 dark:text-gray-400" 
-                    id="notification-toggle-label"
+                  <p className="mb-2">
+                    Notifications are blocked. Please update your browser settings to enable notifications.
+                  </p>
+                  <a 
+                    href="https://support.google.com/chrome/answer/3220216?hl=en" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-vpn-blue dark:text-blue-400 hover:underline"
                   >
-                    Article notifications
-                  </span>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      className="sr-only peer" 
-                      checked={isSubscribed}
-                      onChange={handleToggleNotifications}
-                      disabled={permissionState !== 'granted'}
-                      aria-labelledby="notification-toggle-label"
-                      aria-describedby="notification-toggle-description"
-                    />
-                    <div 
-                      className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-vpn-blue dark:peer-focus:ring-blue-400 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-vpn-blue"
-                      role="switch"
-                      aria-checked={isSubscribed}
-                    ></div>
-                  </label>
+                    Learn how to enable notifications
+                  </a>
                 </div>
-                <p 
-                  className="text-xs text-gray-500 dark:text-gray-400" 
-                  id="notification-toggle-description"
-                >
-                  {isSubscribed 
-                    ? "You'll receive notifications when new articles are published." 
-                    : "Enable notifications to stay updated with the latest news."}
-                </p>
-              </>
-            )}
+              ) : (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <span 
+                      className="text-sm text-gray-600 dark:text-gray-400" 
+                      id="notification-toggle-label"
+                    >
+                      Article notifications
+                    </span>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        className="sr-only peer" 
+                        checked={isSubscribed}
+                        onChange={handleToggleNotifications}
+                        disabled={permissionState !== 'granted'}
+                        aria-labelledby="notification-toggle-label"
+                        aria-describedby="notification-toggle-description"
+                      />
+                      <div 
+                        className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-vpn-blue dark:peer-focus:ring-blue-400 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-vpn-blue"
+                        role="switch"
+                        aria-checked={isSubscribed}
+                      ></div>
+                    </label>
+                  </div>
+                  <p 
+                    className="text-xs text-gray-500 dark:text-gray-400" 
+                    id="notification-toggle-description"
+                  >
+                    {isSubscribed 
+                      ? "You'll receive notifications when new articles are published." 
+                      : "Enable notifications to stay updated with the latest news."}
+                  </p>
+                </>
+              )}
+            </div>
           </div>
-        </div>
+        </Portal>
       )}
     </div>
   );

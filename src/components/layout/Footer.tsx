@@ -46,7 +46,7 @@ export default function Footer() {
         {/* Footer links */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-8 px-3 sm:px-4">
           <div>
-            <h3 className="font-heading font-bold text-lg mb-3">About Us</h3>
+            <h3 className="font-headline font-bold text-lg mb-3">About Us</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/about" className="text-gray-300 hover:text-white">About</Link></li>
               <li><Link href="/contact-us" className="text-gray-300 hover:text-white">Contact Us</Link></li>
@@ -55,7 +55,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-heading font-bold text-lg mb-3">Content</h3>
+            <h3 className="font-headline font-bold text-lg mb-3">Content</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/category/crime-news" className="text-gray-300 hover:text-white">Crime News</Link></li>
               <li><Link href="/category/court-news" className="text-gray-300 hover:text-white">Court News</Link></li>
@@ -80,7 +80,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-heading font-bold text-lg mb-3">Legal</h3>
+            <h3 className="font-headline font-bold text-lg mb-3">Legal</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/terms-of-use" className="text-gray-300 hover:text-white">Terms of Use</Link></li>
               <li><Link href="/privacy-policy" className="text-gray-300 hover:text-white">Privacy Policy</Link></li>
@@ -91,21 +91,22 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-heading font-bold text-lg mb-3">Advertise</h3>
+            <h3 className="font-headline font-bold text-lg mb-3">Advertise</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/sponsorship" className="text-gray-300 hover:text-white">Sponsorship</Link></li>
               <li><Link href="/advertising" className="text-gray-300 hover:text-white">Advertising</Link></li>
               <li><Link href="/newsletters" className="text-gray-300 hover:text-white">Newsletters</Link></li>
+              <li><Link href="/marketplace" className="text-gray-300 hover:text-white">Marketplace</Link></li>
             </ul>
           </div>
           <div>
-            <h3 className="font-heading font-bold text-lg mb-3">Contact</h3>
+            <h3 className="font-headline font-bold text-lg mb-3">Contact</h3>
             <address className="not-italic text-sm text-gray-300">
-              <p>Video Production News</p>
-              <p>10 South Grove</p>
-              <p>London</p>
-              <p>N6 6BS</p>
-              <p>United Kingdom</p>
+              <p>Video Production News<br />
+              10 South Grove<br />
+              London<br />
+              N6 6BS<br />
+              United Kingdom</p>
               <p className="mt-2">Telephone: <a href="tel:+442036334699" className="hover:text-white">+44 20 3633 4699</a></p>
             </address>
           </div>

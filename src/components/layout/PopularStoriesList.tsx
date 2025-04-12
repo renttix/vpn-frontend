@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -41,7 +43,7 @@ function postToArticleProps(post: Post, index: number): ArticleProps {
     ? post.categories[0].title 
     : "News";
     
-  const categorySlug = post.categories && post.categories.length > 0 && post.categories[0].slug
+  const categorySlug = post.categories && post.categories.length > 0 && post.categories[0].slug && post.categories[0].slug.current
     ? `category/${post.categories[0].slug.current}`
     : post.categories && post.categories.length > 0
       ? `category/${post.categories[0].title.toLowerCase().replace(/\s+/g, '-')}`
@@ -189,33 +191,70 @@ const FALLBACK_ARTICLES: Post[] = [
   }
 ];
 
-export default async function PopularStoriesList({ posts: propPosts }: PopularStoriesListProps) {
-  // Use provided posts or fetch them if not provided
-  let posts = propPosts;
+export default function PopularStoriesList({ posts: propPosts }: PopularStoriesListProps) {
+  const [posts, setPosts] = React.useState<Post[]>(propPosts || []);
+  const [loading, setLoading] = React.useState<boolean>(!propPosts || propPosts.length === 0);
   
-  if (!posts || posts.length === 0) {
-    try {
-      posts = await getPopularPosts();
-    } catch (error) {
-      console.error("Error fetching popular posts:", error);
+  // Fetch posts if not provided
+  React.useEffect(() => {
+    if (!propPosts || propPosts.length === 0) {
+      const fetchPosts = async () => {
+        try {
+          const fetchedPosts = await getPopularPosts();
+          if (fetchedPosts && fetchedPosts.length > 0) {
+            setPosts(fetchedPosts);
+          } else {
+            setPosts(FALLBACK_ARTICLES);
+          }
+        } catch (error) {
+          console.error("Error fetching popular posts:", error);
+          setPosts(FALLBACK_ARTICLES);
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      fetchPosts();
     }
-    
-    // If still no posts, use fallbacks
-    if (!posts || posts.length === 0) {
-      posts = FALLBACK_ARTICLES;
-    }
-  }
+  }, [propPosts]);
   
   // Create a map of posts by ID for easy lookup
   const postsMap = new Map(posts.map(post => [post._id, post]));
   
   // Convert to ArticleProps
   const articleProps = posts.map((post, index) => postToArticleProps(post, index));
+  
+  if (loading) {
+    return (
+      <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+            POPULAR STORIES
+          </h2>
+        </div>
+        <div className="p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="flex flex-col animate-pulse">
+                <div className="relative aspect-[1200/630] bg-gray-200 dark:bg-gray-700 rounded-md mb-3"></div>
+                <div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-2"></div>
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2"></div>
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-serif font-bold text-vpn-gray dark:text-white">
+        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
           POPULAR STORIES
         </h2>
       </div>
@@ -251,7 +290,7 @@ export default async function PopularStoriesList({ posts: propPosts }: PopularSt
                   )}
                   
                   <Link href={`/${article.slug}`} className="group">
-                    <h3 className="font-heading font-bold text-vpn-gray dark:text-gray-100 text-lg leading-tight group-hover:text-vpn-blue dark:group-hover:text-yellow-500 mb-2 transition-colors duration-200">
+                    <h3 className="font-headline font-bold text-vpn-gray dark:text-gray-100 text-lg leading-tight group-hover:text-vpn-blue dark:group-hover:text-yellow-500 mb-2 transition-colors duration-200">
                       {article.title}
                     </h3>
                   </Link>

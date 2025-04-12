@@ -107,7 +107,7 @@ export default function LatestNewsSection({
   return (
     <section className="bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-headline font-bold uppercase mb-8 tracking-wider text-vpn-blue dark:text-yellow-500">
+        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
           LATEST NEWS
         </h2>
         

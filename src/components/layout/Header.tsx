@@ -3,13 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { AlertTriangle, Video, LogIn, Menu, X, Calendar, Clock, Search } from "lucide-react";
+import { AlertTriangle, LogIn, Menu, X, Calendar, Clock, Search } from "lucide-react";
 import NewsTicker from "./NewsTicker";
 import NotificationBell from "../notification/NotificationBell";
 import SearchAutocomplete from "../search/SearchAutocomplete";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import Portal from "@/components/ui/Portal";
 
 // Define Category type (matching the one in Layout.tsx)
 interface Category {
@@ -163,24 +164,24 @@ export default function Header({ categories = [] }: HeaderProps) {
         <div className="container mx-auto flex justify-between items-center px-3 sm:px-4">
           <div className="flex items-center space-x-3">
             <div className="flex items-center">
-              <Calendar size={12} className="mr-1 text-vpn-gray-light" />
-              <span className="text-vpn-gray-light">{currentDate}</span>
+              <Calendar size={12} className="mr-1 text-vpn-gray-light dark:text-gray-300" />
+              <span className="text-vpn-gray-light dark:text-gray-300">{currentDate}</span>
             </div>
             <div className="flex items-center">
-              <Clock size={12} className="mr-1 text-vpn-gray-light" />
-              <span className="text-vpn-gray-light">{currentTime}</span>
+              <Clock size={12} className="mr-1 text-vpn-gray-light dark:text-gray-300" />
+              <span className="text-vpn-gray-light dark:text-gray-300">{currentTime}</span>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Link href="/newsletters" className="text-vpn-gray-light hover:text-vpn-blue">
+            <Link href="/newsletters" className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white">
               Newsletters
             </Link>
-            <span className="text-vpn-gray-light">|</span>
-            <Link href="/contact-us" className="text-vpn-gray-light hover:text-vpn-blue">
+            <span className="text-vpn-gray-light dark:text-gray-300">|</span>
+            <Link href="/contact-us" className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white">
               Contact
             </Link>
-            <span className="text-vpn-gray-light">|</span>
-            <a href="https://vpnnews.sanity.studio/" target="_blank" rel="noopener noreferrer" className="text-vpn-gray-light hover:text-vpn-blue flex items-center">
+            <span className="text-vpn-gray-light dark:text-gray-300">|</span>
+            <a href="https://vpnnews.sanity.studio/" target="_blank" rel="noopener noreferrer" className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white flex items-center">
               <LogIn className="h-3 w-3 mr-1" />
               Creator Login
             </a>
@@ -283,7 +284,16 @@ export default function Header({ categories = [] }: HeaderProps) {
                       href="/justice-watch"
                       className="text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white flex items-center"
                     >
-                      <Video size={12} className="mr-1" aria-hidden="true" />
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        viewBox="0 0 24 24" 
+                        width="12" 
+                        height="12" 
+                        className="mr-1 fill-current" 
+                        aria-hidden="true"
+                      >
+                        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                      </svg>
                       <span>Watch</span>
                     </Link>
                   );
@@ -303,6 +313,13 @@ export default function Header({ categories = [] }: HeaderProps) {
                   </Link>
                 );
               })}
+              {/* Marketplace link in compact header */}
+              <Link
+                href="/marketplace"
+                className="text-vpn-blue dark:text-white hover:text-vpn-blue dark:hover:text-blue-400 flex items-center"
+              >
+                <span>Marketplace</span>
+              </Link>
             </div>
             
             <div className="flex items-center space-x-2">
@@ -345,7 +362,16 @@ export default function Header({ categories = [] }: HeaderProps) {
                         role="menuitem"
                         aria-current={typeof window !== 'undefined' ? window.location.pathname === '/justice-watch' ? "page" : undefined : undefined}
                       >
-                        <Video size={14} className="mr-1" aria-hidden="true" />
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          viewBox="0 0 24 24" 
+                          width="14" 
+                          height="14" 
+                          className="mr-1 fill-current" 
+                          aria-hidden="true"
+                        >
+                          <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                        </svg>
                         <span>Watch</span>
                       </Link>
                     </li>
@@ -372,6 +398,16 @@ export default function Header({ categories = [] }: HeaderProps) {
                   </li>
                 );
               })}
+              {/* Marketplace menu item */}
+              <li role="none">
+                <Link
+                  href="/marketplace"
+                  className="text-vpn-blue dark:text-white hover:text-vpn-blue dark:hover:text-blue-400 flex items-center py-1 px-2 newspaper-nav-item"
+                  role="menuitem"
+                >
+                  <span>Marketplace</span>
+                </Link>
+              </li>
             </ul>
           </div>
         </nav>
@@ -459,7 +495,16 @@ export default function Header({ categories = [] }: HeaderProps) {
                         aria-current={typeof window !== 'undefined' ? window.location.pathname === '/justice-watch' ? "page" : undefined : undefined}
                       >
                         <div className="flex items-center">
-                          <Video size={14} className="mr-1" aria-hidden="true" />
+                          <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            viewBox="0 0 24 24" 
+                            width="14" 
+                            height="14" 
+                            className="mr-1 fill-current" 
+                            aria-hidden="true"
+                          >
+                            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                          </svg>
                           <span>Watch</span>
                         </div>
                       </Link>
@@ -520,48 +565,59 @@ export default function Header({ categories = [] }: HeaderProps) {
                   Privacy Policy
                 </Link>
               </li>
+              <li role="none">
+                <Link 
+                  href="/marketplace" 
+                  className="block py-2 px-3 text-vpn-blue dark:text-white hover:text-vpn-blue dark:hover:text-blue-400 text-sm font-medium border-b border-gray-200 dark:border-gray-700"
+                  role="menuitem"
+                >
+                  Marketplace
+                </Link>
+              </li>
             </ul>
           </div>
         )}
 
         {/* Search Modal */}
         {searchOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-20 px-4">
-            <div className="bg-background dark:bg-gray-800 rounded-md shadow-lg w-full max-w-2xl">
-              <div className="p-4 border-b border-border flex justify-between items-center">
-                <h2 className="text-lg font-bold">Search VPN News</h2>
-                <button 
-                  onClick={() => setSearchOpen(false)}
-                  className="text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white"
-                  aria-label="Close search"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-              <div className="p-4">
-                <form onSubmit={handleSearchSubmit}>
-                  <div className="flex">
-                    <input
-                      type="text"
-                      placeholder="Search for news, articles, topics..."
-                      className="flex-grow px-4 py-2 border border-border rounded-l-md focus:outline-none focus:ring-2 focus:ring-vpn-blue dark:bg-gray-700 dark:text-white"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <button
-                      type="submit"
-                      className="bg-vpn-blue text-white px-4 py-2 rounded-r-md hover:bg-opacity-90"
-                    >
-                      <Search size={18} />
-                    </button>
-                  </div>
-                  <div className="mt-4 text-sm text-vpn-gray dark:text-gray-400">
-                    <p>Popular searches: Crime, Court Cases, Legal Updates, News</p>
-                  </div>
-                </form>
+          <Portal>
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-999 flex items-start justify-center pt-20 px-4">
+              <div className="bg-background dark:bg-gray-800 rounded-md shadow-lg w-full max-w-2xl">
+                <div className="p-4 border-b border-border flex justify-between items-center">
+                  <h2 className="text-lg font-bold">Search VPN News</h2>
+                  <button 
+                    onClick={() => setSearchOpen(false)}
+                    className="text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white"
+                    aria-label="Close search"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+                <div className="p-4">
+                  <form onSubmit={handleSearchSubmit}>
+                    <div className="flex">
+                      <input
+                        type="text"
+                        placeholder="Search for news, articles, topics..."
+                        className="flex-grow px-4 py-2 border border-border rounded-l-md focus:outline-none focus:ring-2 focus:ring-vpn-blue dark:bg-gray-700 dark:text-white"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      <button
+                        type="submit"
+                        className="bg-vpn-blue text-white px-4 py-2 rounded-r-md hover:bg-opacity-90"
+                      >
+                        <Search size={18} />
+                      </button>
+                    </div>
+                    <div className="mt-4 text-sm text-vpn-gray dark:text-gray-400">
+                      <p>Popular searches: Crime, Court Cases, Legal Updates, News</p>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
+          </Portal>
         )}
       </div>
     </header>

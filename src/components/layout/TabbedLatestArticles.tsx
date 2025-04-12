@@ -53,8 +53,8 @@ export default function TabbedLatestArticles({
   return (
     <section className="bg-white dark:bg-gray-800 p-6 rounded-sm border border-gray-200 dark:border-gray-700">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h2 className="text-2xl font-headline font-bold text-vpn-blue dark:text-yellow-500 uppercase tracking-wider">
-          Latest
+        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+          LATEST
         </h2>
         
         {/* Tabs */}
@@ -82,7 +82,7 @@ export default function TabbedLatestArticles({
         )}
       </div>
 
-      {/* View All Link */}
+        {/* View All Link */}
       <div className="text-center mt-8">
         <Link 
           href={activeTab === "all" ? "/latest" : 

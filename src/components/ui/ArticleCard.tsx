@@ -71,7 +71,7 @@ export default function ArticleCard({
 
         <Link href={`/${slug}`} className="group">
           <h2
-            className={`font-heading font-bold text-vpn-gray dark:text-gray-100 ${
+            className={`font-headline font-bold text-vpn-gray dark:text-gray-100 ${
               isFeature
                 ? 'text-xl md:text-2xl lg:text-3xl leading-tight'
                 : 'text-base md:text-lg leading-tight'
