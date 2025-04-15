@@ -1,5 +1,6 @@
 import Link from 'next/link'; // Import Link
 import Image from 'next/image'; // Import Next.js Image component
+import Breadcrumbs from '@/components/ui/Breadcrumbs'; // Import Breadcrumbs component
 import { notFound } from "next/navigation";
 import Layout from "@/components/layout/Layout";
 import ArticleLayout from "@/components/article/ArticleLayout";
@@ -12,9 +13,15 @@ import { client } from "@/lib/sanity.client";
 import { groq } from "next-sanity";
 import type { Post, Category } from "@/types/sanity"; // Use shared types
 import { Metadata } from 'next';
-import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
-import BreadcrumbJsonLd, { generateArticleBreadcrumbs } from "@/components/seo/BreadcrumbJsonLd";
-import { generateArticleMetadata } from '@/lib/metadata';
+import CategoryJsonLd from "@/components/seo/CategoryJsonLd";
+import BreadcrumbJsonLd, { generateArticleBreadcrumbs, generateCategoryBreadcrumbs } from "@/components/seo/BreadcrumbJsonLd";
+import FaqJsonLd, { extractFaqsFromContent } from "@/components/seo/FaqJsonLd";
+import SpeakableJsonLd, { generateSpeakableSelectors } from "@/components/seo/SpeakableJsonLd";
+import NewsArticleJsonLd from "@/components/seo/NewsArticleJsonLd";
+import SeriesJsonLd, { formatSeriesArticles } from "@/components/seo/SeriesJsonLd";
+import { generateArticleMetadata, generateCategoryMetadata } from '@/lib/metadata';
+import { trackArticleView, trackCategoryView } from '@/lib/events';
+import CategoryPostsList from '@/components/category/CategoryPostsList';
 
 // --- Types --- (Assuming Post and Category are correctly defined in @/types/sanity)
 interface PageProps {
@@ -47,7 +54,25 @@ async function getPageData(slug: string, searchParams: { [key: string]: string |
   const articleQuery = groq`*[_type == "post" && slug.current == $slug][0]{
     _id, title, slug, mainImage{ asset->{url, alt} },
     author->{_id, name, slug, bio, image{asset->{url, alt}}},
-    publishedAt, body, "categories": categories[]->{_id, title, slug},
+    publishedAt, lastUpdatedAt, body, isBreakingNews,
+    "categories": categories[]->{_id, title, slug},
+    "tags": tags[]->{_id, title, slug},
+    "series": series{
+      "seriesRef": seriesRef->{
+        _id, title, slug, description, 
+        "coverImage": coverImage.asset->{url, alt},
+        startDate, endDate, totalPlannedParts,
+        "categories": categories[]->{_id, title, slug},
+        "tags": tags[]->{_id, title, slug}
+      },
+      partNumber, partTitle, isFinalPart
+    },
+    "seriesArticles": *[_type == "post" && series.seriesRef._ref == ^.series.seriesRef._ref] | order(series.partNumber asc) {
+      _id, title, slug, 
+      "series": series{
+        partNumber, partTitle, isFinalPart
+      }
+    },
     "relatedPosts": relatedPosts[]->{ 
       _id, title, slug, excerpt, 
       "author": author->name,
@@ -131,16 +156,27 @@ export async function generateMetadata({ params, searchParams }: any): Promise<M
   const { pageType, article, category } = await getPageData(slug, resolvedSearchParams);
 
   if (pageType === 'article' && article) {
-    return generateArticleMetadata(article);
-  } else if (pageType === 'category' && category) {
-    const pageTitle = category.title === 'Video' ? 'Legal Commentary' : category.title;
+    const metadata = generateArticleMetadata(article);
+    
+    // Add AMP link for article pages
     return {
-      title: pageTitle,
-      description: category.description || `Latest posts in the ${pageTitle} category.`,
-      alternates: { canonical: `/${category.slug.current}` }, // Use direct slug
+      ...metadata,
+      alternates: {
+        ...metadata.alternates,
+        types: {
+          ...metadata.alternates?.types,
+          'application/vnd.amp.html': `https://vpnnews.com/amp/${article.slug?.current || slug}`,
+        },
+      },
     };
+  } else if (pageType === 'category' && category) {
+    return generateCategoryMetadata(category);
   } else {
-    return { title: 'Not Found' };
+    return { 
+      title: 'Not Found',
+      description: 'The page you are looking for does not exist.',
+      robots: { index: false, follow: false }
+    };
   }
 }
 
@@ -206,24 +242,59 @@ export default async function SlugPage({ params, searchParams }: any) {
     
     console.log(`[SlugPage] RETURNING ARTICLE JSX for: ${article.title}`); // Log before returning JSX
     
-    // Create simple breadcrumb items directly without using the helper function
-    const simpleBreadcrumbs = [
-      {
-        name: 'Home',
-        item: 'https://vpnnews.com/'
-      },
-      {
-        name: article.title,
-        item: `https://vpnnews.com/${article.slug.current}`
-      }
-    ];
+    // Generate breadcrumbs using the enhanced helper function with null checks
+    const articleBreadcrumbs = generateArticleBreadcrumbs(
+      article.title || 'Article',
+      article.slug?.current || slug, // Use the URL slug as fallback
+      article.categories,
+      article.tags,
+      article.author,
+      article.mainImage?.asset?.url
+    );
+    
+    // Track article view for analytics
+    if (typeof window !== 'undefined') {
+      // This will only run on the client side
+      trackArticleView(article);
+    }
+    
+    // Extract FAQs from article content if available
+    const faqs = article.body ? extractFaqsFromContent(article.body) : [];
+    const articleUrl = `https://vpnnews.com/${article.slug?.current || slug}`;
     
     return (
       <Layout categories={allCategories}>
-        {/* Schema.org markup - simplified to avoid errors */}
-        <BreadcrumbJsonLd items={simpleBreadcrumbs} />
+        {/* Schema.org markup - optimized for Google News */}
+        <BreadcrumbJsonLd items={articleBreadcrumbs} />
+        {article && (
+          <NewsArticleJsonLd 
+            article={article} 
+            url={articleUrl} 
+            isGoogleNews={true}
+          />
+        )}
+        {article && article.series && article.series.seriesRef && article.seriesArticles && (
+          <SeriesJsonLd
+            series={article.series.seriesRef}
+            seriesUrl={`https://vpnnews.com/series/${article.series.seriesRef.slug.current}`}
+            article={article}
+            articleUrl={articleUrl}
+            partNumber={article.series.partNumber || 1}
+            totalParts={article.series.seriesRef.totalPlannedParts}
+            articleList={formatSeriesArticles(article.seriesArticles)}
+          />
+        )}
+        {faqs.length > 0 && (
+          <FaqJsonLd faqs={faqs} url={articleUrl} />
+        )}
+        <SpeakableJsonLd 
+          cssSelectors={generateSpeakableSelectors('news')} 
+          url={articleUrl} 
+        />
         
         <div className="container mx-auto px-4 py-8">
+          {/* Visual breadcrumbs */}
+          <Breadcrumbs items={articleBreadcrumbs} className="mb-6" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Main content area */}
             <div className="md:col-span-2">
@@ -231,8 +302,7 @@ export default async function SlugPage({ params, searchParams }: any) {
                 {article.body ? (
                   <>
                     <ArticleContent article={article} />
-                    {/* Temporarily removed SocialButtons to fix build error */}
-                    {/* <SocialButtons title={article.title} /> */}
+                    <SocialButtons title={article.title} />
                     {author && <AuthorBio author={author} />}
                     <CommentSection articleId={article._id} />
                   </>
@@ -257,7 +327,7 @@ export default async function SlugPage({ params, searchParams }: any) {
 
               {/* Newsletter Signup */}
               <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 mt-8 rounded-sm">
-                <h3 className="font-heading font-bold text-lg mb-2">Newsletter</h3>
+                <h3 className="font-body font-bold text-lg mb-2">Newsletter</h3>
                 <p className="font-body text-sm text-gray-600 dark:text-gray-400 mb-4">
                   Get caught up in minutes with our speedy summary of today's must-read stories.
                 </p>
@@ -300,7 +370,7 @@ export default async function SlugPage({ params, searchParams }: any) {
 
     const SortLink = ({ sortValue, currentSort, children }: { sortValue: string; currentSort: string; children: React.ReactNode }) => {
       const isActive = sortValue === currentSort;
-      const href = `/${category.slug.current}?sort=${sortValue}`; // Use direct slug
+      const href = `/${category.slug?.current || slug}?sort=${sortValue}`; // Use direct slug with fallback
       return (
         <Link href={href} className={`font-body px-3 py-1 text-xs rounded ${isActive ? 'bg-vpn-blue text-white font-bold' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
           {children}
@@ -309,12 +379,31 @@ export default async function SlugPage({ params, searchParams }: any) {
     };
 
     console.log(`[SlugPage] RETURNING CATEGORY JSX for: ${category.title}`); // Log before returning JSX
+    // Generate breadcrumbs using the enhanced helper function
+    const categoryBreadcrumbs = generateCategoryBreadcrumbs(category);
+
+    // Track category view for analytics
+    if (typeof window !== 'undefined') {
+      // This will only run on the client side
+      trackCategoryView(category);
+    }
+    
     return (
       <Layout categories={allCategories}>
+        {/* Schema.org markup for category page */}
+        <BreadcrumbJsonLd items={categoryBreadcrumbs} />
+        <CategoryJsonLd 
+          category={category} 
+          posts={categoryPosts}
+          url={`https://vpnnews.com/${category.slug?.current || slug}`} 
+        />
+        
         <div className="container mx-auto px-4 py-8">
+          {/* Visual breadcrumbs */}
+          <Breadcrumbs items={categoryBreadcrumbs} className="mb-6" />
           {/* Category Header */}
           <div className="mb-8 pb-4 border-b border-gray-300 dark:border-gray-700">
-            <h1 className="text-3xl md:text-4xl font-heading font-bold text-vpn-blue dark:text-blue-400 uppercase mb-2">
+            <h1 className="text-3xl md:text-4xl font-body font-bold text-vpn-blue dark:text-blue-400 uppercase mb-2">
               {category.title === 'Video' ? 'Legal Commentary' : category.title}
             </h1>
             {category.description && <p className="font-body text-lg text-gray-600 dark:text-gray-400">{category.description}</p>}
@@ -342,44 +431,19 @@ export default async function SlugPage({ params, searchParams }: any) {
             {/* Middle Content */}
             <div className="md:col-span-2 order-3 md:order-2">
               {categoryPosts.length > 0 ? (
-                <div className="grid grid-cols-1 gap-8">
-                  {Array.from({ length: Math.ceil(categoryPosts.length / 3) }).map((_, rowIndex) => (
-                    <div key={`row-${rowIndex}`} className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                      {categoryPosts.slice(rowIndex * 3, rowIndex * 3 + 3).map(p => (
-                        <article key={p._id} className="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col rounded-sm shadow-sm">
-                          <Link href={`/${p.slug?.current ?? '#'}`} className="block overflow-hidden">
-                            {p.mainImage?.asset?.url ? (
-                              <div className="relative aspect-[16/9] overflow-hidden">
-                                <Image 
-                                  src={p.mainImage.asset.url} 
-                                  alt={p.mainImage.asset.alt || p.title || 'Article image'} 
-                                  className="object-cover transition-transform duration-300 group-hover:scale-105" 
-                                  fill
-                                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                                  loading="lazy"
-                                  quality={80}
-                                />
-                              </div>
-                            ) : (
-                              <div className="relative aspect-[16/9] bg-gray-300 dark:bg-gray-700 flex items-center justify-center"><span className="text-gray-500 text-xs">No Image</span></div>
-                            )}
-                          </Link>
-                          <div className="p-4 flex flex-col flex-grow">
-                            <Link href={`/${p.slug?.current ?? '#'}`} className="group">
-                              <h3 className="font-heading font-bold text-vpn-gray dark:text-vpn-gray-dark text-base leading-tight group-hover:text-vpn-blue dark:group-hover:text-blue-400 mb-2 line-clamp-3">{p.title || 'Untitled Post'}</h3>
-                            </Link>
-                            {p.excerpt && <p className="font-body text-vpn-gray dark:text-vpn-gray-dark/80 text-sm mb-3 line-clamp-3 flex-grow">{p.excerpt}</p>}
-                            <div className="mt-auto font-body text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-100 dark:border-gray-700">
-                              {p.author?.name && <span>By {p.author.name} • </span>}
-                              {formatDate(p.publishedAt)}
-                            </div>
-                          </div>
-                        </article>
-                      ))}
-                      {categoryPosts.slice(rowIndex * 3, rowIndex * 3 + 3).length < 3 && Array.from({ length: 3 - categoryPosts.slice(rowIndex * 3, rowIndex * 3 + 3).length }).map((_, placeholderIndex) => (<div key={`placeholder-${rowIndex}-${placeholderIndex}`} className="hidden sm:block"></div>))}
-                    </div>
-                  ))}
-                </div>
+                <CategoryPostsList 
+                  initialPosts={categoryPosts}
+                  categoryId={category._id}
+                  categoryTitle={category.title}
+                  sortOrder={
+                    sortBy === 'title_asc' ? 'title asc' :
+                    sortBy === 'title_desc' ? 'title desc' :
+                    sortBy === 'date_asc' ? 'publishedAt asc' :
+                    sortBy === 'author_asc' ? 'author.name asc' :
+                    sortBy === 'author_desc' ? 'author.name desc' :
+                    'publishedAt desc' // Default sort
+                  }
+                />
               ) : (
                 <p className="font-body text-center text-gray-500 dark:text-gray-400 py-10 col-span-full">No posts found in this category yet.</p>
               )}

@@ -29,6 +29,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --text-size-scale: 1; /* Default text size scale */
   }
 
   .dark {
@@ -79,18 +80,22 @@
   
   h1 {
     @apply text-3xl md:text-4xl mb-6;
+    font-size: calc(1.875rem * var(--text-size-scale));
   }
   
   h2 {
     @apply text-2xl md:text-3xl mb-4;
+    font-size: calc(1.5rem * var(--text-size-scale));
   }
   
   h3 {
     @apply text-xl md:text-2xl mb-3;
+    font-size: calc(1.25rem * var(--text-size-scale));
   }
   
   p {
     @apply mb-4 leading-relaxed;
+    font-size: calc(1rem * var(--text-size-scale));
   }
   
   /* Improved content spacing */
@@ -114,8 +119,60 @@
   }
 }
 
+/* Text size classes for AMP pages */
+.text-small {
+  --text-size-scale: 0.9;
+}
+
+.text-medium {
+  --text-size-scale: 1;
+}
+
+.text-large {
+  --text-size-scale: 1.2;
+}
+
+.text-x-large {
+  --text-size-scale: 1.4;
+}
+
+/* Text size specific selectors for article content */
+.prose p, 
+.prose li, 
+.prose blockquote,
+.article-content p,
+.article-content li,
+.article-content blockquote {
+  font-size: calc(1rem * var(--text-size-scale));
+}
+
+.prose h1, .article-content h1 {
+  font-size: calc(2.25rem * var(--text-size-scale));
+}
+
+.prose h2, .article-content h2 {
+  font-size: calc(1.875rem * var(--text-size-scale));
+}
+
+.prose h3, .article-content h3 {
+  font-size: calc(1.5rem * var(--text-size-scale));
+}
+
+.prose h4, .article-content h4 {
+  font-size: calc(1.25rem * var(--text-size-scale));
+}
+
+/* Ensure line heights adjust proportionally */
+.prose, .article-content {
+  line-height: calc(1.75 * var(--text-size-scale));
+}
+
 /* Component styles */
 @layer components {
+  /* Text size adjuster styling */
+  .text-size-adjuster {
+    @apply inline-flex items-center bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 py-2 px-3;
+  }
   /* Ad container styling */
   .ad-container {
     @apply relative bg-ad-bg dark:bg-ad-border-dark border border-ad-border dark:border-ad-border-dark rounded-sm overflow-hidden transition-all duration-300;

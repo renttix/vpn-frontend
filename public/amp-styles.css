@@ -1,0 +1,38 @@
+/* AMP-specific styles */
+
+/* Text-to-speech button */
+.listen-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #0066cc; /* vpn-blue */
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.listen-button:hover {
+  background-color: #0052a3;
+}
+
+.listen-button:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Make sure the button is visible in dark mode */
+@media (prefers-color-scheme: dark) {
+  .listen-button {
+    background-color: #0078d7;
+  }
+  
+  .listen-button:hover {
+    background-color: #0063b1;
+  }
+}

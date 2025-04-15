@@ -31,7 +31,7 @@ export default function CategoryLayout({ title, description, articles }: Categor
     <div className="bg-background">
       {/* Category Header */}
       <div className="container mx-auto px-4 py-6">
-        <h1 className="text-2xl md:text-3xl font-heading font-bold text-foreground">{title}</h1>
+        <h1 className="text-2xl md:text-3xl font-headline font-bold text-foreground">{title}</h1>
         {description && (
           <p className="font-body text-muted-foreground mt-2">{description}</p>
         )}

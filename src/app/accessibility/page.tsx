@@ -95,7 +95,7 @@ export default async function AccessibilityPage() {
               We welcome your feedback on the accessibility of the VPN News website. Please let us know if you encounter any accessibility barriers:
             </p>
             <p className="mt-4">
-              <strong>Email:</strong> <a href="mailto:citydesk@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">citydesk@vpnldn.co.uk</a>
+              <strong>Email:</strong> <a href="mailto:accessibility@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">accessibility@vpnldn.co.uk</a>
             </p>
             <p>
               <strong>Postal Address:</strong><br />

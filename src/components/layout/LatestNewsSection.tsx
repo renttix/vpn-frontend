@@ -107,7 +107,7 @@ export default function LatestNewsSection({
   return (
     <section className="bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-heading text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
           LATEST NEWS
         </h2>
         
@@ -137,6 +137,7 @@ export default function LatestNewsSection({
                             fill
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
                             className="object-cover transition-transform duration-300 hover:scale-105"
+                            priority={displayedPosts.indexOf(post) === 0}
                           />
                         </div>
                       </Link>
@@ -153,7 +154,7 @@ export default function LatestNewsSection({
                       </Link>
                       
                       {/* Title */}
-                      <h3 className="font-heading text-xl md:text-2xl font-bold mb-2 leading-tight text-vpn-gray dark:text-gray-100">
+                      <h3 className="font-headline text-xl md:text-2xl font-bold mb-2 leading-tight text-vpn-gray dark:text-gray-100">
                         <Link href={`/${post.slug.current}`} className="hover:text-vpn-blue dark:hover:text-yellow-500 transition-colors duration-200">
                           {post.title}
                         </Link>

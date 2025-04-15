@@ -76,12 +76,19 @@ export function generateArticleMetadata(article: any): Metadata {
   
   const categoryNames = article.categories?.map((cat: any) => cat.title) || [];
   
+  // Add Google News standout tag for breaking news
+  const other: Record<string, string> = {};
+  if (article.isBreakingNews) {
+    other.standout = url; // This will become <link rel="standout" href="https://vpnnews.com/your-article-url" />
+  }
+  
   return {
     title: title,
     description: description,
     alternates: {
       canonical: url,
     },
+    other: Object.keys(other).length > 0 ? other : undefined,
     openGraph: {
       type: 'article',
       url: url,

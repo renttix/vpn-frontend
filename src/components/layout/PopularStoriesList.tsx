@@ -52,7 +52,7 @@ function postToArticleProps(post: Post, index: number): ArticleProps {
   return {
     id: post._id,
     title: post.title,
-    slug: post.slug.current,
+    slug: post.slug?.current || `post-${post._id}`, // Add null check and fallback
     tag: "POPULAR",
     imageUrl: post.mainImage?.asset.url || "/images/placeholder-news.jpg",
     imageAlt: post.title,
@@ -221,14 +221,17 @@ export default function PopularStoriesList({ posts: propPosts }: PopularStoriesL
   // Create a map of posts by ID for easy lookup
   const postsMap = new Map(posts.map(post => [post._id, post]));
   
+  // Filter out posts with missing required fields
+  const validPosts = posts.filter(post => post._id && post.title);
+  
   // Convert to ArticleProps
-  const articleProps = posts.map((post, index) => postToArticleProps(post, index));
+  const articleProps = validPosts.map((post, index) => postToArticleProps(post, index));
   
   if (loading) {
     return (
       <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-3xl font-heading text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+          <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
             POPULAR STORIES
           </h2>
         </div>
@@ -254,7 +257,7 @@ export default function PopularStoriesList({ posts: propPosts }: PopularStoriesL
   return (
     <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-3xl font-heading text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
           POPULAR STORIES
         </h2>
       </div>
@@ -267,7 +270,7 @@ export default function PopularStoriesList({ posts: propPosts }: PopularStoriesL
             
             return (
               <div key={article.id} className="flex flex-col">
-                <div className="relative aspect-[1200/630] overflow-hidden rounded-md mb-3">
+                <div className="aspect-[1200/630] overflow-hidden rounded-md mb-3" style={{ position: 'relative' }}>
                   <Link href={`/${article.slug}`}>
                     <Image
                       src={article.imageUrl || "/images/placeholder-news.jpg"}
@@ -290,7 +293,7 @@ export default function PopularStoriesList({ posts: propPosts }: PopularStoriesL
                   )}
                   
                   <Link href={`/${article.slug}`} className="group">
-                    <h3 className="font-heading font-bold text-vpn-gray dark:text-gray-100 text-lg leading-tight group-hover:text-vpn-blue dark:group-hover:text-yellow-500 mb-2 transition-colors duration-200">
+                    <h3 className="font-headline font-bold text-vpn-gray dark:text-gray-100 text-lg leading-tight group-hover:text-vpn-blue dark:group-hover:text-yellow-500 mb-2 transition-colors duration-200">
                       {article.title}
                     </h3>
                   </Link>

@@ -2,14 +2,12 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { groq } from 'next-sanity';
 import { client } from '@/lib/sanity.client';
-import { getSortOrder, validateSortParam } from '@/lib/sorting';
 import Layout from '@/components/layout/Layout';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import BreadcrumbJsonLd, { generateCategoryBreadcrumbs } from '@/components/seo/BreadcrumbJsonLd';
 import { generateCategoryMetadata } from '@/lib/metadata';
-import ArticleCardList from '@/components/ui/ArticleCardList';
-import { fetchMorePosts } from './actions';
+import CategoryPostsList from '@/components/category/CategoryPostsList';
 
 // Make this page fully dynamic
 export const dynamic = 'force-dynamic';
@@ -38,13 +36,9 @@ interface CategoryPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-// Function to fetch category and posts with pagination
-async function getCategoryData(
-  slug: string | undefined, 
-  sortBy: string = 'date_desc',
-  skip: number = 0,
-  limit: number = 12
-): Promise<{ category: Category | null; posts: Post[]; allCategories: Category[]; totalCount: number }> {
+// Function to fetch category and posts
+// Modify getCategoryData to accept slug directly
+async function getCategoryData(slug: string | undefined, sortBy: string = 'date_desc'): Promise<{ category: Category | null; posts: Post[]; allCategories: Category[] }> {
   // Try to find category by slug first
   const categoryQuery = groq`*[_type == "category" && slug.current == $slug][0]{
     _id,
@@ -84,17 +78,19 @@ async function getCategoryData(
 
   // Handle case where category is not found
   if (!category) {
-    return { category: null, posts: [], allCategories: allCategories || [], totalCount: 0 };
+    return { category: null, posts: [], allCategories: allCategories || [] };
   }
 
-  // Validate and get sort order
-  const validSortBy = validateSortParam(sortBy);
-  const postOrder = getSortOrder(validSortBy);
+  // Determine post ordering based on sortBy parameter
+  let postOrder = 'publishedAt desc'; // Default sort
+  if (sortBy === 'title_asc') postOrder = 'title asc';
+  if (sortBy === 'title_desc') postOrder = 'title desc';
+  if (sortBy === 'date_asc') postOrder = 'publishedAt asc';
+  if (sortBy === 'author_asc') postOrder = 'author.name asc';
+  if (sortBy === 'author_desc') postOrder = 'author.name desc';
 
-  // Count total posts for this category
-  const countQuery = groq`count(*[_type == "post" && $categoryTitle in categories[]->title])`;
-
-  // Fetch posts for the category with dynamic ordering and pagination
+  // Fetch posts for the category with dynamic ordering and limit
+  // Modified query to check for category title in categories array
   const postsQuery = groq`*[_type == "post" && $categoryTitle in categories[]->title]{
     _id,
     title,
@@ -104,27 +100,22 @@ async function getCategoryData(
     publishedAt,
     excerpt,
     "categoryTitles": categories[]->title
-  } | order(${postOrder}) [${skip}...${skip + limit}]`; // Use dynamic order with pagination
+  } | order(${postOrder}) [0...12]`; // Use dynamic order, limit to 12
 
-  // Fetch posts and count concurrently
-  const [posts, totalCount] = await Promise.all([
-    client.fetch<Post[]>(postsQuery, { 
-      categoryId: category._id,
-      categoryTitle: category.title 
-    }),
-    client.fetch<number>(countQuery, {
-      categoryTitle: category.title
-    })
-  ]);
-
-  console.log(`[getCategoryData] Fetched ${posts.length} posts (${skip}-${skip + limit} of ${totalCount}) for category: ${category.title}`);
+  console.log(`[getCategoryData] Fetching posts for category: ${category.title} (ID: ${category._id})`);
+  const posts = await client.fetch<Post[]>(postsQuery, { 
+    categoryId: category._id,
+    categoryTitle: category.title 
+  });
+  console.log(`[getCategoryData] Found ${posts.length} posts for category: ${category.title}`);
   
-  return { 
-    category, 
-    posts: posts || [], 
-    allCategories: allCategories || [],
-    totalCount: totalCount || 0
-  };
+  // Log the titles of posts found for debugging
+  if (posts.length > 0) {
+    console.log(`[getCategoryData] Post titles: ${posts.map(p => p.title).join(', ')}`);
+    console.log(`[getCategoryData] Post categories: ${JSON.stringify(posts.map(p => p.categoryTitles))}`);
+  }
+
+  return { category, posts: posts || [], allCategories: allCategories || [] };
 }
 
 // Generate Metadata for the page
@@ -179,8 +170,8 @@ export default async function CategoryPage({ params, searchParams }: any) {
       notFound(); // If no slug, trigger 404
   }
   
-  // Access and validate searchParams
-  const sortBy = validateSortParam(typeof searchParams.sort === 'string' ? searchParams.sort : 'date_desc');
+  // Access searchParams directly - it's not a Promise
+  const sortBy = typeof searchParams.sort === 'string' ? searchParams.sort : 'date_desc';
   
   console.log(`[CategoryPage] Fetching data for slug: ${slug}, sort: ${sortBy}`);
   const { category, posts, allCategories } = await getCategoryData(slug, sortBy); // Pass the extracted slug string
@@ -210,12 +201,12 @@ export default async function CategoryPage({ params, searchParams }: any) {
     // Use the correct category path format
     const href = `/category/${slug}?sort=${sortValue}`;
     return (
-      <a
+      <Link
         href={href}
         className={`font-body px-3 py-1 text-xs rounded ${isActive ? 'bg-vpn-blue text-white font-bold' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'}`}
       >
         {children}
-      </a>
+      </Link>
     );
   };
 
@@ -227,7 +218,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
         
         {/* Category Header Section */}
         <div className="mb-8 pb-4 border-b border-gray-300 dark:border-gray-700">
-          <h1 className="text-3xl md:text-4xl font-heading font-bold text-vpn-blue dark:text-blue-400 uppercase mb-2">
+          <h1 className="text-3xl md:text-4xl font-body font-bold text-vpn-blue dark:text-blue-400 uppercase mb-2">
             {/* Apply title override */}
             {category.title === 'Video' ? 'Legal Commentary' : category.title}
           </h1>
@@ -252,13 +243,18 @@ export default async function CategoryPage({ params, searchParams }: any) {
           {/* Main Content Column - Wider on desktop */}
           <div className="lg:col-span-8 order-1">
             {posts.length > 0 ? (
-              <ArticleCardList
+              <CategoryPostsList 
                 initialPosts={posts}
-                fetchMorePosts={async (skip: number, limit: number) => {
-                  "use server";
-                  return fetchMorePosts(slug, skip, limit, sortBy);
-                }}
+                categoryId={category._id}
                 categoryTitle={category.title}
+                sortOrder={
+                  sortBy === 'title_asc' ? 'title asc' :
+                  sortBy === 'title_desc' ? 'title desc' :
+                  sortBy === 'date_asc' ? 'publishedAt asc' :
+                  sortBy === 'author_asc' ? 'author.name asc' :
+                  sortBy === 'author_desc' ? 'author.name desc' :
+                  'publishedAt desc' // Default sort
+                }
               />
             ) : (
               // Message when no posts are found
@@ -268,6 +264,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
                 </p>
               </div>
             )}
+            
           </div>
 
           {/* Right Sidebar - Ads and Related Content */}
@@ -278,7 +275,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
               
               {/* Related Categories Box */}
               <div className="content-section p-5 mt-8">
-                <h3 className="text-3xl font-heading text-yellow-500 dark:text-yellow-300 uppercase mb-4 tracking-wider">
+                <h3 className="text-3xl font-body text-yellow-500 dark:text-yellow-300 uppercase mb-4 tracking-wider">
                   Related Categories
                 </h3>
                 <ul className="space-y-3">

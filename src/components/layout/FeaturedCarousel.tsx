@@ -135,7 +135,7 @@ export default function FeaturedCarousel({ posts }: FeaturedCarouselProps) {
               ? currentItem.categories[0].title 
               : "NEWS"}
           </span>
-          <h2 className="font-heading font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl max-w-3xl mb-2 sm:mb-4 leading-tight tracking-tight">
+          <h2 className="font-headline font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl max-w-3xl mb-2 sm:mb-4 leading-tight tracking-tight">
             {currentItem.title || "Untitled Article"}
           </h2>
           {currentItem.slug?.current ? (

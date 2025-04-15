@@ -76,7 +76,7 @@ export default {
             fontFamily: {
                 sans: ["Roboto", "Inter", ...fontFamily.sans],
                 serif: ["Merriweather", "Georgia", "serif"],
-                heading: ["Roboto", "sans-serif"],
+                heading: ["Roboto Slab", "serif"],
                 body: ["Roboto", "sans-serif"],
                 // keeping old fonts for backward compatibility
                 druk: ['DrukText-Medium', 'sans-serif'],

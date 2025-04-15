@@ -24,6 +24,9 @@ export interface Author {
   slug?: Slug;
   bio?: any; // Portable Text
   image?: SanityImage;
+  role?: string; // Author's role or specialty (e.g., "Crime Reporter", "Legal Analyst")
+  jobTitle?: string; // Author's job title for structured data
+  socialLinks?: string[]; // Array of social media profile URLs
 }
 
 export interface Category {
@@ -31,6 +34,42 @@ export interface Category {
   title: string;
   slug: Slug;
   description?: string;
+  parent?: Category; // Reference to parent category for hierarchical categories
+}
+
+export interface Tag {
+  _id: string;
+  title: string;
+  slug: Slug;
+  description?: string;
+}
+
+// Series for article series
+export interface Series {
+  _id: string;
+  title: string;
+  slug: Slug;
+  description?: string;
+  coverImage?: SanityImage;
+  startDate?: string;
+  endDate?: string;
+  totalPlannedParts?: number;
+  categories?: Category[];
+  tags?: Tag[];
+}
+
+// Series information for a post
+export interface SeriesInfo {
+  seriesRef?: Series;
+  partNumber?: number;
+  partTitle?: string;
+  isFinalPart?: boolean;
+}
+
+// Source for citations
+export interface Source {
+  name: string;
+  url: string;
 }
 
 export interface Post {
@@ -40,12 +79,19 @@ export interface Post {
   mainImage?: SanityImage;
   author?: Author; // Reference to Author type
   publishedAt: string;
+  lastUpdatedAt?: string; // Date when the post was last updated
   body?: any; // Portable Text
   subtitle?: string;
   categories?: Category[]; // Array of referenced Category types
+  tags?: Tag[]; // Array of referenced Tag types
   excerpt?: string;
-  isBreakingNews?: boolean; // Flag for news
+  isBreakingNews?: boolean; // Flag for breaking news (used for Google News standout tag)
+  series?: SeriesInfo; // Series information if this post is part of a series
+  seriesArticles?: Post[]; // Other articles in the same series (populated by GROQ)
   relatedPosts?: any[]; // Array of related posts
+  sources?: Source[]; // Sources cited in the article
+  backstory?: string; // Background information about the article
+  wordCount?: number; // Word count of the article
 }
 
 // You can add more specific types as needed, e.g., for Portable Text blocks

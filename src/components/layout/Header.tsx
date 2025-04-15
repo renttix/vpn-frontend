@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { AlertTriangle, LogIn, Menu, X, Calendar, Clock, Search } from "lucide-react";
 import NewsTicker from "./NewsTicker";
 import NotificationBell from "../notification/NotificationBell";
@@ -11,8 +11,9 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Portal from "@/components/ui/Portal";
+import { cn } from "@/lib/utils";
 
-// Define Category type (matching the one in Layout.tsx)
+// Types
 interface Category {
   _id: string;
   title: string;
@@ -21,23 +22,50 @@ interface Category {
   };
 }
 
-// Update props to include categories
 interface HeaderProps {
   categories: Category[];
 }
 
-export default function Header({ categories = [] }: HeaderProps) {
-  const router = useRouter();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+// Helper functions moved outside component
+const getDisplayTitle = (title: string): string => {
+  const titleLower = title.toLowerCase();
+  if (titleLower === 'crime news') return 'Crime';
+  if (titleLower === 'court news') return 'Court';
+  if (titleLower === 'legal commentary') return 'Commentary';
+  if (titleLower === 'justice watch') return 'Watch';
+  return title;
+};
+
+const getMobileDisplayTitle = (title: string): string => {
+  if (title.toLowerCase() === 'news') {
+    return 'News';
+  }
+  return getDisplayTitle(title);
+};
+
+const sortCategories = (cats: Category[]): Category[] => {
+  return [...cats].sort((a, b) => {
+    // Map original category titles to their desired order
+    const getOrderValue = (title: string): number => {
+      const titleLower = title.toLowerCase();
+      if (titleLower === 'news') return 1;
+      if (titleLower === 'crime news') return 2;
+      if (titleLower === 'court news') return 3;
+      if (titleLower === 'legal commentary') return 4;
+      if (titleLower === 'justice watch') return 5;
+      return 999; // Default for any other categories
+    };
+    
+    return getOrderValue(a.title) - getOrderValue(b.title);
+  });
+};
+
+// Custom hooks
+const useDateTime = () => {
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
-  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Update date and time
   useEffect(() => {
-    // Set initial date
     const updateDateTime = () => {
       const now = new Date();
       const options: Intl.DateTimeFormatOptions = { 
@@ -59,130 +87,235 @@ export default function Header({ categories = [] }: HeaderProps) {
     return () => clearInterval(timer);
   }, []);
 
-  // Track scroll position with debouncing
+  return { currentDate, currentTime };
+};
+
+const useScrollPosition = (threshold = 100) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  
   useEffect(() => {
-    // Only run this effect on the client side
     if (typeof window === 'undefined') return;
     
-    let timeoutId: NodeJS.Timeout | null = null;
-    let lastScrollY = window.scrollY;
-    const scrollThreshold = 100;
-    const bufferZone = 20; // Buffer to prevent flickering near threshold
+    const bufferZone = 20; // Buffer to prevent flickering
+    
+    // Use requestAnimationFrame for better performance
+    let ticking = false;
     
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      // Only change state if we've moved significantly and crossed the threshold with buffer
-      if (
-        (currentScrollY > scrollThreshold + bufferZone && !isScrolled) || 
-        (currentScrollY < scrollThreshold - bufferZone && isScrolled)
-      ) {
-        // Clear any existing timeout
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-        
-        // Set a timeout to update the state after scrolling stops
-        timeoutId = setTimeout(() => {
-          const shouldBeScrolled = currentScrollY > scrollThreshold;
-          if (shouldBeScrolled !== isScrolled) {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const shouldBeScrolled = currentScrollY > threshold;
+          
+          // Only update state if we've crossed the threshold with buffer
+          if (
+            (currentScrollY > threshold + bufferZone && !isScrolled) || 
+            (currentScrollY < threshold - bufferZone && isScrolled)
+          ) {
             setIsScrolled(shouldBeScrolled);
           }
-        }, 50); // Short delay for responsiveness
+          
+          ticking = false;
+        });
+        
+        ticking = true;
       }
-      
-      lastScrollY = currentScrollY;
     };
 
-    // Add scroll event listener
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    // Clean up
     return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isScrolled]);
+  }, [isScrolled, threshold]);
 
-  // Helper to get display title - transform long category names to shorter versions
-  const getDisplayTitle = (title: string): string => {
-    const titleLower = title.toLowerCase();
-    if (titleLower === 'crime news') return 'Crime';
-    if (titleLower === 'court news') return 'Court';
-    if (titleLower === 'legal commentary') return 'Commentary';
-    if (titleLower === 'justice watch') return 'Watch';
-    return title;
-  };
+  return isScrolled;
+};
 
-  // Helper to get mobile display title (shorter for news)
-  const getMobileDisplayTitle = (title: string): string => {
-    if (title.toLowerCase() === 'news') {
-      return 'News';
-    }
-    return getDisplayTitle(title); // Use the main helper for other titles
-  };
-
-  // Sort categories in the desired order: News, Crime, Court, Commentary, Watch
-  const sortCategories = (cats: Category[]): Category[] => {
-    return [...cats].sort((a, b) => {
-      // Map original category titles to their desired order
-      const getOrderValue = (title: string): number => {
-        const titleLower = title.toLowerCase();
-        if (titleLower === 'news') return 1;
-        if (titleLower === 'crime news') return 2;
-        if (titleLower === 'court news') return 3;
-        if (titleLower === 'legal commentary') return 4;
-        if (titleLower === 'justice watch') return 5;
-        return 999; // Default for any other categories
-      };
-      
-      return getOrderValue(a.title) - getOrderValue(b.title);
-    });
-  };
-
-  // Sort the categories
-  const sortedCategories = sortCategories(categories);
+export default function Header({ categories = [] }: HeaderProps) {
+  const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { currentDate, currentTime } = useDateTime();
+  const isScrolled = useScrollPosition(100);
+  
+  // Refs for accessibility
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  
+  // Memoized sorted categories - filter out Justice Watch
+  const sortedCategories = useMemo(() => {
+    // Filter out Justice Watch category
+    const filteredCategories = categories.filter(
+      category => category.title.toLowerCase() !== 'justice watch'
+    );
+    return sortCategories(filteredCategories);
+  }, [categories]);
 
   // Handle search submission
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       setSearchOpen(false);
       router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
+  }, [searchQuery, router]);
+  
+  // Toggle mobile menu with accessibility
+  const toggleMobileMenu = useCallback(() => {
+    setMobileMenuOpen(prev => !prev);
+    // Announce to screen readers
+    if (!mobileMenuOpen) {
+      // Focus the first menu item when opening
+      setTimeout(() => {
+        const firstMenuItem = mobileMenuRef.current?.querySelector('a');
+        if (firstMenuItem) {
+          (firstMenuItem as HTMLElement).focus();
+        }
+      }, 100);
+    }
+  }, [mobileMenuOpen]);
+  
+  // Toggle search with accessibility
+  const toggleSearch = useCallback(() => {
+    setSearchOpen(prev => !prev);
+    if (!searchOpen) {
+      // Focus the search input when opening
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 100);
+    }
+  }, [searchOpen]);
+  
+  // Handle escape key for modals
+  useEffect(() => {
+    const handleEscKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (searchOpen) setSearchOpen(false);
+        if (mobileMenuOpen) setMobileMenuOpen(false);
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscKey);
+    return () => window.removeEventListener('keydown', handleEscKey);
+  }, [searchOpen, mobileMenuOpen]);
+
+  // Announce header state change to screen readers
+  useEffect(() => {
+    // This would ideally use a live region, but for now we'll just log
+    // In a real implementation, you'd use an ARIA live region
+    console.log(`Header is now ${isScrolled ? 'compact' : 'expanded'}`);
+  }, [isScrolled]);
+
+  // Render category link based on type
+  const renderCategoryLink = (category: Category, isMobile = false, isCompact = false) => {
+    const isJusticeWatch = category.title.toLowerCase() === 'justice watch';
+    const isNews = category.title.toLowerCase() === 'news';
+    const displayTitle = isMobile ? getMobileDisplayTitle(category.title) : getDisplayTitle(category.title);
+    const href = isJusticeWatch 
+      ? "/justice-watch" 
+      : `/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}`;
+    
+    // Determine if this is the current category based on URL
+    const isCurrent = typeof window !== 'undefined' 
+      ? window.location.pathname === href 
+      : false;
+    
+    return (
+      <Link
+        key={category._id}
+        href={href}
+        className={cn(
+          "text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white",
+          isMobile ? "text-xs font-medium" : "flex items-center",
+          !isMobile && !isCompact && "py-1 px-2 newspaper-nav-item"
+        )}
+        aria-current={isCurrent ? "page" : undefined}
+        aria-label={displayTitle}
+      >
+        {isJusticeWatch && !isMobile && (
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 24 24" 
+            width={isCompact ? 12 : 14}
+            height={isCompact ? 12 : 14}
+            className="mr-1 fill-current" 
+            aria-hidden="true"
+          >
+            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+          </svg>
+        )}
+        {isNews && !isMobile && (
+          <AlertTriangle 
+            size={isCompact ? 12 : 14} 
+            className="mr-1 text-vpn-red" 
+            aria-hidden="true" 
+          />
+        )}
+        <span>{displayTitle}</span>
+      </Link>
+    );
   };
 
   return (
-    <header className={`bg-background border-b border-border sticky top-0 z-40 w-full newspaper-header transition-all duration-300 ${isScrolled ? 'header-compact' : ''}`} role="banner" aria-label="Site header">
+    <header 
+      className={cn(
+        "bg-background border-b border-border sticky top-0 z-40 w-full newspaper-header",
+        "transition-all duration-300 ease-in-out",
+        isScrolled && "header-compact"
+      )} 
+      role="banner" 
+      aria-label="Site header"
+    >
       {/* Breaking news ticker - always visible */}
       <NewsTicker />
 
       {/* Date and utility bar - hidden when scrolled */}
-      <div className={`date-utility-bar border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-xs py-1 transition-all duration-300 ${isScrolled ? 'header-section-hidden' : 'header-section-visible'}`}>
+      <div 
+        className={cn(
+          "date-utility-bar border-b border-gray-200 dark:border-gray-700",
+          "bg-gray-50 dark:bg-gray-900 text-xs py-1.5",
+          "transition-all duration-300 ease-in-out",
+          isScrolled ? "header-section-hidden" : "header-section-visible"
+        )}
+        aria-hidden={isScrolled}
+      >
         <div className="container mx-auto flex justify-between items-center px-3 sm:px-4">
           <div className="flex items-center space-x-3">
             <div className="flex items-center">
-              <Calendar size={12} className="mr-1 text-vpn-gray-light dark:text-gray-300" />
+              <Calendar size={12} className="mr-1 text-vpn-gray-light dark:text-gray-300" aria-hidden="true" />
               <span className="text-vpn-gray-light dark:text-gray-300">{currentDate}</span>
             </div>
             <div className="flex items-center">
-              <Clock size={12} className="mr-1 text-vpn-gray-light dark:text-gray-300" />
+              <Clock size={12} className="mr-1 text-vpn-gray-light dark:text-gray-300" aria-hidden="true" />
               <span className="text-vpn-gray-light dark:text-gray-300">{currentTime}</span>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Link href="/newsletters" className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white">
+            <Link 
+              href="/newsletters" 
+              className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white transition-colors"
+            >
               Newsletters
             </Link>
-            <span className="text-vpn-gray-light dark:text-gray-300">|</span>
-            <Link href="/contact-us" className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white">
+            <span className="text-vpn-gray-light dark:text-gray-300" aria-hidden="true">|</span>
+            <Link 
+              href="/contact-us" 
+              className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white transition-colors"
+            >
               Contact
             </Link>
-            <span className="text-vpn-gray-light dark:text-gray-300">|</span>
-            <a href="https://vpnnews.sanity.studio/" target="_blank" rel="noopener noreferrer" className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white flex items-center">
-              <LogIn className="h-3 w-3 mr-1" />
+            <span className="text-vpn-gray-light dark:text-gray-300" aria-hidden="true">|</span>
+            <a 
+              href="https://vpnnews.sanity.studio/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white transition-colors flex items-center"
+            >
+              <LogIn className="h-3 w-3 mr-1" aria-hidden="true" />
               Creator Login
             </a>
           </div>
@@ -192,11 +325,19 @@ export default function Header({ categories = [] }: HeaderProps) {
       {/* Main header with logo and navigation */}
       <div className="container mx-auto">
         {/* Masthead area - hidden when scrolled */}
-        <div className={`masthead-area py-3 px-3 sm:px-4 flex flex-col items-center border-b border-gray-200 dark:border-gray-700 transition-all duration-300 ${isScrolled ? 'header-section-hidden' : 'header-section-visible'}`}>
+        <div 
+          className={cn(
+            "masthead-area py-4 px-3 sm:px-4 flex flex-col items-center",
+            "border-b border-gray-200 dark:border-gray-700",
+            "transition-all duration-300 ease-in-out",
+            isScrolled ? "header-section-hidden" : "header-section-visible"
+          )}
+          aria-hidden={isScrolled}
+        >
           {/* Logo and Sponsor Row */}
-          <div className="w-full flex justify-between items-center mb-1">
+          <div className="w-full flex justify-between items-center mb-2">
             {/* Logo/Masthead */}
-            <Link href="/" className="flex-shrink-0">
+            <Link href="/" className="flex-shrink-0" aria-label="VPN News Home">
               <div className="relative h-16 w-48 flex items-center justify-center">
                 <Image
                   src="/images/vpn-logo-black.png"
@@ -205,6 +346,7 @@ export default function Header({ categories = [] }: HeaderProps) {
                   height={64}
                   className="block dark:hidden"
                   priority
+                  style={{ height: "auto", width: "auto", maxWidth: "200px", maxHeight: "64px" }}
                 />
                 <Image
                   src="/images/vpn-logo-white.png"
@@ -213,7 +355,7 @@ export default function Header({ categories = [] }: HeaderProps) {
                   height={64}
                   className="hidden dark:block"
                   priority
-                  style={{ filter: 'brightness(1)' }}
+                  style={{ height: "auto", width: "auto", maxWidth: "200px", maxHeight: "64px", filter: 'brightness(1)' }}
                 />
               </div>
             </Link>
@@ -223,31 +365,47 @@ export default function Header({ categories = [] }: HeaderProps) {
           </div>
           
           {/* Action buttons row - centered */}
-          <div className="flex items-center justify-center space-x-3 mt-1 mb-1">
+          <div className="flex items-center justify-center space-x-4 mt-2 mb-2">
             <Link
               href="/membership"
-              className="bg-vpn-red text-white text-xs font-bold py-1.5 px-4 rounded-sm hover:bg-opacity-90 transition-colors"
+              className="bg-vpn-red text-white text-xs font-bold py-2 px-5 rounded-sm hover:bg-opacity-90 transition-colors focus:ring-2 focus:ring-vpn-red focus:ring-opacity-50 focus:outline-none"
+              aria-label="Subscribe to VPN News"
             >
               SUBSCRIBE
             </Link>
             
-            <div className="flex items-center space-x-2 text-vpn-gray dark:text-gray-300">
+            <div className="flex items-center space-x-3 text-vpn-gray dark:text-gray-300">
               <ThemeToggle />
               <NotificationBell />
-              <SearchAutocomplete />
+              <button
+                onClick={toggleSearch}
+                className="p-1 hover:text-vpn-blue dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-vpn-blue rounded-sm"
+                aria-label="Open search"
+                aria-expanded={searchOpen}
+                aria-controls="search-modal"
+              >
+                <Search size={18} />
+              </button>
             </div>
           </div>
           
           {/* Tagline */}
-          <p className="text-vpn-gray dark:text-gray-300 italic text-sm">
+          <p className="text-vpn-gray dark:text-gray-300 italic text-sm mt-1">
             Reporting the Truth from the Courtroom Out
           </p>
         </div>
 
         {/* Compact header - visible only when scrolled */}
-        <div className={`compact-header hidden md:flex justify-between items-center py-2 px-4 transition-all duration-300 ${isScrolled ? 'header-section-visible' : 'header-section-hidden'}`}>
+        <div 
+          className={cn(
+            "compact-header hidden md:flex justify-between items-center py-2 px-4",
+            "transition-all duration-300 ease-in-out shadow-sm",
+            isScrolled ? "header-section-visible" : "header-section-hidden"
+          )}
+          aria-hidden={!isScrolled}
+        >
           <div className="flex items-center space-x-4">
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center" aria-label="VPN News Home">
               <div className="relative h-8 w-20 flex items-center justify-center">
                 <Image
                   src="/images/vpn-logo-black.png"
@@ -256,6 +414,7 @@ export default function Header({ categories = [] }: HeaderProps) {
                   height={32}
                   className="block dark:hidden"
                   priority
+                  style={{ height: "auto", width: "auto", maxWidth: "80px", maxHeight: "32px" }}
                 />
                 <Image
                   src="/images/vpn-logo-white.png"
@@ -264,66 +423,40 @@ export default function Header({ categories = [] }: HeaderProps) {
                   height={32}
                   className="hidden dark:block"
                   priority
-                  style={{ filter: 'brightness(1)' }}
+                  style={{ height: "auto", width: "auto", maxWidth: "80px", maxHeight: "32px", filter: 'brightness(1)' }}
                 />
               </div>
             </Link>
             
-            {/* Logo spacer */}
-            <div></div>
+            {/* Subscribe button in compact header */}
+            <Link
+              href="/membership"
+              className="bg-vpn-red text-white text-xs font-bold py-1.5 px-3 rounded-sm hover:bg-opacity-90 transition-colors focus:ring-2 focus:ring-vpn-red focus:ring-opacity-50 focus:outline-none"
+              aria-label="Subscribe to VPN News"
+            >
+              SUBSCRIBE
+            </Link>
           </div>
           
           <div className="flex items-center space-x-4">
-            <div className="flex space-x-6 text-sm font-medium uppercase">
-              {sortedCategories && sortedCategories.slice(0, 5).map((category) => {
-                // Special case for Justice Watch category
-                if (category.title.toLowerCase() === 'justice watch') {
-                  return (
-                    <Link
-                      key={category._id}
-                      href="/justice-watch"
-                      className="text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white flex items-center"
-                    >
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        width="12" 
-                        height="12" 
-                        className="mr-1 fill-current" 
-                        aria-hidden="true"
-                      >
-                        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
-                      </svg>
-                      <span>Watch</span>
-                    </Link>
-                  );
-                }
-                
-                // Regular categories
-                return (
-                  <Link
-                    key={category._id}
-                    href={`/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}`}
-                    className="text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white flex items-center"
-                  >
-                    {category.title.toLowerCase() === 'news' && (
-                      <AlertTriangle size={12} className="mr-1 text-vpn-red" />
-                    )}
-                    <span>{getDisplayTitle(category.title)}</span>
-                  </Link>
-                );
-              })}
-              {/* Marketplace link in compact header */}
-              <Link
-                href="/marketplace"
-                className="text-vpn-blue dark:text-white hover:text-vpn-blue dark:hover:text-blue-400 flex items-center"
-              >
-                <span>Marketplace</span>
-              </Link>
-            </div>
+            <nav className="flex space-x-6 text-sm font-medium uppercase" aria-label="Main navigation (compact)">
+              {sortedCategories.slice(0, 5).map((category) => (
+                renderCategoryLink(category, false, true)
+              ))}
+              
+              {/* Marketplace link removed */}
+            </nav>
             
-            <div className="flex items-center space-x-2">
-              <SearchAutocomplete />
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={toggleSearch}
+                className="p-1 hover:text-vpn-blue dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-vpn-blue rounded-sm text-vpn-gray dark:text-gray-300"
+                aria-label="Open search"
+                aria-expanded={searchOpen}
+                aria-controls="search-modal"
+              >
+                <Search size={18} />
+              </button>
               <ThemeToggle />
               <NotificationBell />
             </div>
@@ -332,10 +465,15 @@ export default function Header({ categories = [] }: HeaderProps) {
 
         {/* Main navigation menu - desktop, hidden when scrolled */}
         <nav 
-          className={`main-navigation hidden md:block py-2 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 transition-all duration-300 ${isScrolled ? 'header-section-hidden' : 'header-section-visible'}`} 
+          className={cn(
+            "main-navigation hidden md:block py-2 border-b border-gray-200 dark:border-gray-700",
+            "bg-gray-50 dark:bg-gray-900 transition-all duration-300",
+            isScrolled ? "header-section-hidden" : "header-section-visible"
+          )}
           role="navigation" 
           aria-label="Main navigation"
           id="main-navigation"
+          aria-hidden={isScrolled}
         >
           <div className="container mx-auto px-4">
             <ul 
@@ -344,70 +482,25 @@ export default function Header({ categories = [] }: HeaderProps) {
               aria-label="Main menu"
             >
               {/* Dynamic categories from CMS */}
-              {sortedCategories && sortedCategories.map((category) => {
+              {sortedCategories.map((category) => {
+                const isJusticeWatch = category.title.toLowerCase() === 'justice watch';
+                const href = isJusticeWatch 
+                  ? "/justice-watch" 
+                  : `/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}`;
+                
                 // Determine if this is the current category based on URL
-                const isCurrent = typeof window !== 'undefined' ? 
-                  window.location.pathname === `/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}` : false;
+                const isCurrent = typeof window !== 'undefined' 
+                  ? window.location.pathname === href 
+                  : false;
                 
-                // Special case for Justice Watch category
-                if (category.title.toLowerCase() === 'justice watch') {
-                  return (
-                    <li 
-                      key={category._id}
-                      role="none"
-                    >
-                      <Link
-                        href="/justice-watch"
-                        className="text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white flex items-center py-1 px-2 newspaper-nav-item"
-                        role="menuitem"
-                        aria-current={typeof window !== 'undefined' ? window.location.pathname === '/justice-watch' ? "page" : undefined : undefined}
-                      >
-                        <svg 
-                          xmlns="http://www.w3.org/2000/svg" 
-                          viewBox="0 0 24 24" 
-                          width="14" 
-                          height="14" 
-                          className="mr-1 fill-current" 
-                          aria-hidden="true"
-                        >
-                          <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
-                        </svg>
-                        <span>Watch</span>
-                      </Link>
-                    </li>
-                  );
-                }
-                
-                // Regular categories
                 return (
-                  <li 
-                    key={category._id}
-                    role="none"
-                  >
-                    <Link
-                      href={`/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white flex items-center py-1 px-2 newspaper-nav-item"
-                      role="menuitem"
-                      aria-current={isCurrent ? "page" : undefined}
-                    >
-                      {category.title.toLowerCase() === 'news' && (
-                        <AlertTriangle size={14} className="mr-1 text-vpn-red" aria-hidden="true" />
-                      )}
-                      <span>{getDisplayTitle(category.title)}</span>
-                    </Link>
+                  <li key={category._id} role="none">
+                    {renderCategoryLink(category)}
                   </li>
                 );
               })}
-              {/* Marketplace menu item */}
-              <li role="none">
-                <Link
-                  href="/marketplace"
-                  className="text-vpn-blue dark:text-white hover:text-vpn-blue dark:hover:text-blue-400 flex items-center py-1 px-2 newspaper-nav-item"
-                  role="menuitem"
-                >
-                  <span>Marketplace</span>
-                </Link>
-              </li>
+              
+              {/* Marketplace menu item removed */}
             </ul>
           </div>
         </nav>
@@ -415,8 +508,8 @@ export default function Header({ categories = [] }: HeaderProps) {
         {/* Mobile navigation and menu button */}
         <div className="md:hidden flex justify-between items-center py-2 px-3 border-t border-gray-200 dark:border-gray-700">
           <button
-            className="text-vpn-gray dark:text-gray-300"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-vpn-gray dark:text-gray-300 flex items-center focus:outline-none focus:ring-2 focus:ring-vpn-blue rounded-sm"
+            onClick={toggleMobileMenu}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
@@ -430,37 +523,9 @@ export default function Header({ categories = [] }: HeaderProps) {
             role="navigation"
             aria-label="Quick category access"
           >
-            {sortedCategories && sortedCategories.slice(0, 3).map((category) => {
-              // Determine if this is the current category based on URL
-              const isCurrent = typeof window !== 'undefined' ? 
-                window.location.pathname === `/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}` : false;
-              
-              // Special case for Justice Watch category
-              if (category.title.toLowerCase() === 'justice watch') {
-                return (
-                  <Link
-                    key={category._id}
-                    href="/justice-watch"
-                    className="text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white text-xs font-medium"
-                    aria-current={typeof window !== 'undefined' ? window.location.pathname === '/justice-watch' ? "page" : undefined : undefined}
-                  >
-                    Watch
-                  </Link>
-                );
-              }
-              
-              // Regular categories
-              return (
-                <Link
-                  key={category._id}
-                  href={`/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white text-xs font-medium"
-                  aria-current={isCurrent ? "page" : undefined}
-                >
-                  {getMobileDisplayTitle(category.title)}
-                </Link>
-              );
-            })}
+            {sortedCategories.slice(0, 3).map((category) => (
+              renderCategoryLink(category, true)
+            ))}
           </div>
         </div>
 
@@ -471,29 +536,32 @@ export default function Header({ categories = [] }: HeaderProps) {
             className="md:hidden bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700"
             role="menu"
             aria-label="Mobile navigation menu"
+            ref={mobileMenuRef}
           >
             <ul 
               className="grid grid-cols-2 gap-2 p-4"
               role="menu"
             >
-              {sortedCategories && sortedCategories.map((category) => {
-                // Determine if this is the current category based on URL
-                const isCurrent = typeof window !== 'undefined' ? 
-                  window.location.pathname === `/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}` : false;
+              {sortedCategories.map((category) => {
+                const isJusticeWatch = category.title.toLowerCase() === 'justice watch';
+                const href = isJusticeWatch 
+                  ? "/justice-watch" 
+                  : `/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}`;
                 
-                // Special case for Justice Watch category
-                if (category.title.toLowerCase() === 'justice watch') {
-                  return (
-                    <li 
-                      key={category._id}
-                      role="none"
+                // Determine if this is the current category based on URL
+                const isCurrent = typeof window !== 'undefined' 
+                  ? window.location.pathname === href 
+                  : false;
+                
+                return (
+                  <li key={category._id} role="none">
+                    <Link
+                      href={href}
+                      className="block py-2 px-3 text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white text-sm font-medium border-b border-gray-200 dark:border-gray-700"
+                      role="menuitem"
+                      aria-current={isCurrent ? "page" : undefined}
                     >
-                      <Link
-                        href="/justice-watch"
-                        className="block py-2 px-3 text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white text-sm font-medium border-b border-gray-200 dark:border-gray-700"
-                        role="menuitem"
-                        aria-current={typeof window !== 'undefined' ? window.location.pathname === '/justice-watch' ? "page" : undefined : undefined}
-                      >
+                      {isJusticeWatch ? (
                         <div className="flex items-center">
                           <svg 
                             xmlns="http://www.w3.org/2000/svg" 
@@ -507,28 +575,15 @@ export default function Header({ categories = [] }: HeaderProps) {
                           </svg>
                           <span>Watch</span>
                         </div>
-                      </Link>
-                    </li>
-                  );
-                }
-                
-                // Regular categories
-                return (
-                  <li 
-                    key={category._id}
-                    role="none"
-                  >
-                    <Link
-                      href={`/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="block py-2 px-3 text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white text-sm font-medium border-b border-gray-200 dark:border-gray-700"
-                      role="menuitem"
-                      aria-current={isCurrent ? "page" : undefined}
-                    >
-                      {getDisplayTitle(category.title)}
+                      ) : (
+                        getDisplayTitle(category.title)
+                      )}
                     </Link>
                   </li>
                 );
               })}
+              
+              {/* Additional menu items */}
               <li role="none">
                 <Link 
                   href="/about" 
@@ -565,15 +620,7 @@ export default function Header({ categories = [] }: HeaderProps) {
                   Privacy Policy
                 </Link>
               </li>
-              <li role="none">
-                <Link 
-                  href="/marketplace" 
-                  className="block py-2 px-3 text-vpn-blue dark:text-white hover:text-vpn-blue dark:hover:text-blue-400 text-sm font-medium border-b border-gray-200 dark:border-gray-700"
-                  role="menuitem"
-                >
-                  Marketplace
-                </Link>
-              </li>
+              {/* Marketplace menu item removed */}
             </ul>
           </div>
         )}
@@ -602,6 +649,7 @@ export default function Header({ categories = [] }: HeaderProps) {
                         className="flex-grow px-4 py-2 border border-border rounded-l-md focus:outline-none focus:ring-2 focus:ring-vpn-blue dark:bg-gray-700 dark:text-white"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
+                        ref={searchInputRef}
                       />
                       <button
                         type="submit"

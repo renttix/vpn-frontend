@@ -8,7 +8,8 @@ import { SessionProvider } from "@/components/auth/SessionProvider";
 import NotificationBanner from "@/components/notification/NotificationBanner";
 import CookieBanner from "@/components/cookies/CookieBanner";
 import { CookieConsentProvider, useCookieConsent } from "@/contexts/CookieConsentContext";
-import { pageview, initializeGA } from "@/lib/analytics";
+import { TextSizeProvider } from "@/contexts/TextSizeContext";
+import { pageview, initializeGA, trackOutboundLinks, trackScrollDepth } from "@/lib/analytics";
 import { sendToAnalytics } from "@/lib/vitals";
 
 // Inner component that has access to the CookieConsent context
@@ -21,15 +22,24 @@ function ClientBodyInner({ children }: { children: React.ReactNode }) {
   // Report Web Vitals
   useReportWebVitals(sendToAnalytics);
   
-  // Initialize Google Analytics and track page views
+  // Initialize Google Analytics with enhanced tracking
   useEffect(() => {
     // Initialize Google Analytics if consent is given
     initializeGA();
     
-    // Track page views
+    // Track page views with enhanced data
     if (pathname) {
       const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
-      pageview(url);
+      const pageTitle = document.title;
+      
+      // Track the page view with title
+      pageview(url, pageTitle);
+      
+      // Initialize scroll depth tracking
+      trackScrollDepth();
+      
+      // Initialize outbound link tracking
+      trackOutboundLinks();
     }
   }, [pathname, searchParams, consent]);
   
@@ -57,7 +67,9 @@ export default function ClientBody({
   return (
     <SessionProvider>
       <CookieConsentProvider>
-        <ClientBodyInner>{children}</ClientBodyInner>
+        <TextSizeProvider>
+          <ClientBodyInner>{children}</ClientBodyInner>
+        </TextSizeProvider>
       </CookieConsentProvider>
     </SessionProvider>
   );

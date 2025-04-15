@@ -1,6 +1,7 @@
 import React from 'react';
 import Script from 'next/script';
 import { Post, Author, Category } from '@/types/sanity';
+import { calculateReadingTime } from '@/lib/utils';
 
 interface ArticleJsonLdProps {
   article: Post;
@@ -26,6 +27,16 @@ export default function ArticleJsonLd({ article, url }: ArticleJsonLdProps) {
   // Get the author name or default to "VPN Editorial Team"
   const authorName = article.author?.name || "VPN Editorial Team";
 
+  // Calculate word count and reading time
+  const wordCount = article.body ? calculateReadingTime(article.body) * 200 : 0; // Estimate based on reading time
+  
+  // Extract tags from the article
+  const tags = article.tags?.map(tag => tag.title) || [];
+  
+  // Add categories to keywords
+  const categories = article.categories?.map(cat => cat.title) || [];
+  const keywords = [...categories, ...tags].filter(Boolean);
+  
   // Create the JSON-LD schema
   const jsonLd = {
     "@context": "https://schema.org",
@@ -43,11 +54,15 @@ export default function ArticleJsonLd({ article, url }: ArticleJsonLdProps) {
         ] 
       : ["https://cdn.sanity.io/images/g7f0f6rs/production/7c647c54f6f6997b2d1ae4301f5b9bac3587b478-1000x525.jpg"],
     "datePublished": formatDate(article.publishedAt),
-    "dateModified": formatDate(article.publishedAt), // Use published date if no modified date available
+    "dateModified": article.lastUpdatedAt ? formatDate(article.lastUpdatedAt) : formatDate(article.publishedAt),
     "author": {
       "@type": "Person",
       "name": authorName,
-      "url": article.author?.slug ? `https://vpnnews.com/author/${article.author.slug.current}` : "https://vpnnews.com/about"
+      "url": article.author?.slug ? `https://vpnnews.com/author/${article.author.slug.current}` : "https://vpnnews.com/about",
+      "jobTitle": article.author?.jobTitle || "Journalist",
+      "description": article.author?.bio ? "Legal journalist and analyst" : undefined,
+      "knowsAbout": categories.length > 0 ? categories : ["Legal News", "Crime Reporting"],
+      "sameAs": article.author?.socialLinks || []
     },
     "publisher": {
       "@type": "Organization",
@@ -57,17 +72,30 @@ export default function ArticleJsonLd({ article, url }: ArticleJsonLdProps) {
         "url": "https://cdn.sanity.io/images/g7f0f6rs/production/7c647c54f6f6997b2d1ae4301f5b9bac3587b478-1000x525.jpg",
         "width": 600,
         "height": 60
-      }
+      },
+      "url": "https://vpnnews.com",
+      "sameAs": [
+        "https://twitter.com/vpnnews",
+        "https://facebook.com/vpnnews",
+        "https://linkedin.com/company/vpnnews"
+      ],
+      "foundingDate": "2020-01-01",
+      "publishingPrinciples": "https://vpnnews.com/editorial-standards",
+      "diversityPolicy": "https://vpnnews.com/diversity-policy",
+      "ethicsPolicy": "https://vpnnews.com/ethics-policy",
+      "correctionsPolicy": "https://vpnnews.com/corrections-policy"
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": url
     },
     "articleSection": categoryName,
+    "articleBody": article.excerpt || "",
+    "wordCount": wordCount,
     "isAccessibleForFree": "True",
     "speakable": {
       "@type": "SpeakableSpecification",
-      "cssSelector": ["h1", ".article-body"]
+      "cssSelector": ["h1", ".article-content", "p.lead"]
     },
     // Google News specific properties
     "inLanguage": "en-US",
@@ -76,7 +104,7 @@ export default function ArticleJsonLd({ article, url }: ArticleJsonLdProps) {
       "@type": "Organization",
       "name": "Video Production News"
     },
-    "keywords": article.categories ? article.categories.map((cat: any) => cat.title).join(', ') : categoryName,
+    "keywords": keywords.join(', '),
     "printSection": categoryName,
     "printEdition": new Date(article.publishedAt || new Date()).toISOString().split('T')[0],
     "isPartOf": {
@@ -87,7 +115,36 @@ export default function ArticleJsonLd({ article, url }: ArticleJsonLdProps) {
         "name": "Video Production News",
         "issn": "2767-5874" // Example ISSN, replace with actual if available
       }
-    }
+    },
+    // Additional properties for Google News
+    "accessibilityAPI": "ARIA",
+    "accessibilityControl": ["fullKeyboardControl", "fullMouseControl"],
+    "accessibilityFeature": [
+      "alternativeText",
+      "readingOrder",
+      "structuralNavigation",
+      "tableOfContents",
+      "highContrast"
+    ],
+    "accessibilityHazard": ["noFlashingHazard", "noMotionSimulationHazard", "noSoundHazard"],
+    "alternativeHeadline": article.subtitle || article.title,
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "Public",
+      "geographicArea": {
+        "@type": "AdministrativeArea",
+        "name": "United Kingdom"
+      }
+    },
+    "citation": article.sources?.map((source: any) => ({
+      "@type": "CreativeWork",
+      "name": source.name,
+      "url": source.url
+    })) || [],
+    "backstory": article.backstory || undefined,
+    "educationalUse": "Research",
+    "timeRequired": `PT${Math.max(1, Math.ceil(wordCount / 200))}M`,
+    "archivedAt": `https://web.archive.org/web/*/https://vpnnews.com/${article.slug?.current || ''}`
   };
 
   return (

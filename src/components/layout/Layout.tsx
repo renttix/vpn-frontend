@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import NotificationBanner from "../notification/NotificationBanner";
 import BackToTopButton from "../ui/BackToTopButton";
 import TipReferrer from "../tip/TipReferrer";
+import SiteNavigationJsonLd, { generateNavigationItems } from "../seo/SiteNavigationJsonLd";
 import { useEffect, useState } from "react";
 import { registerServiceWorker } from "@/lib/notification";
 
@@ -40,6 +41,9 @@ export default function Layout({ children, categories }: LayoutProps) { // Destr
     }
   }, []);
 
+  // Generate navigation items for structured data
+  const navigationItems = generateNavigationItems(categories);
+
   return (
     <div className="flex flex-col min-h-screen bg-background font-body">
       {/* Skip to content link for keyboard users */}
@@ -49,6 +53,9 @@ export default function Layout({ children, categories }: LayoutProps) { // Destr
       >
         Skip to content
       </a>
+      
+      {/* Structured data for site navigation */}
+      <SiteNavigationJsonLd items={navigationItems} />
       
       {/* Pass categories down to Header */}
       <Header categories={categories} />

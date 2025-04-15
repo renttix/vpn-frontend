@@ -12,6 +12,7 @@ import {
   updateCookieConsent,
   hasConsentBeenGiven
 } from '@/lib/cookies';
+import { GA_MEASUREMENT_ID } from '@/lib/analytics';
 
 // Context interface
 interface CookieConsentContextType {
@@ -57,6 +58,15 @@ export function CookieConsentProvider({ children }: CookieConsentProviderProps) 
     const updatedConsent = acceptAllCookies();
     setConsent(updatedConsent);
     setHasConsented(true);
+    
+    // Update Google Analytics consent
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('consent', 'update', {
+        analytics_storage: 'granted',
+        ad_storage: 'granted',
+        personalization_storage: 'granted'
+      });
+    }
   };
 
   // Accept only essential cookies
@@ -64,6 +74,15 @@ export function CookieConsentProvider({ children }: CookieConsentProviderProps) 
     const updatedConsent = acceptEssentialCookies();
     setConsent(updatedConsent);
     setHasConsented(true);
+    
+    // Update Google Analytics consent
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('consent', 'update', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        personalization_storage: 'denied'
+      });
+    }
   };
 
   // Update specific cookie categories
@@ -71,6 +90,15 @@ export function CookieConsentProvider({ children }: CookieConsentProviderProps) 
     const updatedConsent = updateCookieConsent(categories);
     setConsent(updatedConsent);
     setHasConsented(true);
+    
+    // Update Google Analytics consent based on analytics category
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('consent', 'update', {
+        analytics_storage: categories.analytics ? 'granted' : 'denied',
+        ad_storage: categories.marketing ? 'granted' : 'denied',
+        personalization_storage: categories.preferences ? 'granted' : 'denied'
+      });
+    }
   };
 
   // Check if a specific cookie category is allowed
@@ -90,6 +118,32 @@ export function CookieConsentProvider({ children }: CookieConsentProviderProps) 
         return false;
     }
   };
+
+  // Initialize Google Analytics consent mode
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.gtag) {
+      // Set default consent before GA loads
+      window.dataLayer = window.dataLayer || [];
+      function gtag(...args: any[]) {
+        window.dataLayer.push(arguments);
+      }
+      window.gtag = gtag;
+      
+      // Initialize consent mode with default settings
+      gtag('consent', 'default', {
+        'analytics_storage': consent.analytics ? 'granted' : 'denied',
+        'ad_storage': consent.marketing ? 'granted' : 'denied',
+        'personalization_storage': consent.preferences ? 'granted' : 'denied',
+        'wait_for_update': 500 // Wait for user input for up to 500ms
+      });
+      
+      // Initialize GA with consent mode
+      gtag('js', new Date());
+      gtag('config', GA_MEASUREMENT_ID, {
+        'anonymize_ip': true
+      });
+    }
+  }, [consent.analytics, consent.marketing, consent.preferences]);
 
   // Context value
   const value = {

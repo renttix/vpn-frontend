@@ -38,12 +38,14 @@ const nextConfig = {
         hostname: 'via.placeholder.com',
       },
     ],
-    // Comment out for development
-    // unoptimized: true, // Required for 'output: export'
+    // Enable unoptimized for local development to fix image loading issues
+    unoptimized: process.env.NODE_ENV === 'development', // Use unoptimized in development
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60,
+    dangerouslyAllowSVG: true, // Allow SVG images
+    contentDispositionType: 'attachment', // Helps with some image loading issues
   },
   // For static export, uncomment these lines (not recommended for this project)
   // output: 'export',

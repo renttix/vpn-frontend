@@ -99,7 +99,7 @@ export default async function TermsOfUsePage() {
               If you have any questions about these Terms of Use, please contact us at:
             </p>
             <p className="mt-4">
-              <strong>Email:</strong> <a href="mailto:citydesk@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">citydesk@vpnldn.co.uk</a>
+              <strong>Email:</strong> <a href="mailto:info@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">info@vpnldn.co.uk</a>
             </p>
             <p>
               <strong>Postal Address:</strong><br />

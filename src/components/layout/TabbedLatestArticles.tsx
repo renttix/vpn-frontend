@@ -53,7 +53,7 @@ export default function TabbedLatestArticles({
   return (
     <section className="bg-white dark:bg-gray-800 p-6 rounded-sm border border-gray-200 dark:border-gray-700">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h2 className="text-3xl font-heading text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
           LATEST
         </h2>
         

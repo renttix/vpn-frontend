@@ -8,7 +8,7 @@ import logger from '@/lib/logger';
 // Get VAPID keys from environment variables
 const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || 'BLBz5U0ynWG4O3RsQKR-eLmEt0srZSIVM8k-RgFawuO5fFX8PQYCvnE0xKOV9wbVP6j9RK1NKl_rNzFdPeUJUAA';
 const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || 'QD0GhRTY0qgYT0eeXTTYrfj7A7Q9QKsXYP_YrxpnQQA';
-const CONTACT_EMAIL = process.env.VAPID_CONTACT_EMAIL || 'citydesk@vpnldn.co.uk';
+const CONTACT_EMAIL = process.env.VAPID_CONTACT_EMAIL || 'contact@vpnldn.co.uk';
 
 // Only configure web-push with VAPID keys in a browser environment
 // This prevents errors during build time

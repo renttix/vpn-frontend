@@ -1,9 +1,43 @@
+# robots.txt for VPN News
+
+# Allow all crawlers
 User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: https://vpnnews.com/sitemap.xml
-Sitemap: https://vpnnews.com/news-sitemap.xml
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+Disallow: /_next/
 
+# Sitemap location
+Sitemap: https://vpnnews.com/sitemap.xml
+
+# Feed locations
 # RSS Feed
-# Feed available at: https://vpnnews.com/feed.xml
+Feed: https://vpnnews.com/feed.xml
+# JSON Feed
+Feed: https://vpnnews.com/feed.json
+
+# Google News specific
+User-agent: Googlebot-News
+Allow: /
+Disallow: /about
+Disallow: /contact
+Disallow: /privacy-policy
+Disallow: /terms-of-service
+
+# Bing specific
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Yandex specific
+User-agent: Yandex
+Allow: /
+Crawl-delay: 1
+
+# Baidu specific
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 1

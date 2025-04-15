@@ -1,174 +1,102 @@
-import { ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 /**
- * Combines multiple class names and merges Tailwind CSS classes
- * @param inputs - Class names to combine
- * @returns Merged class names
+ * Combines multiple class names into a single string, merging Tailwind CSS classes properly
  */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 /**
- * Calculates the reading time for Portable Text content
- * @param blocks - Portable Text blocks
- * @returns Estimated reading time in minutes
- */
-/**
- * Extracts plain text from Portable Text blocks
- * @param blocks - Portable Text blocks
- * @returns Plain text content
- */
-export function extractTextFromPortableText(blocks: any[]): string {
-  if (!blocks || !Array.isArray(blocks)) {
-    return ''; // Return empty string if no valid blocks
-  }
-  
-  // Process each block and extract text
-  return blocks.map(block => {
-    // Handle text blocks
-    if (block._type === 'block' && block.children) {
-      return block.children
-        .map((child: any) => {
-          if (child._type === 'span' && typeof child.text === 'string') {
-            return child.text;
-          }
-          return '';
-        })
-        .join(' ');
-    }
-    
-    // Skip non-text blocks like images
-    return '';
-  }).join(' ');
-}
-
-export function calculatePortableTextReadingTime(blocks: any[]): number {
-  if (!blocks || !Array.isArray(blocks)) {
-    return 1; // Default to 1 minute if no valid blocks
-  }
-  
-  // Average reading speed (words per minute)
-  const wordsPerMinute = 200;
-  
-  // Count words in all text blocks
-  let wordCount = 0;
-  
-  // Process each block
-  blocks.forEach(block => {
-    // Handle text blocks
-    if (block._type === 'block' && block.children) {
-      block.children.forEach((child: any) => {
-        if (child._type === 'span' && typeof child.text === 'string') {
-          // Count words in text
-          const words = child.text.trim().split(/\s+/).length;
-          wordCount += words;
-        }
-      });
-    }
-    
-    // Add extra time for images (assume 10 seconds per image)
-    if (block._type === 'image') {
-      wordCount += Math.round((10 / 60) * wordsPerMinute);
-    }
-  });
-  
-  // Calculate reading time
-  const readingTime = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
-  
-  return readingTime;
-}
-
-/**
  * Formats a date string into a human-readable format
- * @param dateString - Date string to format
- * @returns Formatted date string
  */
 export function formatDate(dateString: string): string {
-  const date = new Date(dateString);
+  if (!dateString) return 'No date';
   
-  // Check if the date is valid
-  if (isNaN(date.getTime())) {
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (error) {
+    console.error('Error formatting date:', error);
     return 'Invalid date';
   }
-  
-  // Format the date
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(date);
 }
 
 /**
  * Truncates a string to a specified length and adds an ellipsis
- * @param str - String to truncate
- * @param length - Maximum length
- * @returns Truncated string
  */
-export function truncate(str: string, length: number): string {
+export function truncateString(str: string, length: number): string {
   if (!str) return '';
   if (str.length <= length) return str;
+  
   return str.slice(0, length) + '...';
 }
 
 /**
- * Generates a random string of specified length
- * @param length - Length of the random string
- * @returns Random string
+ * Generates a URL-friendly slug from a string
  */
-export function generateRandomString(length: number = 8): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
+export function slugify(text: string): string {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')        // Replace spaces with -
+    .replace(/&/g, '-and-')      // Replace & with 'and'
+    .replace(/[^\w\-]+/g, '')    // Remove all non-word characters
+    .replace(/\-\-+/g, '-');     // Replace multiple - with single -
 }
 
 /**
- * Debounces a function call
- * @param func - Function to debounce
- * @param wait - Wait time in milliseconds
- * @returns Debounced function
+ * Extracts the first image URL from a Portable Text block
  */
-export function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout | null = null;
+export function extractFirstImage(blocks: any[]): string | null {
+  if (!blocks || !Array.isArray(blocks)) return null;
   
-  return function(...args: Parameters<T>) {
-    const later = () => {
-      timeout = null;
-      func(...args);
-    };
-    
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
-
-/**
- * Throttles a function call
- * @param func - Function to throttle
- * @param limit - Limit time in milliseconds
- * @returns Throttled function
- */
-export function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  limit: number
-): (...args: Parameters<T>) => void {
-  let inThrottle = false;
-  
-  return function(...args: Parameters<T>) {
-    if (!inThrottle) {
-      func(...args);
-      inThrottle = true;
-      setTimeout(() => {
-        inThrottle = false;
-      }, limit);
+  for (const block of blocks) {
+    if (block._type === 'image' && block.asset?._ref) {
+      // This is a simplified version - in a real app, you'd need to construct the actual URL
+      return block.asset._ref;
     }
-  };
+    
+    // Check for inline images in block children
+    if (block.children && Array.isArray(block.children)) {
+      for (const child of block.children) {
+        if (child.marks && child.marks.some((mark: string) => mark.startsWith('image-'))) {
+          return child.marks.find((mark: string) => mark.startsWith('image-')).replace('image-', '');
+        }
+      }
+    }
+  }
+  
+  return null;
+}
+
+/**
+ * Calculates reading time for an article based on word count
+ */
+export function calculateReadingTime(content: string | any[]): number {
+  const WORDS_PER_MINUTE = 200;
+  let wordCount = 0;
+  
+  if (typeof content === 'string') {
+    wordCount = content.split(/\s+/).length;
+  } else if (Array.isArray(content)) {
+    // Assuming content is an array of Portable Text blocks
+    for (const block of content) {
+      if (block.children && Array.isArray(block.children)) {
+        for (const child of block.children) {
+          if (child.text) {
+            wordCount += child.text.split(/\s+/).length;
+          }
+        }
+      }
+    }
+  }
+  
+  return Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
 }

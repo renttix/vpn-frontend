@@ -5,6 +5,7 @@ import LatestArticles from "@/components/layout/LatestArticles";
 import TabbedLatestArticles from "@/components/layout/TabbedLatestArticles";
 import CheatSheet from "@/components/layout/CheatSheet";
 import HomeJsonLd from "@/components/seo/HomeJsonLd";
+import OrganizationJsonLd from "@/components/seo/OrganizationJsonLd";
 import LatestNewsSection from "@/components/layout/LatestNewsSection";
 import PopularStoriesList from "@/components/layout/PopularStoriesList";
 import { client } from "@/lib/sanity.client"; // Import the client
@@ -81,21 +82,51 @@ async function getLatestPosts(): Promise<Post[]> {
     });
     console.log("Fetched posts:", posts?.length || 0);
     
-    // Check if posts have the expected structure
+    // Check if posts have the expected structure and filter out invalid ones
     if (posts && posts.length > 0) {
+      // Log warnings for debugging but don't display them in production
       posts.forEach((post: Post, index: number) => {
         if (!post.mainImage || !post.mainImage.asset || !post.mainImage.asset.url) {
-          console.warn(`Post ${index} (${post.title}) is missing mainImage.asset.url`);
+          console.warn(`Post ${index} (${post.title || 'null'}) is missing mainImage.asset.url`);
         }
         if (!post.categories || post.categories.length === 0) {
-          console.warn(`Post ${index} (${post.title}) has no categories`);
+          console.warn(`Post ${index} (${post.title || 'null'}) has no categories`);
         }
       });
+      
+      // Filter out posts with missing required data
+      const validPosts = posts.filter((post: Post) => {
+        // Ensure post has a title
+        if (!post.title) return false;
+        
+        // Ensure post has a valid mainImage
+        if (!post.mainImage || !post.mainImage.asset || !post.mainImage.asset.url) {
+          // Add a placeholder image for posts without images
+          post.mainImage = {
+            asset: {
+              url: '/images/placeholder-news.jpg'
+            }
+          };
+        }
+        
+        // Ensure post has categories
+        if (!post.categories || post.categories.length === 0) {
+          // Add a default category for posts without categories
+          post.categories = [{
+            _id: 'default-news',
+            title: 'News',
+            slug: { current: 'news', _type: 'slug' }
+          }];
+        }
+        
+        return true;
+      });
+      
+      return validPosts;
     } else {
       console.warn("No posts returned from Sanity");
+      return []; // Return empty array if no posts
     }
-    
-    return posts || []; // Return empty array if fetch returns null/undefined
   } catch (error) {
     console.error("Failed to fetch latest posts:", error);
     // Return some default posts to prevent UI failures
@@ -143,7 +174,41 @@ async function getLatestCrimeNews(): Promise<Post[]> {
     });
     console.log("Fetched crime news posts:", posts?.length || 0);
     
-    return posts || []; // Return empty array if fetch returns null/undefined
+    // Check if posts have the expected structure and filter out invalid ones
+    if (posts && posts.length > 0) {
+      // Filter out posts with missing required data
+      const validPosts = posts.filter((post: Post) => {
+        // Ensure post has a title
+        if (!post.title) return false;
+        
+        // Ensure post has a valid mainImage
+        if (!post.mainImage || !post.mainImage.asset || !post.mainImage.asset.url) {
+          // Add a placeholder image for posts without images
+          post.mainImage = {
+            asset: {
+              url: '/images/placeholder-news.jpg'
+            }
+          };
+        }
+        
+        // Ensure post has categories
+        if (!post.categories || post.categories.length === 0) {
+          // Add a default category for posts without categories
+          post.categories = [{
+            _id: 'default-crime',
+            title: 'Crime News',
+            slug: { current: 'crime-news', _type: 'slug' }
+          }];
+        }
+        
+        return true;
+      });
+      
+      return validPosts;
+    } else {
+      console.warn("No crime news posts returned from Sanity");
+      return []; // Return empty array if no posts
+    }
   } catch (error) {
     console.error("Failed to fetch latest crime news:", error);
     // Return some default crime news posts to prevent UI failures
@@ -202,7 +267,41 @@ async function getLatestNewsPosts(headlinesCount: number = 6): Promise<Post[]> {
     });
     console.log("Fetched latest news posts:", posts?.length || 0);
     
-    return posts || []; // Return empty array if fetch returns null/undefined
+    // Check if posts have the expected structure and filter out invalid ones
+    if (posts && posts.length > 0) {
+      // Filter out posts with missing required data
+      const validPosts = posts.filter((post: Post) => {
+        // Ensure post has a title
+        if (!post.title) return false;
+        
+        // Ensure post has a valid mainImage
+        if (!post.mainImage || !post.mainImage.asset || !post.mainImage.asset.url) {
+          // Add a placeholder image for posts without images
+          post.mainImage = {
+            asset: {
+              url: '/images/placeholder-news.jpg'
+            }
+          };
+        }
+        
+        // Ensure post has categories
+        if (!post.categories || post.categories.length === 0) {
+          // Add a default category for posts without categories
+          post.categories = [{
+            _id: 'default-news',
+            title: 'News',
+            slug: { current: 'news', _type: 'slug' }
+          }];
+        }
+        
+        return true;
+      });
+      
+      return validPosts;
+    } else {
+      console.warn("No latest news posts returned from Sanity");
+      return []; // Return empty array if no posts
+    }
   } catch (error) {
     console.error("Failed to fetch latest news posts:", error);
     // Return some default news posts to prevent UI failures
@@ -242,7 +341,42 @@ async function getLatestPostsForTabs(count: number = 6): Promise<Post[]> {
       cache: 'no-store'
     });
     console.log("Fetched posts for tabs:", posts?.length || 0);
-    return posts || [];
+    
+    // Check if posts have the expected structure and filter out invalid ones
+    if (posts && posts.length > 0) {
+      // Filter out posts with missing required data
+      const validPosts = posts.filter((post: Post) => {
+        // Ensure post has a title
+        if (!post.title) return false;
+        
+        // Ensure post has a valid mainImage
+        if (!post.mainImage || !post.mainImage.asset || !post.mainImage.asset.url) {
+          // Add a placeholder image for posts without images
+          post.mainImage = {
+            asset: {
+              url: '/images/placeholder-news.jpg'
+            }
+          };
+        }
+        
+        // Ensure post has categories
+        if (!post.categories || post.categories.length === 0) {
+          // Add a default category for posts without categories
+          post.categories = [{
+            _id: 'default-news',
+            title: 'News',
+            slug: { current: 'news', _type: 'slug' }
+          }];
+        }
+        
+        return true;
+      });
+      
+      return validPosts;
+    } else {
+      console.warn("No posts for tabs returned from Sanity");
+      return []; // Return empty array if no posts
+    }
   } catch (error) {
     console.error("Failed to fetch latest posts for tabs:", error);
     // Return some default posts to prevent UI failures
@@ -281,7 +415,42 @@ async function getLatestPostsByCategory(categoryTitle: string, count: number = 6
       cache: 'no-store'
     });
     console.log(`Fetched ${categoryTitle} posts:`, posts?.length || 0);
-    return posts || [];
+    
+    // Check if posts have the expected structure and filter out invalid ones
+    if (posts && posts.length > 0) {
+      // Filter out posts with missing required data
+      const validPosts = posts.filter((post: Post) => {
+        // Ensure post has a title
+        if (!post.title) return false;
+        
+        // Ensure post has a valid mainImage
+        if (!post.mainImage || !post.mainImage.asset || !post.mainImage.asset.url) {
+          // Add a placeholder image for posts without images
+          post.mainImage = {
+            asset: {
+              url: '/images/placeholder-news.jpg'
+            }
+          };
+        }
+        
+        // Ensure post has categories
+        if (!post.categories || post.categories.length === 0) {
+          // Add a default category for posts without categories
+          post.categories = [{
+            _id: `default-${categoryTitle.toLowerCase().replace(/\s+/g, '-')}`,
+            title: categoryTitle,
+            slug: { current: categoryTitle.toLowerCase().replace(/\s+/g, '-'), _type: 'slug' }
+          }];
+        }
+        
+        return true;
+      });
+      
+      return validPosts;
+    } else {
+      console.warn(`No ${categoryTitle} posts returned from Sanity`);
+      return []; // Return empty array if no posts
+    }
   } catch (error) {
     console.error(`Failed to fetch latest ${categoryTitle} posts:`, error);
     // Return some default posts to prevent UI failures
@@ -310,6 +479,7 @@ export default async function Home() { // Make the component async
     // Pass categories to Layout
     <Layout categories={categories}>
       <HomeJsonLd />
+      <OrganizationJsonLd />
 
       <HeadlinesSection />
       

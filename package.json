@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev -H 0.0.0.0 -p 3000",
-    "build": "next build",
-    "build:netlify": "NEXT_TYPESCRIPT_IGNORE_ERRORS=true next build",
+    "build": "npm run generate-sitemap && npm run generate-feeds && next build",
+    "build:netlify": "npm run generate-sitemap && npm run generate-feeds && NEXT_TYPESCRIPT_IGNORE_ERRORS=true next build",
     "start": "next start",
     "lint": "bunx biome lint --write && bunx tsc --noEmit",
     "format": "bunx biome format --write",
@@ -13,6 +13,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "convert-logos": "node scripts/convert-logos.js",
+    "generate-sitemap": "node scripts/generate-sitemap.js",
+    "generate-feeds": "node scripts/generate-feeds.js",
     "test:netlify": "node test-netlify-build.js",
     "netlify:deploy": "netlify deploy --prod"
   },
