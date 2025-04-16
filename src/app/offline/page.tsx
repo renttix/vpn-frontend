@@ -1,8 +1,11 @@
+
 import React from 'react';
 import Layout from '@/components/layout/Layout';
 import { Metadata } from 'next';
 import { groq } from 'next-sanity';
 import { client } from '@/lib/sanity.client';
+
+export const dynamic = 'force-dynamic';
 
 // Define metadata for the page
 export const metadata: Metadata = {

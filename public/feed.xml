@@ -3,43 +3,33 @@
   <channel>
     <title>Video Production News</title>
     <description>Breaking legal news, court reports, expert analysis on criminal cases, legal developments, and in-depth coverage of high-profile trials.</description>
-    <link>https://vpnnews.com</link>
+    <link>https://www.vpnnews.co.uk</link>
     <language>en</language>
-    <lastBuildDate>Tue, 15 Apr 2025 13:08:38 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 16 Apr 2025 09:13:00 GMT</lastBuildDate>
     <copyright>© 2025 Video Production News</copyright>
-    <atom:link href="https://vpnnews.com/feed.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://www.vpnnews.co.uk/feed.xml" rel="self" type="application/rss+xml" />
     <image>
-      <url>https://vpnnews.com/images/og-image.jpg</url>
+      <url>https://www.vpnnews.co.uk/images/og-image.jpg</url>
       <title>Video Production News</title>
-      <link>https://vpnnews.com</link>
+      <link>https://www.vpnnews.co.uk</link>
     </image>
     <item>
-      <title>WoolyO Gang Jailed: Gun-Toting Thugs Caged for 41 Years</title>
-      <link>https://vpnnews.com/woolyo-gang-jailed-gun-toting-thugs-caged-for-41-years</link>
-      <guid isPermaLink="true">https://vpnnews.com/woolyo-gang-jailed-gun-toting-thugs-caged-for-41-years</guid>
-      <pubDate>Tue, 15 Apr 2025 13:08:38 GMT</pubDate>
-      <description>Six gang members jailed for 41 years after a major firearms conspiracy investigation by Essex and Metropolitan Police, dismantling the dangerous WoolyO gang. By Ben Freeman
- Six members of a South Lon...</description>
+      <title>Oxford Mosque Rambo Knife Attacker Jailed After Savage Stabbing</title>
+      <link>https://www.vpnnews.co.uk/oxford-mosque-rambo-knife-attacker-jailed-after-savage-stabbing</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/oxford-mosque-rambo-knife-attacker-jailed-after-savage-stabbing</guid>
+      <pubDate>Wed, 16 Apr 2025 09:13:00 GMT</pubDate>
+      <description>A young man has been jailed for more than a decade after stabbing a man with a Rambo knife outside a central Oxford mosque By Ben Freeman 
+Hassan Hussain, 25, of Nye Bevan Close, Oxford, was convicted...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Court News</category>
+      <category>Crime</category>
       <category>Knife Crime</category>
-      <category>UK Crime</category>
-      <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/b857cd5312341d589f239706925adccf4470e805-1200x630.jpg" medium="image" />
-    </item>
-    <item>
-      <title>One-Punch Killer Rakeem Miles: Guilty of London Tube Attack Turned Fatal!</title>
-      <link>https://vpnnews.com/one-punch-killer-rakeem-miles-guilty-of-london-attack-turned-fatal</link>
-      <guid isPermaLink="true">https://vpnnews.com/one-punch-killer-rakeem-miles-guilty-of-london-attack-turned-fatal</guid>
-      <pubDate>Sun, 27 Apr 2025 14:24:00 GMT</pubDate>
-      <description>Rakeem Miles, 23, of East Street in Southwark, has been convicted of manslaughter at Inner London Crown Court following a fatal altercation at a London Underground station. By Ben Freeman   The court...</description>
-      <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Court News</category>
-      <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/cc148b91f0c371d73ab77e82359068030875eb17-1200x630.jpg" medium="image" />
+      <category>Court Cases</category>
+      <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/5f5c39f3bbcf24ffa43fde4cbcd79019acb090de-1200x630.jpg" medium="image" />
     </item>
     <item>
       <title>Aluko v  Joey Barton: A Defamation Ruling That Raises as Many Questions as It Answers</title>
-      <link>https://vpnnews.com/aluko-v-barton-a-defamation-ruling-that-raises-as-many-questions-as-it-answers</link>
-      <guid isPermaLink="true">https://vpnnews.com/aluko-v-barton-a-defamation-ruling-that-raises-as-many-questions-as-it-answers</guid>
+      <link>https://www.vpnnews.co.uk/aluko-v-barton-a-defamation-ruling-that-raises-as-many-questions-as-it-answers</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/aluko-v-barton-a-defamation-ruling-that-raises-as-many-questions-as-it-answers</guid>
       <pubDate>Fri, 11 Apr 2025 11:23:00 GMT</pubDate>
       <description>In  Aluko v Barton , the High Court—presided over by Mr Justice Lavender—found that two social media posts by Joseph Barton were defamatory of former England footballer and pundit Eniola Aluko. But de...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
@@ -48,19 +38,42 @@
     </item>
     <item>
       <title>Is the British Criminal Justice System Biased Against Victims?</title>
-      <link>https://vpnnews.com/is-the-british-criminal-justice-system-biased-against-victims</link>
-      <guid isPermaLink="true">https://vpnnews.com/is-the-british-criminal-justice-system-biased-against-victims</guid>
+      <link>https://www.vpnnews.co.uk/is-the-british-criminal-justice-system-biased-against-victims</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/is-the-british-criminal-justice-system-biased-against-victims</guid>
       <pubDate>Fri, 04 Apr 2025 22:33:00 GMT</pubDate>
       <description>The  criminal justice system (CJS)  is designed to deliver justice for victims, but many feel frustrated by the process. Often, the system leaves victims questioning whether the system is really worki...</description>
       <dc:creator>Jason King</dc:creator>
       <category>Crime</category>
-      <category>crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/9031db5934161b8e3f0cfbee6da73ada4d2983da-1200x630.jpg" medium="image" />
     </item>
     <item>
+      <title>WoolyO Gang Jailed: Gun-Toting Thugs Caged for 41 Years</title>
+      <link>https://www.vpnnews.co.uk/woolyo-gang-jailed-gun-toting-thugs-caged-for-41-years</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/woolyo-gang-jailed-gun-toting-thugs-caged-for-41-years</guid>
+      <pubDate>Fri, 04 Apr 2025 14:35:00 GMT</pubDate>
+      <description>Six gang members jailed for 41 years after a major firearms conspiracy investigation by Essex and Metropolitan Police, dismantling the dangerous WoolyO gang. By Ben Freeman
+ Six members of a South Lon...</description>
+      <dc:creator>Bénédict Tarot Freeman</dc:creator>
+      <category>Court</category>
+      <category>Knife Crime</category>
+      <category>UK Crime</category>
+      <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/b857cd5312341d589f239706925adccf4470e805-1200x630.jpg" medium="image" />
+    </item>
+    <item>
+      <title>Man Jailed for Rape of Vulnerable Woman in Leicester</title>
+      <link>https://www.vpnnews.co.uk/man-jailed-for-rape-of-vulnerable-woman-in-leicester</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/man-jailed-for-rape-of-vulnerable-woman-in-leicester</guid>
+      <pubDate>Fri, 04 Apr 2025 14:06:00 GMT</pubDate>
+      <description>A man who raped a vulnerable woman in a Leicester park has been  jailed  for six and a half years. The young woman had been on a night out in  Leicester  last September and was alone in  Jubilee Squar...</description>
+      <dc:creator>Jason King</dc:creator>
+      <category>Court</category>
+      <category>Urban Crime</category>
+      <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/1522a4f2daa846618491ed47da2b7a97f6584213-1600x900.jpg" medium="image" />
+    </item>
+    <item>
       <title>Turkish Barbers Raided in £500K Crime Cash Laundering Blitz</title>
-      <link>https://vpnnews.com/turkish-barbers-raided-in-gbp500k-crime-cash-laundering-blitz</link>
-      <guid isPermaLink="true">https://vpnnews.com/turkish-barbers-raided-in-gbp500k-crime-cash-laundering-blitz</guid>
+      <link>https://www.vpnnews.co.uk/turkish-barbers-raided-in-gbp500k-crime-cash-laundering-blitz</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/turkish-barbers-raided-in-gbp500k-crime-cash-laundering-blitz</guid>
       <pubDate>Fri, 04 Apr 2025 01:15:00 GMT</pubDate>
       <description>Police smash major money laundering ring as £500K seized in raids on Turkish barbers linked to gangs, smuggling, drugs, terror, and dirty cash networks. By Ben Freeman
  In a coordinated series of raid...</description>
@@ -71,20 +84,20 @@
     </item>
     <item>
       <title>Twin Brothers Ran £400K Drug Empire with Mum’s Cannabis Bakes</title>
-      <link>https://vpnnews.com/twin-brothers-ran-gbp400k-drug-empire-with-mum-s-cannabis-bakes</link>
-      <guid isPermaLink="true">https://vpnnews.com/twin-brothers-ran-gbp400k-drug-empire-with-mum-s-cannabis-bakes</guid>
+      <link>https://www.vpnnews.co.uk/twin-brothers-ran-gbp400k-drug-empire-with-mum-s-cannabis-bakes</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/twin-brothers-ran-gbp400k-drug-empire-with-mum-s-cannabis-bakes</guid>
       <pubDate>Fri, 04 Apr 2025 00:59:00 GMT</pubDate>
       <description>Twin brothers turned drug kingpins ran a £400K cannabis empire with sales tactics straight out of a corporate playbook—complete with loyalty schemes, daily deals, and home-baked edibles cooked up by t...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <category>Court Cases</category>
       <category>UK Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/34aeccb69cd49a91cb3905cacb021d13e752131a-1200x630.jpg" medium="image" />
     </item>
     <item>
       <title>CHILD GROOMER: MOHAMMED SHEKIRI CHARGED:</title>
-      <link>https://vpnnews.com/child-groomer-mohammed-shekiri-charged</link>
-      <guid isPermaLink="true">https://vpnnews.com/child-groomer-mohammed-shekiri-charged</guid>
+      <link>https://www.vpnnews.co.uk/child-groomer-mohammed-shekiri-charged</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/child-groomer-mohammed-shekiri-charged</guid>
       <pubDate>Thu, 03 Apr 2025 00:52:00 GMT</pubDate>
       <description>MOHAMMED SHEKIRI  has been arrested, charged and sentenced with attempting to groom, meet and exploit 14-Year-Old British 🇬🇧 School Girl for Sex.  He was sentenced to an 18 month community order and...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
@@ -92,98 +105,68 @@
     </item>
     <item>
       <title>Birmingham Teen Found Guilty of Distributing Terrorist Materials</title>
-      <link>https://vpnnews.com/birmingham-teen-found-guilty-of-distributing-terrorist-materials</link>
-      <guid isPermaLink="true">https://vpnnews.com/birmingham-teen-found-guilty-of-distributing-terrorist-materials</guid>
+      <link>https://www.vpnnews.co.uk/birmingham-teen-found-guilty-of-distributing-terrorist-materials</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/birmingham-teen-found-guilty-of-distributing-terrorist-materials</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/022ef895fa0b11c1ff21a310a0b5aeebbb1009fc-1000x525.jpg" medium="image" />
     </item>
     <item>
-      <title>ALLEGED CHILD GROOMER: MOHAMMED SINA:</title>
-      <link>https://vpnnews.com/alleged-child-groomer-mohammed-sina</link>
-      <guid isPermaLink="true">https://vpnnews.com/alleged-child-groomer-mohammed-sina</guid>
-      <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
-      <description>ALLEGED CHILD GROOMER: MOHAMMED SINA: Hi and welcome to this JK News Report: Hi and welcome to this JK News Report: MOHAMMED SINA, 30, from Iran, has been charged with attempting to groom and meet a 1...</description>
-      <dc:creator>Jason King</dc:creator>
-      <category>Crime News</category>
-      <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/caa7b4395bec425e51534002d8b9a261a33845bc-1000x525.jpg" medium="image" />
-    </item>
-    <item>
-      <title>Teen Found Guilty in Fatal Kings Heath Stabbing Over Electric Bike Dispute</title>
-      <link>https://vpnnews.com/teen-found-guilty-in-fatal-kings-heath-stabbing-over-electric-bike-dispute</link>
-      <guid isPermaLink="true">https://vpnnews.com/teen-found-guilty-in-fatal-kings-heath-stabbing-over-electric-bike-dispute</guid>
-      <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
-      <description>Content from imported article</description>
-      <dc:creator>Jason King</dc:creator>
-      <category>Crime News</category>
-      <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/b96e2514a57bf537e694881d8f76f7186301d145-642x643.jpg" medium="image" />
-    </item>
-    <item>
       <title>“Drill Rap Dilemma: DigDat Charged with Attempted Murder and Firearms Offences”</title>
-      <link>https://vpnnews.com/drill-rap-dilemma-digdat-charged-with-attempted-murder-and-firearms-offences</link>
-      <guid isPermaLink="true">https://vpnnews.com/drill-rap-dilemma-digdat-charged-with-attempted-murder-and-firearms-offences</guid>
+      <link>https://www.vpnnews.co.uk/drill-rap-dilemma-digdat-charged-with-attempted-murder-and-firearms-offences</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/drill-rap-dilemma-digdat-charged-with-attempted-murder-and-firearms-offences</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>“Drill Rap Dilemma: DigDat Charged with Attempted Murder and Firearms Offences” In recent years, the UK’s drill rap music scene has become intertwined with headlines of violent crime, legal battles, a...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/a27cfca7f098a228a2f57ed90efa0151f377fe9b-1000x563.png" medium="image" />
     </item>
     <item>
       <title>Drug Dealer Saqib Ali Convicted Of ABH After Attacking Police Officer With Car</title>
-      <link>https://vpnnews.com/drug-dealer-saqib-ali-convicted-of-abh-after-attacking-police-officer-with-car</link>
-      <guid isPermaLink="true">https://vpnnews.com/drug-dealer-saqib-ali-convicted-of-abh-after-attacking-police-officer-with-car</guid>
+      <link>https://www.vpnnews.co.uk/drug-dealer-saqib-ali-convicted-of-abh-after-attacking-police-officer-with-car</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/drug-dealer-saqib-ali-convicted-of-abh-after-attacking-police-officer-with-car</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Drug Dealer Saqib Ali Convicted Of ABH After Attacking Police Officer With Car A Drug Dealer Has Been Convicted Of ABH After Using His Vehicle To Crush A Police Officer’s Leg A Drug Dealer Has Been Co...</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/b66b481ef2456ba8c9fa75b87c723f747934f8d0-1000x563.png" medium="image" />
     </item>
     <item>
-      <title>Axel Rudakubana’s Court Appearances by Video Link: A Question Of Justice in Court !</title>
-      <link>https://vpnnews.com/axel-rudakubana-s-court-appearances-by-video-link-a-question-of-justice-in-court</link>
-      <guid isPermaLink="true">https://vpnnews.com/axel-rudakubana-s-court-appearances-by-video-link-a-question-of-justice-in-court</guid>
-      <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
-      <description>Content from imported article</description>
-      <dc:creator>Jason King</dc:creator>
-      <category>Court News</category>
-      <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/124f4db2c4f78ce84fb3aa147657bcd23966e5b0-1000x525.jpg" medium="image" />
-    </item>
-    <item>
       <title>Drug Dealers Caught Red-Handed with Knife and 50 Wraps of Heroin &amp; Cocaine – Jailed for 6½ Years!</title>
-      <link>https://vpnnews.com/drug-dealers-caught-red-handed-with-knife-and-50-wraps-of-heroin-cocaine-jailed-for-6-years</link>
-      <guid isPermaLink="true">https://vpnnews.com/drug-dealers-caught-red-handed-with-knife-and-50-wraps-of-heroin-cocaine-jailed-for-6-years</guid>
+      <link>https://www.vpnnews.co.uk/drug-dealers-caught-red-handed-with-knife-and-50-wraps-of-heroin-cocaine-jailed-for-6-years</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/drug-dealers-caught-red-handed-with-knife-and-50-wraps-of-heroin-cocaine-jailed-for-6-years</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Drug Dealers Caught Red-Handed with Knife and 50 Wraps of Heroin &amp; Cocaine – Jailed for 6½ Years! Hi and welcome to this Video Production News Court and Sentecing Report. Hi and welcome to this Video...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/fcf1195437e2b1ef682a57273d3b464d7a661df2-1000x525.jpg" medium="image" />
     </item>
     <item>
       <title>Cafe Owner Jailed for Possessing Firearms and Cocaine in Wolverhampton</title>
-      <link>https://vpnnews.com/cafe-owner-jailed-for-possessing-firearms-and-cocaine-in-wolverhampton</link>
-      <guid isPermaLink="true">https://vpnnews.com/cafe-owner-jailed-for-possessing-firearms-and-cocaine-in-wolverhampton</guid>
+      <link>https://www.vpnnews.co.uk/cafe-owner-jailed-for-possessing-firearms-and-cocaine-in-wolverhampton</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/cafe-owner-jailed-for-possessing-firearms-and-cocaine-in-wolverhampton</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/fc7d9b9455837749fa47b417d593390b5046316d-1000x563.png" medium="image" />
     </item>
     <item>
       <title>Teenager, Sanchez Tate Sentenced to Life Imprisonment for Fatal North London Sword Attack.</title>
-      <link>https://vpnnews.com/teenager-sanchez-tate-sentenced-to-life-imprisonment-for-fatal-north-london-sword-attack</link>
-      <guid isPermaLink="true">https://vpnnews.com/teenager-sanchez-tate-sentenced-to-life-imprisonment-for-fatal-north-london-sword-attack</guid>
+      <link>https://www.vpnnews.co.uk/teenager-sanchez-tate-sentenced-to-life-imprisonment-for-fatal-north-london-sword-attack</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/teenager-sanchez-tate-sentenced-to-life-imprisonment-for-fatal-north-london-sword-attack</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Teenager, Sanchez Tate Sentenced to Life Imprisonment for Fatal North London Sword Attack. Hi and welcome to this Video Production News Court and Sentencing Report. Hi and welcome to this Video Produc...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/417b15cfee1a132c776ee3d8a999cd48887f8cba-1000x525.jpg" medium="image" />
     </item>
     <item>
       <title>ZAHIR AHMED of Bradford Gets Prison Sentence For Sexual Activity With A 15-Year-Old Girl</title>
-      <link>https://vpnnews.com/zahir-ahmed-of-bradford-gets-prison-sentence-for-sexual-activity-with-a-15-year-old-girl</link>
-      <guid isPermaLink="true">https://vpnnews.com/zahir-ahmed-of-bradford-gets-prison-sentence-for-sexual-activity-with-a-15-year-old-girl</guid>
+      <link>https://www.vpnnews.co.uk/zahir-ahmed-of-bradford-gets-prison-sentence-for-sexual-activity-with-a-15-year-old-girl</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/zahir-ahmed-of-bradford-gets-prison-sentence-for-sexual-activity-with-a-15-year-old-girl</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>ZAHIR AHMED of Bradford Gets Prison Sentence For Sexual Activity With A 15-Year-Old Girl Hi and welcome to this Jason King Insight: Hi and welcome to this Jason King Insight: ZAHEER AHMED,  34, has be...</description>
       <dc:creator>Jason King</dc:creator>
@@ -192,28 +175,28 @@
     </item>
     <item>
       <title>Police Investigating Indecent Exposure on Birmingham Bus</title>
-      <link>https://vpnnews.com/police-investigating-indecent-exposure-on-birmingham-bus</link>
-      <guid isPermaLink="true">https://vpnnews.com/police-investigating-indecent-exposure-on-birmingham-bus</guid>
+      <link>https://www.vpnnews.co.uk/police-investigating-indecent-exposure-on-birmingham-bus</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/police-investigating-indecent-exposure-on-birmingham-bus</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/6428c8f12e8150075f62dfc91b9ee5e53563e393-1000x563.png" medium="image" />
     </item>
     <item>
       <title>Autistic Teen Killer Wanted Revenge: Croydon Stabbing Sparks Chilling Courtroom Revelations</title>
-      <link>https://vpnnews.com/autistic-teen-killer-wanted-revenge-croydon-stabbing-sparks-chilling-courtroom-revelations</link>
-      <guid isPermaLink="true">https://vpnnews.com/autistic-teen-killer-wanted-revenge-croydon-stabbing-sparks-chilling-courtroom-revelations</guid>
+      <link>https://www.vpnnews.co.uk/autistic-teen-killer-wanted-revenge-croydon-stabbing-sparks-chilling-courtroom-revelations</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/autistic-teen-killer-wanted-revenge-croydon-stabbing-sparks-chilling-courtroom-revelations</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/146ed75ee8943d3d53fb272a178b5434356c3b8a-1000x525.jpg" medium="image" />
     </item>
     <item>
       <title>Violent Mob Protests Against Terrorism Arrests: Threatening Britain&apos;s Justice System &amp; National Security!</title>
-      <link>https://vpnnews.com/violent-mob-protests-against-terrorism-arrests-threatening-britain-s-justice-system-national-secu</link>
-      <guid isPermaLink="true">https://vpnnews.com/violent-mob-protests-against-terrorism-arrests-threatening-britain-s-justice-system-national-secu</guid>
+      <link>https://www.vpnnews.co.uk/violent-mob-protests-against-terrorism-arrests-threatening-britain-s-justice-system-national-secu</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/violent-mob-protests-against-terrorism-arrests-threatening-britain-s-justice-system-national-secu</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
@@ -222,18 +205,18 @@
     </item>
     <item>
       <title>Suspended Labour Councillor’s Trial for Riot Speech Delayed – Jones Accused of Calling to ‘Cut Throats’ of Fascists!</title>
-      <link>https://vpnnews.com/suspended-labour-councillor-s-trial-for-riot-speech-delayed-jones-accused-of-calling-to-cut-throa</link>
-      <guid isPermaLink="true">https://vpnnews.com/suspended-labour-councillor-s-trial-for-riot-speech-delayed-jones-accused-of-calling-to-cut-throa</guid>
+      <link>https://www.vpnnews.co.uk/suspended-labour-councillor-s-trial-for-riot-speech-delayed-jones-accused-of-calling-to-cut-throa</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/suspended-labour-councillor-s-trial-for-riot-speech-delayed-jones-accused-of-calling-to-cut-throa</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Suspended Labour Councillor’s Trial for Riot Speech Delayed – Jones Accused of Calling to ‘Cut Throats’ of Fascists! Hi, and welcome to this Video Production News Court Report, Hi, and welcome to this...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/2c182817d1713afb0a1b63942646566df95f2433-1000x525.jpg" medium="image" />
     </item>
     <item>
       <title>&quot;Legal Factcheck: Exposing the Shocking Lies About UK and EU Legal Aid —The Truth They Don&apos;t Want You to Know!&quot;</title>
-      <link>https://vpnnews.com/legal-factcheck-exposing-the-shocking-lies-about-uk-and-eu-legal-aid-the-truth-they-don-t-want-yo</link>
-      <guid isPermaLink="true">https://vpnnews.com/legal-factcheck-exposing-the-shocking-lies-about-uk-and-eu-legal-aid-the-truth-they-don-t-want-yo</guid>
+      <link>https://www.vpnnews.co.uk/legal-factcheck-exposing-the-shocking-lies-about-uk-and-eu-legal-aid-the-truth-they-don-t-want-yo</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/legal-factcheck-exposing-the-shocking-lies-about-uk-and-eu-legal-aid-the-truth-they-don-t-want-yo</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
@@ -242,8 +225,8 @@
     </item>
     <item>
       <title>ALLEGED CHILD GROOMER GALIB MUBARRED CHARGED:</title>
-      <link>https://vpnnews.com/alleged-child-groomer-galib-mubarred-charged</link>
-      <guid isPermaLink="true">https://vpnnews.com/alleged-child-groomer-galib-mubarred-charged</guid>
+      <link>https://www.vpnnews.co.uk/alleged-child-groomer-galib-mubarred-charged</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/alleged-child-groomer-galib-mubarred-charged</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
@@ -252,48 +235,48 @@
     </item>
     <item>
       <title>&quot;APPEAL: IHSAN MAHMOOD, 21, Wanted For Drugs Offences&quot;</title>
-      <link>https://vpnnews.com/appeal-ihsan-mahmood-21-wanted-for-drugs-offences</link>
-      <guid isPermaLink="true">https://vpnnews.com/appeal-ihsan-mahmood-21-wanted-for-drugs-offences</guid>
+      <link>https://www.vpnnews.co.uk/appeal-ihsan-mahmood-21-wanted-for-drugs-offences</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/appeal-ihsan-mahmood-21-wanted-for-drugs-offences</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/678da69e78207912b667784d1453e50a0793ba81-1000x563.png" medium="image" />
     </item>
     <item>
       <title>&quot;Are Hospital Orders: The Ultimate &apos;Get Out of Jail Free Card&apos; for Dangerous Offenders?&quot;</title>
-      <link>https://vpnnews.com/are-hospital-orders-the-ultimate-get-out-of-jail-free-card-for-dangerous-offenders</link>
-      <guid isPermaLink="true">https://vpnnews.com/are-hospital-orders-the-ultimate-get-out-of-jail-free-card-for-dangerous-offenders</guid>
+      <link>https://www.vpnnews.co.uk/are-hospital-orders-the-ultimate-get-out-of-jail-free-card-for-dangerous-offenders</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/are-hospital-orders-the-ultimate-get-out-of-jail-free-card-for-dangerous-offenders</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/8ca5a3ef033993b84da1d798772940a396426bcd-1000x563.png" medium="image" />
     </item>
     <item>
       <title>Inside the Dark World of &quot;Menace to Society&quot; - Music Producer Turned Convicted Criminal.</title>
-      <link>https://vpnnews.com/inside-the-dark-world-of-menace-to-society-music-producer-turned-convicted-criminal</link>
-      <guid isPermaLink="true">https://vpnnews.com/inside-the-dark-world-of-menace-to-society-music-producer-turned-convicted-criminal</guid>
+      <link>https://www.vpnnews.co.uk/inside-the-dark-world-of-menace-to-society-music-producer-turned-convicted-criminal</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/inside-the-dark-world-of-menace-to-society-music-producer-turned-convicted-criminal</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/584ee4e39d5eba6ee2bb7c0a7c7100c04b9b9c17-1000x563.png" medium="image" />
     </item>
     <item>
       <title>Predator Albert Okyere Receives 14-Year Extended Sentence for Vicious Sexual Assaults</title>
-      <link>https://vpnnews.com/predator-albert-okyere-receives-14-year-extended-sentence-for-vicious-sexual-assaults</link>
-      <guid isPermaLink="true">https://vpnnews.com/predator-albert-okyere-receives-14-year-extended-sentence-for-vicious-sexual-assaults</guid>
+      <link>https://www.vpnnews.co.uk/predator-albert-okyere-receives-14-year-extended-sentence-for-vicious-sexual-assaults</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/predator-albert-okyere-receives-14-year-extended-sentence-for-vicious-sexual-assaults</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/2aad3df114e7c909ab1daa18c04b403b822e6043-591x393.jpg" medium="image" />
     </item>
     <item>
       <title>Rapist and Domestic Abuser FARNAZ FARABI Sentenced To 19 Years in Prison</title>
-      <link>https://vpnnews.com/rapist-and-domestic-abuser-farnaz-farabi-sentenced-to-19-years-in-prison</link>
-      <guid isPermaLink="true">https://vpnnews.com/rapist-and-domestic-abuser-farnaz-farabi-sentenced-to-19-years-in-prison</guid>
+      <link>https://www.vpnnews.co.uk/rapist-and-domestic-abuser-farnaz-farabi-sentenced-to-19-years-in-prison</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/rapist-and-domestic-abuser-farnaz-farabi-sentenced-to-19-years-in-prison</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
@@ -302,8 +285,8 @@
     </item>
     <item>
       <title>Two Teens Convicted for Killing of Harleigh Hepworth</title>
-      <link>https://vpnnews.com/two-teens-convicted-for-killing-of-harleigh-hepworth</link>
-      <guid isPermaLink="true">https://vpnnews.com/two-teens-convicted-for-killing-of-harleigh-hepworth</guid>
+      <link>https://www.vpnnews.co.uk/two-teens-convicted-for-killing-of-harleigh-hepworth</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/two-teens-convicted-for-killing-of-harleigh-hepworth</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
@@ -312,8 +295,8 @@
     </item>
     <item>
       <title>ALLEGED CHILD GROOMER: ABDUL ABDELSALAM ABOUSAAD CHARGED:</title>
-      <link>https://vpnnews.com/alleged-child-groomer-abdul-abdelsalam-abousaad-charged</link>
-      <guid isPermaLink="true">https://vpnnews.com/alleged-child-groomer-abdul-abdelsalam-abousaad-charged</guid>
+      <link>https://www.vpnnews.co.uk/alleged-child-groomer-abdul-abdelsalam-abousaad-charged</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/alleged-child-groomer-abdul-abdelsalam-abousaad-charged</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>ALLEGED CHILD GROOMER: ABDUL ABDELSALAM ABOUSAAD CHARGED: Hi and welcome to this Jason King Insight: Hi and welcome to this Jason King Insight: ABDUL ABDELSALAM ABOUSAAD, 31, from Egypt, has been char...</description>
       <dc:creator>Jason King</dc:creator>
@@ -322,68 +305,68 @@
     </item>
     <item>
       <title>Hidden Toxic Masculinity in Public Life: How Hidden Anti-Women Views Are Set To Destroy Careers</title>
-      <link>https://vpnnews.com/hidden-toxic-masculinity-in-public-life-how-hidden-anti-women-views-are-set-to-destroy-careers</link>
-      <guid isPermaLink="true">https://vpnnews.com/hidden-toxic-masculinity-in-public-life-how-hidden-anti-women-views-are-set-to-destroy-careers</guid>
+      <link>https://www.vpnnews.co.uk/hidden-toxic-masculinity-in-public-life-how-hidden-anti-women-views-are-set-to-destroy-careers</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/hidden-toxic-masculinity-in-public-life-how-hidden-anti-women-views-are-set-to-destroy-careers</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/bbda825a6050ec71a1eb8f6a42651043c5540ec7-1000x563.jpg" medium="image" />
     </item>
     <item>
       <title>&quot;Mohamed lidow Repeatedly Orally Raped Mum-of-Three Natalie Shotter on Park Bench, Causing Fatal Heart Attack-Grim Details Revealed in Old Bailey Trial&quot;</title>
-      <link>https://vpnnews.com/mohamed-lidow-repeatedly-orally-raped-mum-of-three-natalie-shotter-on-park-bench-causing-fatal-hea</link>
-      <guid isPermaLink="true">https://vpnnews.com/mohamed-lidow-repeatedly-orally-raped-mum-of-three-natalie-shotter-on-park-bench-causing-fatal-hea</guid>
+      <link>https://www.vpnnews.co.uk/mohamed-lidow-repeatedly-orally-raped-mum-of-three-natalie-shotter-on-park-bench-causing-fatal-hea</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/mohamed-lidow-repeatedly-orally-raped-mum-of-three-natalie-shotter-on-park-bench-causing-fatal-hea</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/712a8c3413d65f3279c4c66d32c0b0d429d2deb6-1000x525.png" medium="image" />
     </item>
     <item>
       <title>“Shock as Hockey Star Mohamed Samak Is Charged With Wife&apos;s Murder!”</title>
-      <link>https://vpnnews.com/shock-as-hockey-star-mohamed-samak-is-charged-with-wife-s-murder</link>
-      <guid isPermaLink="true">https://vpnnews.com/shock-as-hockey-star-mohamed-samak-is-charged-with-wife-s-murder</guid>
+      <link>https://www.vpnnews.co.uk/shock-as-hockey-star-mohamed-samak-is-charged-with-wife-s-murder</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/shock-as-hockey-star-mohamed-samak-is-charged-with-wife-s-murder</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/95a0351ca2774de92d74088a54f5dae29b8aeace-1000x525.jpg" medium="image" />
     </item>
     <item>
       <title>ALLEGED CHILD GROOMER: MOHAMMED SAYEK AHMED, CHARGED:</title>
-      <link>https://vpnnews.com/alleged-child-groomer-mohammed-sayek-ahmed-charged</link>
-      <guid isPermaLink="true">https://vpnnews.com/alleged-child-groomer-mohammed-sayek-ahmed-charged</guid>
+      <link>https://www.vpnnews.co.uk/alleged-child-groomer-mohammed-sayek-ahmed-charged</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/alleged-child-groomer-mohammed-sayek-ahmed-charged</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/9c0b242aa1424bfa4753827003aa00c0cf49e73c-1000x525.png" medium="image" />
     </item>
     <item>
       <title>Junior Kunu Charged in £2M Watch Heist That Led to Tragic Suicide of Store Manager Oliver White!</title>
-      <link>https://vpnnews.com/junior-kunu-charged-in-2m-watch-heist-that-led-to-tragic-suicide-of-store-manager-oliver-white</link>
-      <guid isPermaLink="true">https://vpnnews.com/junior-kunu-charged-in-2m-watch-heist-that-led-to-tragic-suicide-of-store-manager-oliver-white</guid>
+      <link>https://www.vpnnews.co.uk/junior-kunu-charged-in-2m-watch-heist-that-led-to-tragic-suicide-of-store-manager-oliver-white</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/junior-kunu-charged-in-2m-watch-heist-that-led-to-tragic-suicide-of-store-manager-oliver-white</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/1201661b04b51f2b2f5c3570da303ffc342e6e74-1000x525.png" medium="image" />
     </item>
     <item>
       <title>&quot;Costa Café Horror: Deliveroo Hero Stabbed by Bike Thief! Attacker Sentenced, Victim&apos;s Life Shattered!”</title>
-      <link>https://vpnnews.com/costa-café-horror-deliveroo-hero-stabbed-by-bike-thief-attacker-sentenced-victim-s-life-shattere</link>
-      <guid isPermaLink="true">https://vpnnews.com/costa-café-horror-deliveroo-hero-stabbed-by-bike-thief-attacker-sentenced-victim-s-life-shattere</guid>
+      <link>https://www.vpnnews.co.uk/costa-café-horror-deliveroo-hero-stabbed-by-bike-thief-attacker-sentenced-victim-s-life-shattere</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/costa-café-horror-deliveroo-hero-stabbed-by-bike-thief-attacker-sentenced-victim-s-life-shattere</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/b1d9ad4b94f214c4250af0504501a8622d5db930-1000x563.png" medium="image" />
     </item>
     <item>
       <title>The Ego&apos;s Battle with Balance:</title>
-      <link>https://vpnnews.com/the-ego-s-battle-with-balance</link>
-      <guid isPermaLink="true">https://vpnnews.com/the-ego-s-battle-with-balance</guid>
+      <link>https://www.vpnnews.co.uk/the-ego-s-battle-with-balance</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/the-ego-s-battle-with-balance</guid>
       <pubDate>Thu, 03 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
@@ -391,29 +374,52 @@
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/07bbf16e0ca7e8ca5d84e2f344adf6a9db1b2dc7-770x513.jpg" medium="image" />
     </item>
     <item>
+      <title>Mosque Patrol Thug Mohammed Ali Jailed For Violent Disorder</title>
+      <link>https://www.vpnnews.co.uk/mosque-patrol-thug-mohammed-ali-jailed-for-birmingham-disorder</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/mosque-patrol-thug-mohammed-ali-jailed-for-birmingham-disorder</guid>
+      <pubDate>Wed, 02 Apr 2025 17:20:00 GMT</pubDate>
+      <description>Ali took over the streets as part of a mob, smashing a car and declaring a racist no-go zone. Muhammed Ali , a 20-year-old from  Yardley Green Road , has been  jailed  for  two-and-a-half years  after...</description>
+      <dc:creator>Jason King</dc:creator>
+      <category>Court</category>
+      <category>Birmingham </category>
+      <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/be172834ed52c1f52d23bab5fa3d224c598ceac0-1600x900.jpg" medium="image" />
+    </item>
+    <item>
       <title>BREAKING: ‘Hands On’ Prison Governor Denies Affair With Inmate!</title>
-      <link>https://vpnnews.com/breaking-hands-on-prison-governor-denies-affair-with-inmate</link>
-      <guid isPermaLink="true">https://vpnnews.com/breaking-hands-on-prison-governor-denies-affair-with-inmate</guid>
+      <link>https://www.vpnnews.co.uk/breaking-hands-on-prison-governor-denies-affair-with-inmate</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/breaking-hands-on-prison-governor-denies-affair-with-inmate</guid>
       <pubDate>Wed, 02 Apr 2025 00:00:00 GMT</pubDate>
       <description>BREAKING: ‘Hands On’ Prison Governor Denies Affair With Inmate! It is drugs alleged that the drugs boss It is drugs alleged that the drugs boss It is drugs alleged that the drugs boss repeatedly conta...</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/bb1af2c7187eb64e9c0e03d12b874d2e856d3369-1000x563.jpg" medium="image" />
     </item>
     <item>
+      <title>‘Hands On’ Prison Governor Denies Affair With Inmate!</title>
+      <link>https://www.vpnnews.co.uk/hands-on-prison-governor-denies-affair-with-inmate</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/hands-on-prison-governor-denies-affair-with-inmate</guid>
+      <pubDate>Tue, 01 Apr 2025 23:51:00 GMT</pubDate>
+      <description>It is alleged that the drugs boss repeatedly contacted her using the burner phone he used to call escorts, as part of an ongoing relationship. 
+Kerri Pegg, 42, the former governor at  HMP Kirkham , ha...</description>
+      <dc:creator>Jason King</dc:creator>
+      <category>Court</category>
+      <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/8b99c146f081e76ca79566643abe04e40a9413e0-1600x900.jpg" medium="image" />
+    </item>
+    <item>
       <title>London Quran Burner Knife Attack Trial - Latest Court Update</title>
-      <link>https://vpnnews.com/london-quran-burner-knife-attack-trial-latest-court-updat</link>
-      <guid isPermaLink="true">https://vpnnews.com/london-quran-burner-knife-attack-trial-latest-court-updat</guid>
+      <link>https://www.vpnnews.co.uk/london-quran-burner-knife-attack-trial-latest-court-updat</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/london-quran-burner-knife-attack-trial-latest-court-updat</guid>
       <pubDate>Tue, 01 Apr 2025 17:25:00 GMT</pubDate>
       <description>Knife-wielding attacker filmed kicking and slashing man burning Koran outside Turkish consulate in shocking London assault; charges brought as trial adjourned until April.
  Moussa Kadri , aged 59 and...</description>
       <dc:creator>Jason King</dc:creator>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/3b4602b788c670b40d71021a85bbf64a58383de7-1600x900.jpg" medium="image" />
     </item>
     <item>
       <title>Armed Man Shot Dead by Police Outside Milton Keynes Station</title>
-      <link>https://vpnnews.com/armed-man-shot-dead-by-police-milton-keynes</link>
-      <guid isPermaLink="true">https://vpnnews.com/armed-man-shot-dead-by-police-milton-keynes</guid>
+      <link>https://www.vpnnews.co.uk/armed-man-shot-dead-by-police-milton-keynes</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/armed-man-shot-dead-by-police-milton-keynes</guid>
       <pubDate>Tue, 01 Apr 2025 00:43:00 GMT</pubDate>
       <description>A dramatic police shooting outside Milton Keynes railway station left a man dead after armed officers opened fire following reports of a suspect with a weapon. By Ben Freeman
  A man has been shot dead...</description>
@@ -423,107 +429,107 @@
     </item>
     <item>
       <title>There’s a Monster in Me – Omar Wilson Jailed for Murder</title>
-      <link>https://vpnnews.com/monster-in-me-omar-wilson-jailed-for-murder</link>
-      <guid isPermaLink="true">https://vpnnews.com/monster-in-me-omar-wilson-jailed-for-murder</guid>
+      <link>https://www.vpnnews.co.uk/monster-in-me-omar-wilson-jailed-for-murder</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/monster-in-me-omar-wilson-jailed-for-murder</guid>
       <pubDate>Tue, 01 Apr 2025 00:31:00 GMT</pubDate>
       <description>A self-proclaimed “monster”, Omar Wilson savagely beat chef Mussie Imnetu to death near  Notting Hill Carnival , then fled to a nightclub—now he’s facing life behind bars. By Ben Freeman
  Omar Wilson,...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <category>crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/49306566958a8772fbb25bf817bfa0f8b6f46321-1200x630.jpg" medium="image" />
     </item>
     <item>
       <title>BREAKING: Sentencing Council U-turn is a victory for Robert Jenrick</title>
-      <link>https://vpnnews.com/breaking-sentencing-council-u-turn-is-a-victory-for-robert-jenrick</link>
-      <guid isPermaLink="true">https://vpnnews.com/breaking-sentencing-council-u-turn-is-a-victory-for-robert-jenrick</guid>
+      <link>https://www.vpnnews.co.uk/breaking-sentencing-council-u-turn-is-a-victory-for-robert-jenrick</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/breaking-sentencing-council-u-turn-is-a-victory-for-robert-jenrick</guid>
       <pubDate>Tue, 01 Apr 2025 00:00:00 GMT</pubDate>
       <description>BREAKING: Sentencing Council U-turn is a victory for Robert Jenrick The Sentencing Council’s climbdown halts two-tier justice two-tier justice in its tracks—thanks to Robert Jenrick’s relentless fight...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/05900f589a5ed916fcdc5853794ed994e8cb0ab0-1000x525.jpg" medium="image" />
     </item>
     <item>
       <title>Armed Man Shot Dead by Police Outside Milton Keynes Station</title>
-      <link>https://vpnnews.com/armed-man-shot-dead-by-police-outside-milton-keynes-station</link>
-      <guid isPermaLink="true">https://vpnnews.com/armed-man-shot-dead-by-police-outside-milton-keynes-station</guid>
+      <link>https://www.vpnnews.co.uk/armed-man-shot-dead-by-police-outside-milton-keynes-station</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/armed-man-shot-dead-by-police-outside-milton-keynes-station</guid>
       <pubDate>Tue, 01 Apr 2025 00:00:00 GMT</pubDate>
       <description>Content from imported article</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/1f886d1e552624af2a18cf927715255b4b74b381-1000x525.jpg" medium="image" />
     </item>
     <item>
       <title>“London Quran Burner Knife Attack Trial - Latest Court Update”</title>
-      <link>https://vpnnews.com/london-quran-burner-knife-attack-trial-latest-court-update</link>
-      <guid isPermaLink="true">https://vpnnews.com/london-quran-burner-knife-attack-trial-latest-court-update</guid>
+      <link>https://www.vpnnews.co.uk/london-quran-burner-knife-attack-trial-latest-court-update</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/london-quran-burner-knife-attack-trial-latest-court-update</guid>
       <pubDate>Tue, 01 Apr 2025 00:00:00 GMT</pubDate>
       <description>“London Quran Burner Knife Attack Trial - Latest Court Update” Knife-wielding attacker filmed kicking and slashing man burning Koran outside Turkish consulate in shocking London assault; charges broug...</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/f94f98ed23083c587dcf4508063e76748e970c3c-1000x563.jpg" medium="image" />
     </item>
     <item>
       <title>There’s a Monster in Me – Omar Wilson Jailed for Murder</title>
-      <link>https://vpnnews.com/there-s-a-monster-in-me-omar-wilson-jailed-for-murder</link>
-      <guid isPermaLink="true">https://vpnnews.com/there-s-a-monster-in-me-omar-wilson-jailed-for-murder</guid>
+      <link>https://www.vpnnews.co.uk/there-s-a-monster-in-me-omar-wilson-jailed-for-murder</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/there-s-a-monster-in-me-omar-wilson-jailed-for-murder</guid>
       <pubDate>Tue, 01 Apr 2025 00:00:00 GMT</pubDate>
       <description>There’s a Monster in Me – Omar Wilson Jailed for Murder A self-proclaimed “monster”, Omar Wilson savagely beat chef Mussie Imnetu to death near A self-proclaimed “monster”, Omar Wilson savagely beat c...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/b58c4c57bd958ead3e99bd53bcdcb90ea4953e69-1000x525.jpg" medium="image" />
     </item>
     <item>
       <title>Two More Convictions  In Aurman Singh Murder Case</title>
-      <link>https://vpnnews.com/two-more-convictions-in-aurman-singh-murder-case</link>
-      <guid isPermaLink="true">https://vpnnews.com/two-more-convictions-in-aurman-singh-murder-case</guid>
+      <link>https://www.vpnnews.co.uk/two-more-convictions-in-aurman-singh-murder-case</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/two-more-convictions-in-aurman-singh-murder-case</guid>
       <pubDate>Tue, 01 Apr 2025 00:00:00 GMT</pubDate>
       <description>Two More Convictions  In Aurman Singh Murder Case Two men join the five already jailed after the murder of the DPD driver. Two men join the five already jailed after the murder of the DPD driver. By J...</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/fe2249e514a248a6d34ac78e728bb29286c3e134-1000x563.jpg" medium="image" />
     </item>
     <item>
       <title>Two More Convictions In Aurman Singh Murder Case</title>
-      <link>https://vpnnews.com/two-more-convictions-in-aurman-singh-murder-cas</link>
-      <guid isPermaLink="true">https://vpnnews.com/two-more-convictions-in-aurman-singh-murder-cas</guid>
+      <link>https://www.vpnnews.co.uk/two-more-convictions-in-aurman-singh-murder-cas</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/two-more-convictions-in-aurman-singh-murder-cas</guid>
       <pubDate>Mon, 31 Mar 2025 23:08:00 GMT</pubDate>
       <description>Two men join the five already jailed after the murder of the DPD driver in Shrewsbury. 
  Jurors at Stafford Crown Court  have unanimously convicted  Mehakdeep Singh, 24 , and  Sehajpal Singh, 36  for...</description>
       <dc:creator>Jason King</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <category>Murder Convictions</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/762a078acb0e1825236e267043a9a74266b48c7f-1600x900.jpg" medium="image" />
     </item>
     <item>
       <title>BREAKING: Sentencing Council U-turn is a victory for Robert Jenrick</title>
-      <link>https://vpnnews.com/sentencing-council-u-turn-is-a-victory-for-robert-jenrick</link>
-      <guid isPermaLink="true">https://vpnnews.com/sentencing-council-u-turn-is-a-victory-for-robert-jenrick</guid>
+      <link>https://www.vpnnews.co.uk/sentencing-council-u-turn-is-a-victory-for-robert-jenrick</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/sentencing-council-u-turn-is-a-victory-for-robert-jenrick</guid>
       <pubDate>Mon, 31 Mar 2025 23:05:00 GMT</pubDate>
       <description>The Sentencing Council’s climbdown halts  two-tier justice  in its tracks—thanks to Robert Jenrick’s relentless fight against  discriminatory sentencing rules ! By Ben Freeman
  The Sentencing Council...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Court News</category>
+      <category>Court</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/72fa3e02a5074feaf467e557c0ac8159b9950196-1200x630.jpg" medium="image" />
     </item>
     <item>
       <title>Birmingham Couple Guilty of Attempted Murder in Animal Mask Attack </title>
-      <link>https://vpnnews.com/birmingham-couple-guilty-of-attempted-murder-in-animal-mask</link>
-      <guid isPermaLink="true">https://vpnnews.com/birmingham-couple-guilty-of-attempted-murder-in-animal-mask</guid>
+      <link>https://www.vpnnews.co.uk/birmingham-couple-guilty-of-attempted-murder-in-animal-mask</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/birmingham-couple-guilty-of-attempted-murder-in-animal-mask</guid>
       <pubDate>Sun, 30 Mar 2025 22:30:00 GMT</pubDate>
       <description>A young  Birmingham couple  who attacked a woman with a  hammer and knife  while wearing  animal masks  have been found guilty of  attempted murder . Wasif Hussain , 21, and his wife  Nabela Tabassum...</description>
-      <category>Court News</category>
+      <category>Court</category>
       <category>Birmingham </category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/213cddea7daaab80a672ab1863688580bb800456-1600x900.jpg" medium="image" />
     </item>
     <item>
       <title>ALLEGED CHILD GROOMER: AHMED HUSSAIN CHARGED:</title>
-      <link>https://vpnnews.com/child-groomer-ahmed-hussain-charged</link>
-      <guid isPermaLink="true">https://vpnnews.com/child-groomer-ahmed-hussain-charged</guid>
+      <link>https://www.vpnnews.co.uk/child-groomer-ahmed-hussain-charged</link>
+      <guid isPermaLink="true">https://www.vpnnews.co.uk/child-groomer-ahmed-hussain-charged</guid>
       <pubDate>Sun, 30 Mar 2025 15:15:00 GMT</pubDate>
       <description>AHMED HUSSAIN  has been arrested and charged with attempting to groom, meet and exploit 13-Year-Old British 🇬🇧 School Girl for Sex. ACCESS TO THE LAW: Understanding the Crime and Sentencing As part...</description>
       <dc:creator>Bénédict Tarot Freeman</dc:creator>
-      <category>Crime News</category>
+      <category>Crime</category>
       <media:content url="https://cdn.sanity.io/images/g7f0f6rs/production/7918531993bc8f1bd347bdce407fd9aa5011244e-1200x630.jpg" medium="image" />
     </item>
   </channel>
