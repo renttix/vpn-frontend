@@ -58,7 +58,7 @@ export default function ArticleJsonLd({ article, url }: ArticleJsonLdProps) {
     "author": {
       "@type": "Person",
       "name": authorName,
-      "url": article.author?.slug ? `https://vpnnews.com/author/${article.author.slug.current}` : "https://vpnnews.com/about",
+      "url": article.author?.slug ? `https://www.vpnnews.co.uk/author/${article.author.slug.current}` : "https://www.vpnnews.co.uk/about",
       "jobTitle": article.author?.jobTitle || "Journalist",
       "description": article.author?.bio ? "Legal journalist and analyst" : undefined,
       "knowsAbout": categories.length > 0 ? categories : ["Legal News", "Crime Reporting"],
@@ -73,17 +73,17 @@ export default function ArticleJsonLd({ article, url }: ArticleJsonLdProps) {
         "width": 600,
         "height": 60
       },
-      "url": "https://vpnnews.com",
+      "url": "https://www.vpnnews.co.uk",
       "sameAs": [
         "https://twitter.com/vpnnews",
         "https://facebook.com/vpnnews",
         "https://linkedin.com/company/vpnnews"
       ],
       "foundingDate": "2020-01-01",
-      "publishingPrinciples": "https://vpnnews.com/editorial-standards",
-      "diversityPolicy": "https://vpnnews.com/diversity-policy",
-      "ethicsPolicy": "https://vpnnews.com/ethics-policy",
-      "correctionsPolicy": "https://vpnnews.com/corrections-policy"
+      "publishingPrinciples": "https://www.vpnnews.co.uk/editorial-standards",
+      "diversityPolicy": "https://www.vpnnews.co.uk/diversity-policy",
+      "ethicsPolicy": "https://www.vpnnews.co.uk/ethics-policy",
+      "correctionsPolicy": "https://www.vpnnews.co.uk/corrections-policy"
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
@@ -144,7 +144,7 @@ export default function ArticleJsonLd({ article, url }: ArticleJsonLdProps) {
     "backstory": article.backstory || undefined,
     "educationalUse": "Research",
     "timeRequired": `PT${Math.max(1, Math.ceil(wordCount / 200))}M`,
-    "archivedAt": `https://web.archive.org/web/*/https://vpnnews.com/${article.slug?.current || ''}`
+    "archivedAt": `https://web.archive.org/web/*/https://www.vpnnews.co.uk/${article.slug?.current || ''}`
   };
 
   return (

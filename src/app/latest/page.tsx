@@ -126,7 +126,7 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
         
         {/* Page Header Section */}
         <div className="mb-8 pb-4 border-b border-gray-300 dark:border-gray-700">
-          <h1 className="text-3xl md:text-4xl font-heading font-bold text-vpn-blue dark:text-blue-400 uppercase mb-2">
+          <h1 className="text-3xl md:text-4xl font-roboto font-bold text-vpn-blue dark:text-blue-400 uppercase mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
             Latest Articles
           </h1>
           <p className="text-lg font-body text-gray-600 dark:text-gray-400">
@@ -188,7 +188,7 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
                             )}
                             
                             <Link href={`/${p.slug?.current ?? '#'}`} className="group">
-                              <h3 className="font-heading font-bold text-vpn-gray dark:text-vpn-gray-dark text-lg md:text-xl leading-tight group-hover:text-vpn-blue dark:group-hover:text-blue-400 mb-3">
+                              <h3 className="font-roboto font-bold text-vpn-gray dark:text-vpn-gray-dark text-lg md:text-xl leading-tight group-hover:text-vpn-blue dark:group-hover:text-blue-400 mb-3" style={{ fontFamily: 'Roboto, sans-serif' }}>
                                 {p.title || 'Untitled Post'}
                               </h3>
                             </Link>
@@ -240,7 +240,7 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
             <div className="sticky top-[156px]">
               {/* Categories Box */}
               <div className="content-section p-5">
-                <h3 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-4 tracking-wider">
+                <h3 className="text-3xl font-roboto text-yellow-500 dark:text-yellow-300 uppercase mb-4 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
                   Categories
                 </h3>
                 <ul className="space-y-3">
@@ -262,7 +262,7 @@ export default async function LatestPage({ searchParams }: LatestPageProps) {
               
               {/* Newsletter Box */}
               <div className="content-section p-5 mt-8">
-                <h3 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-4 tracking-wider">
+                <h3 className="text-3xl font-roboto text-yellow-500 dark:text-yellow-300 uppercase mb-4 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
                   Newsletter
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">

@@ -27,6 +27,7 @@ interface LayoutProps {
 
 export default function Layout({ children, categories }: LayoutProps) { // Destructure categories
   const [serviceWorkerRegistered, setServiceWorkerRegistered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Register service worker on mount
   useEffect(() => {
@@ -38,6 +39,21 @@ export default function Layout({ children, categories }: LayoutProps) { // Destr
     // Only run in browser environment
     if (typeof window !== 'undefined') {
       registerSW();
+      
+      // Detect mobile devices for content prioritization
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+      
+      // Initial check
+      checkMobile();
+      
+      // Add resize listener
+      window.addEventListener('resize', checkMobile);
+      
+      return () => {
+        window.removeEventListener('resize', checkMobile);
+      };
     }
   }, []);
 
@@ -59,8 +75,18 @@ export default function Layout({ children, categories }: LayoutProps) { // Destr
       
       {/* Pass categories down to Header */}
       <Header categories={categories} />
-      <main id="main-content" className="flex-grow" tabIndex={-1}>{children}</main>
+      
+      {/* Main content */}
+      <main 
+        id="main-content" 
+        className="flex-grow" 
+        tabIndex={-1}
+      >
+        {children}
+      </main>
+      
       <TipReferrer />
+      
       <Footer />
       
       {/* Notification Banner */}

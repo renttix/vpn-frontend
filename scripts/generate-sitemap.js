@@ -22,7 +22,7 @@ const client = createClient({
 });
 
 // Base URL for the site
-const SITE_URL = 'https://vpnnews.com';
+const SITE_URL = 'https://www.vpnnews.co.uk';
 
 // Static pages to include in the sitemap
 const staticPages = [

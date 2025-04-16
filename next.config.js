@@ -9,6 +9,7 @@ const nextConfig = {
       },
     ];
   },
+  
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -61,6 +62,9 @@ const nextConfig = {
     optimizeCss: true, // Enable CSS optimization
     scrollRestoration: true, // Enable scroll restoration
     optimizePackageImports: ['react-icons', '@heroicons/react'],
+    // Optimize for mobile-first
+    optimizeServerReact: true,
+    // Removed deprecated options: granularChunks and modern
   },
   
   // Server external packages
@@ -121,7 +125,7 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
+            value: 'camera=(), microphone=(), geolocation=(), speech-synthesis=(self)',
           },
         ],
       },

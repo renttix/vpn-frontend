@@ -105,7 +105,11 @@ async function getLastWeekPosts(): Promise<Post[]> {
   }`;
   
   try {
-    const posts = await client.fetch(query, { fromDate: formattedDate });
+    const posts = await client.fetch(query, { fromDate: formattedDate }, {
+      // Add cache: 'no-store' to ensure fresh data
+      cache: 'no-store'
+    });
+    console.log("LatestArticles - Fetched posts from last 7 days:", posts?.length || 0);
     return posts || [];
   } catch (error) {
     console.error("Failed to fetch posts from the last 7 days:", error);
@@ -152,8 +156,8 @@ export default async function LatestArticles() {
     const posts = await getLastWeekPosts();
     
     if (posts && posts.length > 0) {
-      // Get 3 random posts
-      const randomPosts = getRandomPosts(posts, 3);
+      // Get 6 random posts instead of just 3
+      const randomPosts = getRandomPosts(posts, 6);
       
       // Convert to ArticleProps
       articles = randomPosts.map((post, index) => 
@@ -168,11 +172,14 @@ export default async function LatestArticles() {
   return (
     <section className="bg-vpn-bg dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
-          THIS WEEK AT VPN
-        </h2>
+        <h1 className="text-3xl font-roboto text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          THIS WEEK AT VIDEO PRODUCTION NEWS 
+        </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="md:col-span-3 mb-4">
+            <p className="text-sm text-gray-600 dark:text-gray-300">Showing {articles.length} articles from the past week</p>
+          </div>
           {articles.map((article) => (
             <div key={article.id} className="bg-white dark:bg-gray-800 p-4 border border-gray-200 dark:border-gray-700 shadow-sm">
               <ArticleCard {...article} />

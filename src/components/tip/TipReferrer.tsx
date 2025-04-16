@@ -10,7 +10,7 @@ export default function TipReferrer() {
     <div className="border-t border-gray-200 dark:border-gray-800">
       <div className="container mx-auto py-10 px-4">
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl font-headline font-bold text-vpn-gray dark:text-vpn-gray-dark mb-4">
+          <h2 className="text-3xl font-roboto font-bold text-vpn-gray dark:text-vpn-gray-dark mb-4" style={{ fontFamily: 'Roboto, sans-serif' }}>
             Got a tip worth investigating?
           </h2>
           <p className="text-lg text-vpn-gray dark:text-vpn-gray-dark/80 mb-6">

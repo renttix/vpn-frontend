@@ -231,7 +231,7 @@ export default function PopularStoriesList({ posts: propPosts }: PopularStoriesL
     return (
       <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+          <h2 className="text-3xl font-roboto text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
             POPULAR STORIES
           </h2>
         </div>
@@ -257,7 +257,7 @@ export default function PopularStoriesList({ posts: propPosts }: PopularStoriesL
   return (
     <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+        <h2 className="text-3xl font-roboto text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
           POPULAR STORIES
         </h2>
       </div>
@@ -293,7 +293,7 @@ export default function PopularStoriesList({ posts: propPosts }: PopularStoriesL
                   )}
                   
                   <Link href={`/${article.slug}`} className="group">
-                    <h3 className="font-headline font-bold text-vpn-gray dark:text-gray-100 text-lg leading-tight group-hover:text-vpn-blue dark:group-hover:text-yellow-500 mb-2 transition-colors duration-200">
+                    <h3 className="font-roboto font-bold text-vpn-gray dark:text-gray-100 text-lg leading-tight group-hover:text-vpn-blue dark:group-hover:text-yellow-500 mb-2 transition-colors duration-200" style={{ fontFamily: 'Roboto, sans-serif' }}>
                       {article.title}
                     </h3>
                   </Link>

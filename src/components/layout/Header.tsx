@@ -144,14 +144,17 @@ export default function Header({ categories = [] }: HeaderProps) {
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   
-  // Memoized sorted categories - filter out Justice Watch
-  const sortedCategories = useMemo(() => {
-    // Filter out Justice Watch category
-    const filteredCategories = categories.filter(
-      category => category.title.toLowerCase() !== 'justice watch'
-    );
-    return sortCategories(filteredCategories);
-  }, [categories]);
+// Memoized sorted categories - only filter out Justice Watch category
+const sortedCategories = useMemo(() => {
+  // Filter out Justice Watch category only
+  const filteredCategories = categories.filter(
+    category => {
+      const titleLower = category.title.toLowerCase();
+      return titleLower !== 'justice watch';
+    }
+  );
+  return sortCategories(filteredCategories);
+}, [categories]);
 
   // Handle search submission
   const handleSearchSubmit = useCallback((e: React.FormEvent) => {
@@ -248,14 +251,7 @@ export default function Header({ categories = [] }: HeaderProps) {
             <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
           </svg>
         )}
-        {isNews && !isMobile && (
-          <AlertTriangle 
-            size={isCompact ? 12 : 14} 
-            className="mr-1 text-vpn-red" 
-            aria-hidden="true" 
-          />
-        )}
-        <span>{displayTitle}</span>
+      <span>{displayTitle}</span>
       </Link>
     );
   };
@@ -294,26 +290,26 @@ export default function Header({ categories = [] }: HeaderProps) {
               <span className="text-vpn-gray-light dark:text-gray-300">{currentTime}</span>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 h-full">
             <Link 
               href="/newsletters" 
-              className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white transition-colors"
+              className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white transition-colors flex items-center h-full"
             >
               Newsletters
             </Link>
-            <span className="text-vpn-gray-light dark:text-gray-300" aria-hidden="true">|</span>
+            <span className="text-vpn-gray-light dark:text-gray-300 flex items-center h-full" aria-hidden="true">|</span>
             <Link 
               href="/contact-us" 
-              className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white transition-colors"
+              className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white transition-colors flex items-center h-full"
             >
               Contact
             </Link>
-            <span className="text-vpn-gray-light dark:text-gray-300" aria-hidden="true">|</span>
+            <span className="text-vpn-gray-light dark:text-gray-300 flex items-center h-full" aria-hidden="true">|</span>
             <a 
               href="https://vpnnews.sanity.studio/" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white transition-colors flex items-center"
+              className="text-vpn-gray-light dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white transition-colors flex items-center h-full"
             >
               <LogIn className="h-3 w-3 mr-1" aria-hidden="true" />
               Creator Login
@@ -368,7 +364,8 @@ export default function Header({ categories = [] }: HeaderProps) {
           <div className="flex items-center justify-center space-x-4 mt-2 mb-2">
             <Link
               href="/membership"
-              className="bg-vpn-red text-white text-xs font-bold py-2 px-5 rounded-sm hover:bg-opacity-90 transition-colors focus:ring-2 focus:ring-vpn-red focus:ring-opacity-50 focus:outline-none"
+              className="bg-vpn-red text-white text-xs font-bold rounded-sm hover:bg-opacity-90 transition-colors focus:ring-2 focus:ring-vpn-red focus:ring-opacity-50 focus:outline-none flex items-center justify-center"
+              style={{ height: '32px', padding: '0 12px', fontSize: '11px' }}
               aria-label="Subscribe to VPN News"
             >
               SUBSCRIBE
@@ -431,7 +428,8 @@ export default function Header({ categories = [] }: HeaderProps) {
             {/* Subscribe button in compact header */}
             <Link
               href="/membership"
-              className="bg-vpn-red text-white text-xs font-bold py-1.5 px-3 rounded-sm hover:bg-opacity-90 transition-colors focus:ring-2 focus:ring-vpn-red focus:ring-opacity-50 focus:outline-none"
+              className="bg-vpn-red text-white text-xs font-bold rounded-sm hover:bg-opacity-90 transition-colors focus:ring-2 focus:ring-vpn-red focus:ring-opacity-50 focus:outline-none flex items-center justify-center"
+              style={{ height: '28px', padding: '0 10px', fontSize: '10px' }}
               aria-label="Subscribe to VPN News"
             >
               SUBSCRIBE
@@ -482,17 +480,11 @@ export default function Header({ categories = [] }: HeaderProps) {
               aria-label="Main menu"
             >
               {/* Dynamic categories from CMS */}
-              {sortedCategories.map((category) => {
+              {sortedCategories.map((category, index, array) => {
                 const isJusticeWatch = category.title.toLowerCase() === 'justice watch';
-                const href = isJusticeWatch 
-                  ? "/justice-watch" 
-                  : `/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}`;
                 
-                // Determine if this is the current category based on URL
-                const isCurrent = typeof window !== 'undefined' 
-                  ? window.location.pathname === href 
-                  : false;
                 
+                // For all other categories, use the normal rendering
                 return (
                   <li key={category._id} role="none">
                     {renderCategoryLink(category)}
@@ -542,8 +534,10 @@ export default function Header({ categories = [] }: HeaderProps) {
               className="grid grid-cols-2 gap-2 p-4"
               role="menu"
             >
-              {sortedCategories.map((category) => {
+              {sortedCategories.map((category, index, array) => {
                 const isJusticeWatch = category.title.toLowerCase() === 'justice watch';
+                
+                
                 const href = isJusticeWatch 
                   ? "/justice-watch" 
                   : `/category/${category.slug?.current ?? category.title.toLowerCase().replace(/\s+/g, '-')}`;

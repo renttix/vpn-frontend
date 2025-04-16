@@ -18,13 +18,18 @@
   # Web Push Notification Keys
   NEXT_PUBLIC_VAPID_PUBLIC_KEY = ""
   VAPID_PRIVATE_KEY = ""
-  VAPID_CONTACT_EMAIL = ""
+  VAPID_CONTACT_EMAIL = "contact@vpnnews.co.uk"
   NOTIFICATIONS_API_KEY = ""
   # Other environment variables
-  NEXT_PUBLIC_SITE_URL = "https://vpnldn.netlify.app"
+  NEXT_PUBLIC_SITE_URL = "https://www.vpnnews.co.uk"
   NEXT_PUBLIC_GA_MEASUREMENT_ID = ""
   # Database connection string should be set in Netlify dashboard, not in this file
   MONGODB_URI = ""
+  # Apple News Integration - set these in Netlify dashboard
+  APPLE_NEWS_API_KEY = ""
+  APPLE_NEWS_API_SECRET = ""
+  APPLE_NEWS_CHANNEL_ID = ""
+  SANITY_WEBHOOK_SECRET = ""
 
 
 

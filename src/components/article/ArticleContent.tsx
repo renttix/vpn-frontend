@@ -8,8 +8,18 @@ import { formatDate, calculateReadingTime } from "@/lib/utils"; // Import readin
 import { PortableText } from "@portabletext/react"; // Import PortableText
 import { Clock, Volume2 } from "lucide-react"; // Import Clock and Volume2 icons
 import TableOfContents, { ensureHeadingIds } from "./TableOfContents"; // Import TableOfContents
-import TextToSpeech from "@/components/accessibility/TextToSpeech"; // Import TextToSpeech
-import TextSizeAdjuster from "@/components/accessibility/TextSizeAdjuster"; // Import TextSizeAdjuster
+import dynamic from 'next/dynamic'; // Import dynamic for client-side only components
+
+// Import TextToSpeech with dynamic import to ensure it only loads on the client side
+const TextToSpeech = dynamic(
+  () => import("@/components/accessibility/TextToSpeech"),
+  { ssr: false } // Disable server-side rendering for this component
+);
+// Import TextSizeAdjuster with dynamic import to ensure it only loads on the client side
+const TextSizeAdjuster = dynamic(
+  () => import("@/components/accessibility/TextSizeAdjuster"),
+  { ssr: false } // Disable server-side rendering for this component
+);
 
 // Define the Sanity Article type (or import if defined elsewhere)
 // Ensure this matches the structure fetched in [slug]/page.tsx
@@ -44,13 +54,13 @@ const ptComponents = {
       return <h1 className="font-body text-3xl md:text-4xl font-bold mt-8 mb-6 text-vpn-gray dark:text-white">{children}</h1>;
     },
     h2: ({children}: any) => {
-      return <h2 className="font-headline text-2xl md:text-3xl font-bold mt-8 mb-4 text-vpn-gray dark:text-white">{children}</h2>;
+      return <h2 className="font-roboto text-2xl md:text-3xl font-bold mt-8 mb-4 text-vpn-gray dark:text-white" style={{ fontFamily: 'Roboto, sans-serif' }}>{children}</h2>;
     },
     h3: ({children}: any) => {
-      return <h3 className="font-headline text-xl md:text-2xl font-bold mt-6 mb-4 text-vpn-gray dark:text-white">{children}</h3>;
+      return <h3 className="font-roboto text-xl md:text-2xl font-bold mt-6 mb-4 text-vpn-gray dark:text-white" style={{ fontFamily: 'Roboto, sans-serif' }}>{children}</h3>;
     },
     h4: ({children}: any) => {
-      return <h4 className="font-headline text-lg md:text-xl font-bold mt-6 mb-3 text-vpn-gray dark:text-white">{children}</h4>;
+      return <h4 className="font-roboto text-lg md:text-xl font-bold mt-6 mb-3 text-vpn-gray dark:text-white" style={{ fontFamily: 'Roboto, sans-serif' }}>{children}</h4>;
     },
     // Blockquote styling
     blockquote: ({children}: any) => {
@@ -216,7 +226,7 @@ export default function ArticleContent({ article }: ArticleContentProps) {
 
         {/* Use subtitle from Sanity if available */}
         {article.subtitle && (
-          <p className="text-xl md:text-2xl text-vpn-gray-light dark:text-gray-300 font-headline mb-6 leading-relaxed">
+          <p className="text-xl md:text-2xl text-vpn-gray-light dark:text-gray-300 font-roboto mb-6 leading-relaxed" style={{ fontFamily: 'Roboto, sans-serif' }}>
             {article.subtitle}
           </p>
         )}
@@ -374,23 +384,7 @@ export default function ArticleContent({ article }: ArticleContentProps) {
         </div>
       )}
       
-      {/* Share buttons */}
-      <div className="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold font-body text-vpn-gray-light dark:text-gray-400">Share this article:</h3>
-          <div className="flex space-x-4">
-            <button className="font-body text-vpn-gray-light hover:text-vpn-blue dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-              Twitter
-            </button>
-            <button className="font-body text-vpn-gray-light hover:text-vpn-blue dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-              Facebook
-            </button>
-            <button className="font-body text-vpn-gray-light hover:text-vpn-blue dark:text-gray-400 dark:hover:text-blue-400 transition-colors">
-              LinkedIn
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Share buttons section removed as requested */}
     </article>
   );
 }

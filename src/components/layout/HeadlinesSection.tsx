@@ -21,7 +21,13 @@ function formatDate(dateString?: string): string {
 
 // Fetch latest posts with author information
 async function getLatestPosts(): Promise<Post[]> {
-  const query = groq`*[_type == "post" && count((categories[]->title)[@ match "Watch"]) == 0] | order(publishedAt desc)[0...6]{
+  // Modified query to include all posts except those in "Justice Watch" and "Commentary" categories
+  // This ensures the Headlines section only shows news articles, not commentary/analysis
+  const query = groq`*[_type == "post" && count(categories[]) > 0 && 
+    !("Justice Watch" in categories[]->title) && 
+    !("Commentary" in categories[]->title) && 
+    !("Legal Commentary" in categories[]->title)] | 
+    order(publishedAt desc)[0...6]{
     _id,
     title,
     slug,
@@ -49,7 +55,11 @@ async function getLatestPosts(): Promise<Post[]> {
   }`;
   
   try {
-    const posts = await client.fetch(query);
+    const posts = await client.fetch(query, {}, {
+      // Add cache: 'no-store' to ensure fresh data
+      cache: 'no-store'
+    });
+    console.log("HeadlinesSection - Fetched posts:", posts?.length || 0);
     return posts || [];
   } catch (error) {
     console.error("Failed to fetch latest posts:", error);
@@ -74,7 +84,7 @@ function FeaturedArticle({ article }: { article: Post }) {
             priority
           />
         </div>
-        <h2 className="font-headline text-2xl md:text-3xl leading-tight mb-2 tracking-wide text-white dark:text-gray-100 transition-colors duration-200 group-hover:text-yellow-500 dark:group-hover:text-yellow-300">
+        <h2 className="font-roboto text-2xl md:text-3xl leading-tight mb-2 tracking-wide text-white dark:text-gray-100 transition-colors duration-200 group-hover:text-yellow-500 dark:group-hover:text-yellow-300" style={{ fontFamily: 'Roboto, sans-serif' }}>
           {article.title}
         </h2>
       </Link>
@@ -111,7 +121,7 @@ function SmallArticleCard({ article }: { article: Post }) {
       )}
       <div className="flex-1">
         <Link href={`/${article.slug.current}`}>
-          <h3 className="font-headline text-base leading-tight mb-2 tracking-wide text-white dark:text-gray-100 transition-colors duration-200 group-hover:text-yellow-500 dark:group-hover:text-yellow-300">
+          <h3 className="font-roboto text-base leading-tight mb-2 tracking-wide text-white dark:text-gray-100 transition-colors duration-200 group-hover:text-yellow-500 dark:group-hover:text-yellow-300" style={{ fontFamily: 'Roboto, sans-serif' }}>
             {article.title}
           </h3>
         </Link>
@@ -152,7 +162,7 @@ export default function HeadlinesSection() {
     return (
       <section className="bg-vpn-blue dark:bg-gray-900 text-white dark:text-gray-100 py-8">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+          <h2 className="text-3xl font-roboto text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
             HEADLINES
           </h2>
           
@@ -199,9 +209,9 @@ export default function HeadlinesSection() {
     <section className="bg-vpn-blue dark:bg-gray-900 text-white dark:text-gray-100 py-8">
       <div className="container mx-auto px-4">
         {/* HEADLINES title */}
-        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
-          HEADLINES
-        </h2>
+        <h1 className="text-3xl font-roboto text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          NEWS HEADLINES
+        </h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Featured article - 7 columns */}

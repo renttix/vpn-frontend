@@ -47,7 +47,7 @@ export default function Footer() {
         {/* Footer links */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-8 px-3 sm:px-4">
           <div>
-            <h3 className="font-headline font-bold text-lg mb-3">About Us</h3>
+            <h3 className="font-roboto font-bold text-lg mb-3" style={{ fontFamily: 'Roboto, sans-serif' }}>About Us</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/about" className="text-gray-300 hover:text-white">About</Link></li>
               <li><Link href="/contact-us" className="text-gray-300 hover:text-white">Contact Us</Link></li>
@@ -56,12 +56,13 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-headline font-bold text-lg mb-3">Content</h3>
+            <h3 className="font-roboto font-bold text-lg mb-3" style={{ fontFamily: 'Roboto, sans-serif' }}>Content</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/category/crime-news" className="text-gray-300 hover:text-white">Crime News</Link></li>
-              <li><Link href="/category/court-news" className="text-gray-300 hover:text-white">Court News</Link></li>
+              <li><Link href="/category/crime" className="text-gray-300 hover:text-white">Crime</Link></li>
+              <li><Link href="/category/court" className="text-gray-300 hover:text-white">Court</Link></li>
               <li><Link href="/category/news" className="text-gray-300 hover:text-white">News</Link></li>
-              <li><Link href="/category/legal-commentary" className="text-gray-300 hover:text-white">Legal Commentary</Link></li>
+              <li><Link href="/category/commentary" className="text-gray-300 hover:text-white">Commentary</Link></li>
+              <li><Link href="/category/watch" className="text-gray-300 hover:text-white">Watch</Link></li>
               <li>
                 <Link href="/subscribe" className="text-gray-300 hover:text-white flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="mr-1">
@@ -81,7 +82,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-headline font-bold text-lg mb-3">Legal</h3>
+            <h3 className="font-roboto font-bold text-lg mb-3" style={{ fontFamily: 'Roboto, sans-serif' }}>Legal</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/terms-of-use" className="text-gray-300 hover:text-white">Terms of Use</Link></li>
               <li><Link href="/privacy-policy" className="text-gray-300 hover:text-white">Privacy Policy</Link></li>
@@ -92,7 +93,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-headline font-bold text-lg mb-3">Advertise</h3>
+            <h3 className="font-roboto font-bold text-lg mb-3" style={{ fontFamily: 'Roboto, sans-serif' }}>Advertise</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/sponsorship" className="text-gray-300 hover:text-white">Sponsorship</Link></li>
               <li><Link href="/advertising" className="text-gray-300 hover:text-white">Advertising</Link></li>
@@ -101,9 +102,9 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-headline font-bold text-lg mb-3">Contact</h3>
+            <h3 className="font-roboto font-bold text-lg mb-3" style={{ fontFamily: 'Roboto, sans-serif' }}>Contact</h3>
             <address className="not-italic text-sm text-gray-300">
-              <p>Video Production News<br />
+              <p>VPN News<br />
               10 South Grove<br />
               London<br />
               N6 6BS<br />
@@ -115,7 +116,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="text-center text-sm text-gray-400 border-t border-gray-700 pt-6 px-3 sm:px-4">
-          <p>© 2025 Video Production News</p>
+          <p>© 2025 VPN News</p>
           <p className="mt-1">
             Reporting the Truth from the Courtroom Out
           </p>

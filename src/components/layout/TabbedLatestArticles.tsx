@@ -53,9 +53,9 @@ export default function TabbedLatestArticles({
   return (
     <section className="bg-white dark:bg-gray-800 p-6 rounded-sm border border-gray-200 dark:border-gray-700">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
-          LATEST
-        </h2>
+        <h1 className="text-3xl font-roboto text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
+          LATEST NEWS FROM VIDEO PRODUCTION NEWS
+        </h1>
         
         {/* Tabs */}
         <div className="flex flex-wrap gap-2">
@@ -87,7 +87,7 @@ export default function TabbedLatestArticles({
         <Link 
           href={activeTab === "all" ? "/latest" : 
                 activeTab === "crime" ? "/category/crime-news" : 
-                activeTab === "court" ? "/category/court-news" : 
+                activeTab === "court" ? "/category/court" : 
                 "/category/legal-commentary"}
           className="inline-block bg-vpn-blue text-white font-medium py-2 px-6 rounded hover:bg-opacity-90 transition dark:bg-blue-700"
         >

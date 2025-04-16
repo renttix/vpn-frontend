@@ -11,13 +11,13 @@ Disallow: /api/
 Disallow: /_next/
 
 # Sitemap location
-Sitemap: https://vpnnews.com/sitemap.xml
+Sitemap: https://www.vpnnews.co.uk/sitemap.xml
 
 # Feed locations
 # RSS Feed
-Feed: https://vpnnews.com/feed.xml
+Feed: https://www.vpnnews.co.uk/feed.xml
 # JSON Feed
-Feed: https://vpnnews.com/feed.json
+Feed: https://www.vpnnews.co.uk/feed.json
 
 # Google News specific
 User-agent: Googlebot-News

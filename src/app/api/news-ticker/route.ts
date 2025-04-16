@@ -26,7 +26,7 @@ const FALLBACK_HEADLINES = [
 
 // Static headlines that will always work even if all else fails
 const STATIC_HEADLINES = [
-  { title: "Welcome to VPN London News - Your source for legal news and updates" },
+  { title: "Welcome to VPN News - Your source for legal news and updates" },
   { title: "Reporting the Truth from the Courtroom Out" },
   { title: "Follow us for the latest legal news and updates" }
 ];
@@ -120,15 +120,15 @@ async function fetchWithTimeout(url: string, timeout: number = 15000): Promise<R
   
   try {
     const response = await fetch(url, {
-      next: { revalidate: CACHE_MAX_AGE }, // Use Next.js cache
+      next: { revalidate: CACHE_MAX_AGE }, // Use Next.js cache with revalidation
       headers: {
         'User-Agent': 'VPN News/1.0',
         'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml',
         'Cache-Control': 'no-cache',
         'Pragma': 'no-cache'
       },
-      signal: controller.signal,
-      cache: 'no-store' // Ensure we're not using browser cache
+      signal: controller.signal
+      // Removed 'cache: no-store' to avoid conflicting with revalidate
     });
     
     clearTimeout(timeoutId);

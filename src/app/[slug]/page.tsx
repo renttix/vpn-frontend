@@ -165,7 +165,7 @@ export async function generateMetadata({ params, searchParams }: any): Promise<M
         ...metadata.alternates,
         types: {
           ...metadata.alternates?.types,
-          'application/vnd.amp.html': `https://vpnnews.com/amp/${article.slug?.current || slug}`,
+          'application/vnd.amp.html': `https://www.vpnnews.co.uk/amp/${article.slug?.current || slug}`,
         },
       },
     };
@@ -260,7 +260,7 @@ export default async function SlugPage({ params, searchParams }: any) {
     
     // Extract FAQs from article content if available
     const faqs = article.body ? extractFaqsFromContent(article.body) : [];
-    const articleUrl = `https://vpnnews.com/${article.slug?.current || slug}`;
+    const articleUrl = `https://www.vpnnews.co.uk/${article.slug?.current || slug}`;
     
     return (
       <Layout categories={allCategories}>
@@ -276,7 +276,7 @@ export default async function SlugPage({ params, searchParams }: any) {
         {article && article.series && article.series.seriesRef && article.seriesArticles && (
           <SeriesJsonLd
             series={article.series.seriesRef}
-            seriesUrl={`https://vpnnews.com/series/${article.series.seriesRef.slug.current}`}
+            seriesUrl={`https://www.vpnnews.co.uk/series/${article.series.seriesRef.slug.current}`}
             article={article}
             articleUrl={articleUrl}
             partNumber={article.series.partNumber || 1}
@@ -395,7 +395,7 @@ export default async function SlugPage({ params, searchParams }: any) {
         <CategoryJsonLd 
           category={category} 
           posts={categoryPosts}
-          url={`https://vpnnews.com/${category.slug?.current || slug}`} 
+          url={`https://www.vpnnews.co.uk/${category.slug?.current || slug}`} 
         />
         
         <div className="container mx-auto px-4 py-8">

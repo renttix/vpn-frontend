@@ -51,14 +51,14 @@ export default function SeriesJsonLd({
       "author": article.author ? {
         "@type": "Person",
         "name": article.author.name,
-        "url": article.author.slug ? `https://vpnnews.com/author/${article.author.slug.current}` : undefined
+        "url": article.author.slug ? `https://www.vpnnews.co.uk/author/${article.author.slug.current}` : undefined
       } : undefined,
       "publisher": {
         "@type": "Organization",
         "name": "Video Production News",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://vpnnews.com/images/logo.png",
+          "url": "https://www.vpnnews.co.uk/images/logo.png",
           "width": 600,
           "height": 60
         }
@@ -98,7 +98,7 @@ export default function SeriesJsonLd({
  */
 export function formatSeriesArticles(
   articles: Post[],
-  baseUrl: string = 'https://vpnnews.com'
+  baseUrl: string = 'https://www.vpnnews.co.uk'
 ): Array<{ title: string; url: string; partNumber: number }> {
   if (!articles || !Array.isArray(articles)) return [];
   

@@ -1,260 +1,238 @@
-"use client";
+import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { getPopularSearchTerms, getSearchHistory } from '@/lib/searchAnalytics';
 
-import { useState, useEffect, useRef } from "react";
-import { Search, X } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useDebounce } from "@/lib/hooks";
-import Portal from "@/components/ui/Portal";
-
-// Types for search suggestions
-interface SearchSuggestion {
-  title: string;
-  slug: string;
-  type: 'article' | 'category';
+interface SearchAutocompleteProps {
+  query: string;
+  onQueryChange: (query: string) => void;
+  onSearch: (query: string) => void;
 }
 
-export default function SearchAutocomplete() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+/**
+ * Search Autocomplete Component
+ * 
+ * Provides autocomplete suggestions for the search input:
+ * - Popular search terms
+ * - User's search history
+ * - Fuzzy matching for typo tolerance
+ */
+export default function SearchAutocomplete({
+  query,
+  onQueryChange,
+  onSearch
+}: SearchAutocompleteProps) {
   const router = useRouter();
-  const searchRef = useRef<HTMLDivElement>(null);
-  const debouncedQuery = useDebounce(query, 300);
-
-  // Close search when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
+  
   // Fetch suggestions when query changes
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (debouncedQuery.length < 2) {
+      if (!query || query.length < 2) {
         setSuggestions([]);
         return;
       }
-
-      setIsLoading(true);
+      
       try {
-        const response = await fetch(`/api/search/suggestions?q=${encodeURIComponent(debouncedQuery)}`);
-        const data = await response.json();
-        setSuggestions(data.suggestions);
+        // Get popular search terms
+        const popularTerms = await getPopularSearchTerms(10);
+        
+        // Get user's search history
+        const searchHistory = getSearchHistory().map(item => item.query);
+        
+        // Combine and deduplicate
+        const allTerms = [...new Set([...popularTerms, ...searchHistory])];
+        
+        // Filter terms that match the query (case-insensitive)
+        const exactMatches = allTerms.filter(term => 
+          term.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        // Add fuzzy matching for typo tolerance
+        const fuzzyMatches = allTerms.filter(term => {
+          // Skip terms that are already exact matches
+          if (exactMatches.includes(term)) return false;
+          
+          // Simple Levenshtein distance calculation (for terms of similar length)
+          return calculateLevenshteinDistance(query.toLowerCase(), term.toLowerCase()) <= 2;
+        });
+        
+        // Combine exact and fuzzy matches, prioritizing exact matches
+        const combinedSuggestions = [...exactMatches, ...fuzzyMatches].slice(0, 5);
+        
+        setSuggestions(combinedSuggestions);
       } catch (error) {
-        console.error("Failed to fetch suggestions:", error);
+        console.error('Error fetching suggestions:', error);
         setSuggestions([]);
-      } finally {
-        setIsLoading(false);
       }
     };
-
+    
     fetchSuggestions();
-  }, [debouncedQuery]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (query.trim()) {
-      setIsOpen(false);
-      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
-    }
+  }, [query]);
+  
+  // Show suggestions when input is focused
+  const handleFocus = () => {
+    setShowSuggestions(true);
   };
-
-  // Create unique IDs for ARIA relationships
-  const searchButtonId = "search-button";
-  const searchDialogId = "search-dialog";
-  const searchInputId = "search-input";
-  const searchSuggestionsId = "search-suggestions";
-  const searchStatusId = "search-status";
   
-  // Track the currently focused suggestion index for keyboard navigation
-  const [focusedIndex, setFocusedIndex] = useState(-1);
+  // Handle input change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onQueryChange(e.target.value);
+    setActiveSuggestionIndex(-1);
+  };
   
-  // Handle keyboard navigation through suggestions
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!suggestions.length) return;
+  // Handle suggestion click
+  const handleSuggestionClick = (suggestion: string) => {
+    onQueryChange(suggestion);
+    onSearch(suggestion);
+    setShowSuggestions(false);
+  };
+  
+  // Handle keyboard navigation
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Enter key
+    if (e.key === 'Enter') {
+      if (activeSuggestionIndex >= 0 && activeSuggestionIndex < suggestions.length) {
+        // Select the active suggestion
+        onQueryChange(suggestions[activeSuggestionIndex]);
+        onSearch(suggestions[activeSuggestionIndex]);
+      } else {
+        // Search with the current query
+        onSearch(query);
+      }
+      setShowSuggestions(false);
+      return;
+    }
+    
+    // Escape key
+    if (e.key === 'Escape') {
+      setShowSuggestions(false);
+      return;
+    }
     
     // Arrow down
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setFocusedIndex(prev => (prev < suggestions.length - 1 ? prev + 1 : 0));
+      setActiveSuggestionIndex(prev => 
+        prev < suggestions.length - 1 ? prev + 1 : prev
+      );
+      return;
     }
+    
     // Arrow up
-    else if (e.key === 'ArrowUp') {
+    if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setFocusedIndex(prev => (prev > 0 ? prev - 1 : suggestions.length - 1));
-    }
-    // Enter key when a suggestion is focused
-    else if (e.key === 'Enter' && focusedIndex >= 0) {
-      e.preventDefault();
-      const suggestion = suggestions[focusedIndex];
-      router.push(suggestion.type === 'article' ? `/${suggestion.slug}` : `/category/${suggestion.slug}`);
-      setIsOpen(false);
-    }
-    // Escape key
-    else if (e.key === 'Escape') {
-      setIsOpen(false);
+      setActiveSuggestionIndex(prev => 
+        prev > 0 ? prev - 1 : -1
+      );
+      return;
     }
   };
   
-  // Reset focused index when suggestions change
+  // Close suggestions when clicking outside
   useEffect(() => {
-    setFocusedIndex(-1);
-  }, [suggestions]);
-
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        inputRef.current && 
+        !inputRef.current.contains(e.target as Node) &&
+        suggestionsRef.current && 
+        !suggestionsRef.current.contains(e.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
+  // Calculate Levenshtein distance for fuzzy matching
+  const calculateLevenshteinDistance = (a: string, b: string): number => {
+    // Skip calculation for strings with large length difference
+    if (Math.abs(a.length - b.length) > 3) return Infinity;
+    
+    const matrix: number[][] = [];
+    
+    // Initialize matrix
+    for (let i = 0; i <= b.length; i++) {
+      matrix[i] = [i];
+    }
+    
+    for (let j = 0; j <= a.length; j++) {
+      matrix[0][j] = j;
+    }
+    
+    // Fill matrix
+    for (let i = 1; i <= b.length; i++) {
+      for (let j = 1; j <= a.length; j++) {
+        const cost = a[j - 1] === b[i - 1] ? 0 : 1;
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j] + 1, // deletion
+          matrix[i][j - 1] + 1, // insertion
+          matrix[i - 1][j - 1] + cost // substitution
+        );
+      }
+    }
+    
+    return matrix[b.length][a.length];
+  };
+  
   return (
-    <div ref={searchRef} className="relative">
-      <button
-        id={searchButtonId}
-        onClick={() => setIsOpen(true)}
-        aria-label="Open search"
-        aria-expanded={isOpen}
-        aria-haspopup="dialog"
-        aria-controls={searchDialogId}
-        className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-vpn-gray dark:text-gray-300 hover:text-vpn-blue dark:hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-vpn-blue dark:focus:ring-blue-400"
-      >
-        <Search size={18} aria-hidden="true" />
-      </button>
-
-      {isOpen && (
-        <Portal>
-          <div 
-            id={searchDialogId}
-            className="fixed inset-0 bg-black bg-opacity-50 z-999 flex items-start justify-center pt-20 px-4" 
-            role="dialog" 
-            aria-modal="true" 
-            aria-labelledby="search-dialog-title"
-          >
-            <div className="bg-background dark:bg-gray-800 rounded-md shadow-lg w-full max-w-2xl">
-              <div className="p-4 border-b border-border">
-                <h2 id="search-dialog-title" className="sr-only">Search</h2>
-                <form onSubmit={handleSubmit} role="search">
-                  <div className="relative">
-                    <label htmlFor={searchInputId} className="sr-only">Search for news, articles, topics</label>
-                    <input
-                      id={searchInputId}
-                      type="search"
-                      placeholder="Search for news, articles, topics..."
-                      className="w-full px-4 py-2 pr-10 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-vpn-blue dark:bg-gray-700 dark:text-white"
-                      value={query}
-                      onChange={(e) => setQuery(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      autoFocus
-                      aria-autocomplete="list"
-                      aria-controls={debouncedQuery.length >= 2 ? searchSuggestionsId : undefined}
-                      aria-activedescendant={focusedIndex >= 0 ? `suggestion-${focusedIndex}` : undefined}
-                      aria-describedby={searchStatusId}
-                    />
-                    <button
-                      type="submit"
-                      className="absolute right-2 top-1/2 transform -translate-y-1/2 text-vpn-gray dark:text-gray-300"
-                      aria-label="Submit search"
-                    >
-                      <Search size={18} aria-hidden="true" />
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              {/* Hidden status for screen readers */}
-              <div id={searchStatusId} className="sr-only" aria-live="polite">
-                {isLoading 
-                  ? "Loading search suggestions" 
-                  : debouncedQuery.length >= 2 
-                    ? suggestions.length > 0 
-                      ? `${suggestions.length} suggestions found. Use up and down arrow keys to navigate.` 
-                      : "No suggestions found for your search." 
-                    : "Type at least 2 characters to see suggestions."}
-              </div>
-
-              {/* Suggestions */}
-              {debouncedQuery.length >= 2 && (
-                <div className="p-4 max-h-80 overflow-y-auto">
-                  {isLoading ? (
-                    <div className="text-center py-4" aria-live="polite">Loading suggestions...</div>
-                  ) : suggestions.length > 0 ? (
-                    <ul 
-                      id={searchSuggestionsId} 
-                      className="space-y-2" 
-                      role="listbox" 
-                      aria-label="Search suggestions"
-                    >
-                      {suggestions.map((suggestion, index) => (
-                        <li 
-                          key={index} 
-                          id={`suggestion-${index}`}
-                          role="option" 
-                          aria-selected={focusedIndex === index}
-                          className={`${focusedIndex === index ? 'bg-gray-100 dark:bg-gray-700' : ''}`}
-                        >
-                          <Link
-                            href={suggestion.type === 'article' ? `/${suggestion.slug}` : `/category/${suggestion.slug}`}
-                            className="block p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                            onClick={() => setIsOpen(false)}
-                            onMouseEnter={() => setFocusedIndex(index)}
-                            onFocus={() => setFocusedIndex(index)}
-                          >
-                            <div className="flex items-center">
-                              <span className="text-xs uppercase text-vpn-gray-light dark:text-gray-400 mr-2">
-                                {suggestion.type}:
-                              </span>
-                              <span>{suggestion.title}</span>
-                            </div>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <div className="text-center py-4" aria-live="polite">No suggestions found</div>
-                  )}
+    <div className="relative w-full">
+      {/* Search Input */}
+      <div className="relative">
+        <input
+          ref={inputRef}
+          type="text"
+          value={query}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onKeyDown={handleKeyDown}
+          placeholder="Search articles..."
+          className="w-full p-2 pl-10 border border-gray-300 dark:border-gray-700 rounded-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-vpn-blue"
+          aria-label="Search"
+          autoComplete="off"
+        />
+        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+      
+      {/* Suggestions Dropdown */}
+      {showSuggestions && suggestions.length > 0 && (
+        <div 
+          ref={suggestionsRef}
+          className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-sm shadow-lg"
+        >
+          <ul className="py-1">
+            {suggestions.map((suggestion, index) => (
+              <li 
+                key={index}
+                className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                  index === activeSuggestionIndex ? 'bg-gray-100 dark:bg-gray-700' : ''
+                }`}
+                onClick={() => handleSuggestionClick(suggestion)}
+              >
+                <div className="flex items-center">
+                  <span className="mr-2 text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </span>
+                  <span className="text-gray-900 dark:text-gray-100">{suggestion}</span>
                 </div>
-              )}
-
-              {/* Popular searches */}
-              <div className="p-4 border-t border-border">
-                <h3 id="popular-searches-heading" className="text-sm font-medium mb-2">Popular Searches:</h3>
-                <div 
-                  className="flex flex-wrap gap-2"
-                  role="group" 
-                  aria-labelledby="popular-searches-heading"
-                >
-                  {["Crime News", "Court Cases", "Legal Updates", "News"].map((term) => (
-                    <button
-                      key={term}
-                      onClick={() => {
-                        setQuery(term);
-                        router.push(`/search?q=${encodeURIComponent(term)}`);
-                        setIsOpen(false);
-                      }}
-                      className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-vpn-gray dark:text-gray-300 text-sm rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"
-                      aria-label={`Search for ${term}`}
-                    >
-                      {term}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Close button */}
-              <div className="p-4 border-t border-border flex justify-end">
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-vpn-gray dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
-                  aria-label="Close search dialog"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </Portal>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

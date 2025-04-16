@@ -1,246 +1,369 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { notFound } from 'next/navigation';
-import { groq } from 'next-sanity';
-import { client } from '@/lib/sanity.client';
 import Layout from '@/components/layout/Layout';
-import Link from 'next/link';
-import { formatDate } from '@/lib/utils';
-import { Metadata } from 'next';
-import { defaultMetadata } from '@/lib/metadata';
+import SearchFilters from '@/components/search/SearchFilters';
+import SearchResults from '@/components/search/SearchResults';
+import SearchAutocomplete from '@/components/search/SearchAutocomplete';
+import { SearchResult, Category, Author } from '@/types/sanity';
+import { 
+  loadFilters, 
+  saveFilters, 
+  parseUrlParams, 
+  mergeFilters, 
+  SearchFilterState 
+} from '@/lib/searchFilterStorage';
+import { 
+  trackSearchQuery, 
+  trackFilterUsage, 
+  trackSearchResults, 
+  trackFailedSearch,
+  trackPagination,
+  storeSearchQuery
+} from '@/lib/searchAnalytics';
 
-// Define types
-interface SearchResult {
-  _id: string;
-  title: string;
-  slug: { current: string };
-  mainImage?: { asset: { url: string; alt?: string } };
-  author?: { name: string };
-  publishedAt: string;
-  excerpt?: string;
-  categories?: { _id: string; title: string; slug: { current: string } }[];
-}
-
-interface Category {
-  _id: string;
-  title: string;
-  slug: { current: string };
-}
-
+// Define the page props
 interface SearchPageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-// Function to fetch search results and categories
-async function getSearchResults(query: string): Promise<{ results: SearchResult[]; allCategories: Category[] }> {
-  // Fetch all categories for the header
-  const allCategoriesQuery = groq`*[_type == "category"]{
-    _id,
-    title,
-    slug
-  }`;
-
-  // Search query - search in title, excerpt, and body content
-  const searchQuery = groq`*[_type == "post" && (
-    title match $searchPattern || 
-    excerpt match $searchPattern || 
-    pt::text(body) match $searchPattern
-  )]{
-    _id,
-    title,
-    slug,
-    mainImage{ asset->{url, alt} },
-    author->{name},
-    publishedAt,
-    excerpt,
-    categories[]->{ _id, title, slug }
-  } | order(publishedAt desc) [0...20]`; // Limit to 20 results
-
-  // Create search pattern with wildcards
-  const searchPattern = `*${query}*`;
-
-  // Fetch search results and categories concurrently
-  const [results, allCategories] = await Promise.all([
-    client.fetch<SearchResult[]>(searchQuery, { searchPattern }),
-    client.fetch<Category[]>(allCategoriesQuery)
-  ]);
-
-  return { 
-    results: results || [], 
-    allCategories: allCategories || [] 
-  };
+// Define the search state
+interface SearchState {
+  query: string;
+  results: SearchResult[];
+  categories: Category[];
+  authors: Author[];
+  selectedCategories: string[];
+  selectedAuthors: string[];
+  dateFrom?: string;
+  dateTo?: string;
+  sortBy: string;
+  currentPage: number;
+  totalPages: number;
+  isLoading: boolean;
+  error?: string;
 }
 
-// Generate metadata for the page
-export async function generateMetadata({ searchParams }: any): Promise<Metadata> {
-  // Access searchParams directly - it's not a Promise
-  const query = typeof searchParams.q === 'string' ? searchParams.q : '';
-  
-  return {
-    ...defaultMetadata,
-    title: query ? `Search results for "${query}"` : 'Search',
-    description: `Search results for "${query}" on VPN News - Video Production News`,
-    alternates: {
-      canonical: `/search?q=${encodeURIComponent(query)}`,
-    },
-    openGraph: {
-      ...defaultMetadata.openGraph,
-      title: query ? `Search results for "${query}" - VPN News` : 'Search - VPN News',
-      url: `/search?q=${encodeURIComponent(query)}`,
-    },
-    robots: {
-      index: false,
-      follow: true,
-    }
-  };
-}
+// Results per page
+const RESULTS_PER_PAGE = 10;
 
 // Search Page Component
-export default async function SearchPage({ searchParams }: any) {
-  // Access searchParams directly - it's not a Promise
+export default function SearchPage({ searchParams }: SearchPageProps) {
+  const router = useRouter();
+  const urlSearchParams = useSearchParams();
+  
   // Get search query from URL
-  const query = typeof searchParams.q === 'string' ? searchParams.q : '';
+  const query = typeof urlSearchParams.get('q') === 'string' ? urlSearchParams.get('q') || '' : '';
   
   // If no query provided, return 404
   if (!query) {
     notFound();
   }
-
-  // Fetch search results and categories
-  const { results, allCategories } = await getSearchResults(query);
-
+  
+  // Parse other search parameters
+  const page = parseInt(urlSearchParams.get('page') || '1', 10);
+  const categoriesParam = urlSearchParams.get('categories') || '';
+  const authorsParam = urlSearchParams.get('authors') || '';
+  const dateFrom = urlSearchParams.get('dateFrom') || undefined;
+  const dateTo = urlSearchParams.get('dateTo') || undefined;
+  const sortBy = urlSearchParams.get('sortBy') || 'relevance';
+  
+  // Parse array parameters
+  const selectedCategories = categoriesParam ? categoriesParam.split(',') : [];
+  const selectedAuthors = authorsParam ? authorsParam.split(',') : [];
+  
+  // Search state
+  const [searchState, setSearchState] = useState<SearchState>({
+    query,
+    results: [],
+    categories: [],
+    authors: [],
+    selectedCategories,
+    selectedAuthors,
+    dateFrom,
+    dateTo,
+    sortBy,
+    currentPage: page,
+    totalPages: 1,
+    isLoading: true,
+    error: undefined
+  });
+  
+  // Load saved filters on initial render
+  useEffect(() => {
+    // Load saved filters from local storage
+    const savedFilters = loadFilters();
+    
+    // Parse URL parameters
+    const urlParams = parseUrlParams(new URLSearchParams(window.location.search));
+    
+    // Merge URL parameters with saved filters, prioritizing URL parameters
+    const mergedFilters = mergeFilters(urlParams, savedFilters);
+    
+    // Update search state with merged filters
+    setSearchState(prev => ({
+      ...prev,
+      selectedCategories: mergedFilters.selectedCategories,
+      selectedAuthors: mergedFilters.selectedAuthors,
+      dateFrom: mergedFilters.dateFrom,
+      dateTo: mergedFilters.dateTo,
+      sortBy: mergedFilters.sortBy,
+    }));
+  }, []);
+  
+  // Fetch search results
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      setSearchState(prev => ({ ...prev, isLoading: true, error: undefined }));
+      
+      // Store search query for analytics and autocomplete
+      storeSearchQuery(query);
+      
+      try {
+        // Build the API URL with all search parameters
+        const apiUrl = new URL('/api/search', window.location.origin);
+        apiUrl.searchParams.append('q', query);
+        apiUrl.searchParams.append('page', searchState.currentPage.toString());
+        apiUrl.searchParams.append('limit', RESULTS_PER_PAGE.toString());
+        
+        if (searchState.selectedCategories.length > 0) {
+          apiUrl.searchParams.append('categories', searchState.selectedCategories.join(','));
+        }
+        
+        if (searchState.selectedAuthors.length > 0) {
+          apiUrl.searchParams.append('authors', searchState.selectedAuthors.join(','));
+        }
+        
+        if (searchState.dateFrom) {
+          apiUrl.searchParams.append('dateFrom', searchState.dateFrom);
+        }
+        
+        if (searchState.dateTo) {
+          apiUrl.searchParams.append('dateTo', searchState.dateTo);
+        }
+        
+        apiUrl.searchParams.append('sortBy', searchState.sortBy);
+        
+        // Fetch search results
+        const response = await fetch(apiUrl.toString());
+        
+        if (!response.ok) {
+          throw new Error(`Search request failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Update search state with results
+        setSearchState(prev => ({
+          ...prev,
+          results: data.results || [],
+          categories: data.categories || [],
+          authors: data.authors || [],
+          totalPages: Math.ceil(data.total / RESULTS_PER_PAGE),
+          isLoading: false
+        }));
+        
+      } catch (error) {
+        console.error('Error fetching search results:', error);
+        setSearchState(prev => ({
+          ...prev,
+          isLoading: false,
+          error: error instanceof Error ? error.message : 'An error occurred while searching'
+        }));
+      }
+    };
+    
+    fetchSearchResults();
+  }, [
+    query,
+    searchState.currentPage,
+    searchState.selectedCategories,
+    searchState.selectedAuthors,
+    searchState.dateFrom,
+    searchState.dateTo,
+    searchState.sortBy
+  ]);
+  
+  // Handle query change
+  const handleQueryChange = (newQuery: string) => {
+    setSearchState(prev => ({
+      ...prev,
+      query: newQuery
+    }));
+  };
+  
+  // Handle search submission
+  const handleSearch = (searchQuery: string) => {
+    // Track search query
+    trackSearchQuery(searchQuery, 0); // We don't know the result count yet
+    
+    // Update URL with new query
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set('q', searchQuery);
+    
+    // Reset page to 1
+    newUrl.searchParams.set('page', '1');
+    
+    // Update URL and reload the page
+    router.push(newUrl.toString());
+  };
+  
+  // Handle filter changes
+  const handleApplyFilters = (filters: {
+    categories: string[];
+    authors: string[];
+    dateFrom?: string;
+    dateTo?: string;
+    sortBy: string;
+  }) => {
+    // Save filters to local storage
+    saveFilters({
+      selectedCategories: filters.categories,
+      selectedAuthors: filters.authors,
+      dateFrom: filters.dateFrom,
+      dateTo: filters.dateTo,
+      sortBy: filters.sortBy
+    });
+    
+    // Track filter usage
+    if (filters.categories.length > 0) {
+      trackFilterUsage('categories', filters.categories.join(','));
+    }
+    
+    if (filters.authors.length > 0) {
+      trackFilterUsage('authors', filters.authors.join(','));
+    }
+    
+    if (filters.dateFrom) {
+      trackFilterUsage('dateFrom', filters.dateFrom);
+    }
+    
+    if (filters.dateTo) {
+      trackFilterUsage('dateTo', filters.dateTo);
+    }
+    
+    trackFilterUsage('sortBy', filters.sortBy);
+    
+    // Update search state
+    setSearchState(prev => ({
+      ...prev,
+      selectedCategories: filters.categories,
+      selectedAuthors: filters.authors,
+      dateFrom: filters.dateFrom,
+      dateTo: filters.dateTo,
+      sortBy: filters.sortBy,
+      currentPage: 1 // Reset to first page when filters change
+    }));
+    
+    // Update URL with new filters
+    const newUrl = new URL(window.location.href);
+    
+    // Update or remove category parameter
+    if (filters.categories.length > 0) {
+      newUrl.searchParams.set('categories', filters.categories.join(','));
+    } else {
+      newUrl.searchParams.delete('categories');
+    }
+    
+    // Update or remove author parameter
+    if (filters.authors.length > 0) {
+      newUrl.searchParams.set('authors', filters.authors.join(','));
+    } else {
+      newUrl.searchParams.delete('authors');
+    }
+    
+    // Update or remove date parameters
+    if (filters.dateFrom) {
+      newUrl.searchParams.set('dateFrom', filters.dateFrom);
+    } else {
+      newUrl.searchParams.delete('dateFrom');
+    }
+    
+    if (filters.dateTo) {
+      newUrl.searchParams.set('dateTo', filters.dateTo);
+    } else {
+      newUrl.searchParams.delete('dateTo');
+    }
+    
+    // Update sort parameter
+    newUrl.searchParams.set('sortBy', filters.sortBy);
+    
+    // Reset page to 1
+    newUrl.searchParams.set('page', '1');
+    
+    // Update URL without reloading the page
+    router.replace(newUrl.toString(), { scroll: false });
+  };
+  
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    // Update search state
+    setSearchState(prev => ({
+      ...prev,
+      currentPage: page
+    }));
+    
+    // Update URL with new page
+    const newUrl = new URL(window.location.href);
+    newUrl.searchParams.set('page', page.toString());
+    
+    // Update URL without reloading the page
+    router.replace(newUrl.toString(), { scroll: false });
+    
+    // Scroll to top of results
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
   return (
-    <Layout categories={allCategories}>
+    <Layout categories={searchState.categories}>
       <div className="container mx-auto px-4 py-8">
-        {/* Horizontal Ad Banner Placeholder - Sticky */}
-        <div className="mb-6 sticky top-[120px] z-30">
-          <div className="w-full h-[90px] bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-muted-foreground text-sm border border-border">
-            Horizontal Advertisement (e.g., 728x90)
-          </div>
+        {/* Search Box */}
+        <div className="mb-8">
+          <SearchAutocomplete
+            query={searchState.query}
+            onQueryChange={handleQueryChange}
+            onSearch={handleSearch}
+          />
         </div>
-
-        {/* Search Header */}
-        <div className="mb-8 pb-4 border-b border-gray-300 dark:border-gray-700">
-          <h1 className="text-3xl md:text-4xl font-heading font-bold text-vpn-blue dark:text-blue-400 mb-2">
-            Search Results
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            {results.length} {results.length === 1 ? 'result' : 'results'} for "{query}"
-          </p>
-        </div>
-
-        {/* Grid for Content and Right Ad */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Search Results - Middle Column - First on mobile */}
-          <div className="col-span-1 lg:col-span-8 order-1">
-            <div className="grid grid-cols-1 gap-8">
-              {results.length > 0 ? (
-                results.map((result) => (
-                  <article 
-                    key={result._id} 
-                    className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 rounded-sm shadow-sm flex flex-col md:flex-row gap-6"
-                  >
-                    {/* Article Image */}
-                    {result.mainImage?.asset?.url ? (
-                      <div className="md:w-1/4">
-                        <Link href={`/${result.slug?.current ?? '#'}`} className="block">
-                          <div className="relative aspect-[16/9] overflow-hidden rounded-sm">
-                            <img
-                              src={result.mainImage.asset.url}
-                              alt={result.mainImage.asset.alt || result.title || 'Article image'}
-                              className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
-                              width="400"
-                              height="225"
-                              loading="lazy"
-                            />
-                          </div>
-                        </Link>
-                      </div>
-                    ) : null}
-
-                    {/* Article Content */}
-                    <div className={`${result.mainImage?.asset?.url ? 'md:w-3/4' : 'w-full'}`}>
-                      <Link href={`/${result.slug?.current ?? '#'}`} className="group">
-                        <h2 className="font-heading font-bold text-vpn-gray dark:text-vpn-gray-dark text-xl md:text-2xl leading-tight group-hover:text-vpn-blue dark:group-hover:text-blue-400 mb-2">
-                          {result.title || 'Untitled Post'}
-                        </h2>
-                      </Link>
-                      
-                      {result.excerpt && (
-                        <p className="text-vpn-gray dark:text-vpn-gray-dark/80 text-base mb-4">
-                          {result.excerpt}
-                        </p>
-                      )}
-                      
-                      <div className="flex flex-wrap items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
-                        {result.author?.name && <span className="mr-3">By {result.author.name}</span>}
-                        <span className="mr-3">{formatDate(result.publishedAt)}</span>
-                        
-                        {/* Categories */}
-                        {result.categories && result.categories.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mt-2 md:mt-0">
-                            {result.categories.map((category) => (
-                              <Link
-                                key={category._id}
-                                href={`/category/${category.slug?.current ?? '#'}`}
-                                className="text-xs bg-gray-100 dark:bg-gray-700 text-vpn-blue dark:text-blue-400 px-2 py-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"
-                              >
-                                {category.title}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                      
-                      <Link 
-                        href={`/${result.slug?.current ?? '#'}`} 
-                        className="text-vpn-blue dark:text-blue-400 font-medium hover:underline"
-                      >
-                        Read full article →
-                      </Link>
-                    </div>
-                  </article>
-                ))
-              ) : (
-                <div className="text-center py-12">
-                  <h2 className="text-xl font-bold mb-4">No results found for "{query}"</h2>
-                  <p className="text-gray-600 dark:text-gray-400 mb-6">
-                    Try different keywords or check your spelling.
-                  </p>
-                  <div className="flex justify-center">
-                    <Link 
-                      href="/" 
-                      className="bg-vpn-blue text-white px-6 py-2 rounded-sm hover:bg-opacity-90"
-                    >
-                      Return to Home
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
+        
+        {/* Grid for Content */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* Filters Sidebar */}
+          <div className="md:col-span-1">
+            <SearchFilters
+              categories={searchState.categories}
+              authors={searchState.authors}
+              selectedCategories={searchState.selectedCategories}
+              selectedAuthors={searchState.selectedAuthors}
+              dateFrom={searchState.dateFrom}
+              dateTo={searchState.dateTo}
+              sortBy={searchState.sortBy}
+              onApplyFilters={handleApplyFilters}
+            />
           </div>
-
-          {/* Left Ad Column - Hidden on Mobile */}
-          <div className="hidden lg:block lg:col-span-2 order-2">
-            <div className="sticky top-4">
-              <div className="w-full h-[600px] bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-muted-foreground text-sm border border-border">
-                <div>Ad (e.g., 160x600)</div>
+          
+          {/* Search Results */}
+          <div className="md:col-span-3">
+            {searchState.isLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-vpn-blue"></div>
               </div>
-            </div>
-          </div>
-
-          {/* Right Ad Column - Hidden on Mobile */}
-          <div className="hidden lg:block lg:col-span-2 order-3">
-            <div className="sticky top-4">
-              <div className="w-full h-[600px] bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-muted-foreground text-sm border border-border">
-                <div>Ad (e.g., 160x600)</div>
+            ) : searchState.error ? (
+              <div className="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded relative" role="alert">
+                <strong className="font-bold">Error:</strong>
+                <span className="block sm:inline"> {searchState.error}</span>
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Horizontal Ad Banner - Sticky at bottom */}
-        <div className="mt-8 sticky bottom-0 z-30">
-          <div className="w-full h-[90px] bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-muted-foreground text-sm border border-border">
-            Horizontal Advertisement (e.g., 728x90)
+            ) : (
+              <SearchResults
+                results={searchState.results}
+                query={query}
+                currentPage={searchState.currentPage}
+                totalPages={searchState.totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
           </div>
         </div>
       </div>

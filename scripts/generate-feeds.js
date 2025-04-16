@@ -21,7 +21,7 @@ const client = createClient({
 });
 
 // Base URL for the site
-const SITE_URL = 'https://vpnnews.com';
+const SITE_URL = 'https://www.vpnnews.co.uk';
 const SITE_TITLE = 'Video Production News';
 const SITE_DESCRIPTION = 'Breaking legal news, court reports, expert analysis on criminal cases, legal developments, and in-depth coverage of high-profile trials.';
 const SITE_LANGUAGE = 'en';

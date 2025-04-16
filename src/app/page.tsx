@@ -1,6 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import HeadlinesSection from "@/components/layout/HeadlinesSection";
 import HeroSection from "@/components/layout/HeroSection";
+import FeaturedVideoSection from "@/components/layout/FeaturedVideoSection";
 import LatestArticles from "@/components/layout/LatestArticles";
 import TabbedLatestArticles from "@/components/layout/TabbedLatestArticles";
 import CheatSheet from "@/components/layout/CheatSheet";
@@ -389,6 +390,80 @@ async function getLatestPostsForTabs(count: number = 6): Promise<Post[]> {
   }
 }
 
+// Fetch latest posts by category ID
+async function getLatestPostsByCategoryId(categoryId: string, count: number = 6): Promise<Post[]> {
+  const query = groq`*[_type == "post" && references($categoryId)] | order(publishedAt desc)[0...${count}]{
+    _id,
+    title,
+    slug,
+    mainImage {
+      asset->{
+        url
+      }
+    },
+    categories[]->{
+      _id,
+      title,
+      slug
+    },
+    publishedAt
+  }`;
+  
+  try {
+    console.log(`Fetching latest posts for category ID: ${categoryId} from Sanity...`);
+    const posts = await client.fetch(query, { categoryId }, {
+      // Add cache: 'no-store' to ensure fresh data
+      cache: 'no-store'
+    });
+    console.log(`Found ${posts?.length || 0} posts for category ID: ${categoryId}`);
+    
+    // Check if posts have the expected structure and filter out invalid ones
+    if (posts && posts.length > 0) {
+      // Filter out posts with missing required data
+      const validPosts = posts.filter((post: Post) => {
+        // Ensure post has a title
+        if (!post.title) return false;
+        
+        // Ensure post has a valid mainImage
+        if (!post.mainImage || !post.mainImage.asset || !post.mainImage.asset.url) {
+          // Add a placeholder image for posts without images
+          post.mainImage = {
+            asset: {
+              url: '/images/placeholder-news.jpg'
+            }
+          };
+        }
+        
+        // Ensure post has categories
+        if (!post.categories || post.categories.length === 0) {
+          // Add a default category for posts without categories
+          post.categories = [{
+            _id: categoryId,
+            title: "Court News",
+            slug: { current: "court", _type: 'slug' }
+          }];
+        }
+        
+        return true;
+      });
+      
+      return validPosts;
+    } else {
+      console.warn(`No posts returned for category ID: ${categoryId}`);
+      return []; // Return empty array if no posts
+    }
+  } catch (error) {
+    console.error(`Failed to fetch latest posts for category ID: ${categoryId}:`, error);
+    // Return some default posts to prevent UI failures
+    return Array(count).fill(0).map((_, i) => ({
+      _id: `default-court-${i+1}`,
+      title: `Sample Court Article ${i+1}`,
+      slug: { current: `sample-court-article-${i+1}`, _type: 'slug' },
+      publishedAt: new Date().toISOString()
+    }));
+  }
+}
+
 // Fetch latest posts by category
 async function getLatestPostsByCategory(categoryTitle: string, count: number = 6): Promise<Post[]> {
   const query = groq`*[_type == "post" && references(*[_type == "category" && title == $categoryTitle]._id)] | order(publishedAt desc)[0...${count}]{
@@ -471,9 +546,11 @@ export default async function Home() { // Make the component async
   
   // Fetch data for tabbed latest articles section
   const allLatestPosts = await getLatestPostsForTabs(6);
-  const latestCrimePosts = await getLatestPostsByCategory("Crime News", 6);
-  const latestCourtPosts = await getLatestPostsByCategory("Court News", 6);
-  const latestCommentaryPosts = await getLatestPostsByCategory("Legal Commentary", 6);
+  
+  // Use category IDs for all category-specific queries
+  const latestCrimePosts = await getLatestPostsByCategoryId("93053966-0a99-444a-9f8a-7dfc43ed7380", 6);
+  const latestCourtPosts = await getLatestPostsByCategoryId("c81a52c4-119a-46f0-8306-10bc3f72dd19", 6);
+  const latestCommentaryPosts = await getLatestPostsByCategoryId("IZrPJ0KdVO8qEhMFzimYnr", 6);
 
   return (
     // Pass categories to Layout
@@ -486,15 +563,18 @@ export default async function Home() { // Make the component async
       {/* Latest News Section */}
       <LatestNewsSection posts={latestNewsPosts} />
       
-      {/* Latest Court Reports Section */}
-      <HeroSection />
+    {/* Latest Court Reports Section */}
+    <HeroSection />
 
-      {/* Spacer */}
-      <div className="container mx-auto px-4 pt-8">
-        <div className="mb-8"></div>
-      </div>
+    {/* Featured Videos Section */}
+    <FeaturedVideoSection />
 
-      {/* Tabbed Latest Articles Section */}
+    {/* Spacer */}
+    <div className="container mx-auto px-4 pt-8">
+      <div className="mb-8"></div>
+    </div>
+
+    {/* Tabbed Latest Articles Section */}
       <div className="container mx-auto px-4 mb-8">
         <TabbedLatestArticles 
           allPosts={allLatestPosts}

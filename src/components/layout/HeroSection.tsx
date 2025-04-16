@@ -25,7 +25,8 @@ interface Post {
 
 // Fetch latest Court News posts
 async function getLatestCourtNews(): Promise<Post[]> {
-  const query = groq`*[_type == "post" && references(*[_type == "category" && title == "Court News"]._id)] | order(publishedAt desc)[0...3]{
+  // Use the specific category ID provided: c81a52c4-119a-46f0-8306-10bc3f72dd19
+  const query = groq`*[_type == "post" && references("c81a52c4-119a-46f0-8306-10bc3f72dd19")] | order(publishedAt desc)[0...3]{
     _id,
     title,
     slug,
@@ -44,7 +45,11 @@ async function getLatestCourtNews(): Promise<Post[]> {
   
   try {
     console.log("Fetching latest Court News from Sanity...");
-    const posts = await client.fetch(query);
+    const posts = await client.fetch(query, {}, {
+      // Add cache: 'no-store' to ensure fresh data
+      cache: 'no-store'
+    });
+    console.log(`Found ${posts?.length || 0} Court News posts`);
     return posts || [];
   } catch (error) {
     console.error("Failed to fetch latest Court News:", error);
@@ -69,7 +74,7 @@ export default async function HeroSection() {
     return (
       <section className="bg-vpn-bg dark:bg-gray-900 py-8">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+          <h2 className="text-3xl font-roboto text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
             LATEST COURT REPORTS
           </h2>
           <div className="bg-white dark:bg-gray-800 p-4 border border-gray-200 dark:border-gray-700">
@@ -78,7 +83,7 @@ export default async function HeroSection() {
           <div className="text-center mt-8">
             <a 
               className="inline-block bg-vpn-blue text-white font-medium py-2 px-6 rounded hover:bg-opacity-90 transition dark:bg-blue-700" 
-              href="/category/court-news"
+              href="/category/court"
             >
               View All Court Reports
             </a>
@@ -91,7 +96,7 @@ export default async function HeroSection() {
   return (
     <section className="bg-vpn-bg dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-headline text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider">
+        <h2 className="text-3xl font-roboto text-yellow-500 dark:text-yellow-300 uppercase mb-6 tracking-wider" style={{ fontFamily: 'Roboto, sans-serif' }}>
           LATEST COURT REPORTS
         </h2>
         
@@ -122,11 +127,11 @@ export default async function HeroSection() {
                     </span>
                   </a>
                   <div className="mt-3">
-                    <a className="uppercase text-xs font-bold text-vpn-blue dark:text-blue-400 mb-1 block transition-colors duration-200" href="/category/court-news">
+                    <a className="uppercase text-xs font-bold text-vpn-blue dark:text-blue-400 mb-1 block transition-colors duration-200" href="/category/court">
                       COURT NEWS
                     </a>
                     <a className="group" href={`/${post.slug.current}`}>
-                      <h2 className="font-headline font-bold text-vpn-gray dark:text-gray-100 text-base md:text-lg leading-tight group-hover:text-vpn-blue dark:group-hover:text-yellow-500 transition-colors duration-200 mb-2">
+                      <h2 className="font-roboto font-bold text-vpn-gray dark:text-gray-100 text-base md:text-lg leading-tight group-hover:text-vpn-blue dark:group-hover:text-yellow-500 transition-colors duration-200 mb-2" style={{ fontFamily: 'Roboto, sans-serif' }}>
                         {post.title}
                       </h2>
                     </a>
@@ -140,7 +145,7 @@ export default async function HeroSection() {
         <div className="text-center mt-8">
           <a 
             className="inline-block bg-vpn-blue text-white font-medium py-2 px-6 rounded hover:bg-opacity-90 transition dark:bg-blue-700" 
-            href="/category/court-news"
+            href="/category/court"
           >
             View All Court Reports
           </a>

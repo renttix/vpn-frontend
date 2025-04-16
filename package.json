@@ -16,6 +16,7 @@
     "generate-sitemap": "node scripts/generate-sitemap.js",
     "generate-feeds": "node scripts/generate-feeds.js",
     "test:netlify": "node test-netlify-build.js",
+    "test:search": "node test-search.js",
     "netlify:deploy": "netlify deploy --prod"
   },
   "dependencies": {

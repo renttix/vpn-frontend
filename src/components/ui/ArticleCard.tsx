@@ -71,11 +71,12 @@ export default function ArticleCard({
 
         <Link href={`/${slug}`} className="group">
           <h2
-            className={`font-headline font-bold text-vpn-gray dark:text-gray-100 ${
+            className={`font-roboto font-bold text-vpn-gray dark:text-gray-100 ${
               isFeature
                 ? 'text-xl md:text-2xl lg:text-3xl leading-tight'
                 : 'text-base md:text-lg leading-tight'
             } group-hover:text-vpn-blue dark:group-hover:text-yellow-500 mb-2 transition-colors duration-200`}
+            style={{ fontFamily: 'Roboto, sans-serif' }}
           >
             {title}
           </h2>

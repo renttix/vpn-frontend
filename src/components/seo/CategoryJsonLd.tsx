@@ -9,7 +9,7 @@ interface CategoryJsonLdProps {
 }
 
 export default function CategoryJsonLd({ category, posts, url }: CategoryJsonLdProps) {
-  // Get the category title, with special handling for "Video" category
+  // Get the category title, with special handling for certain categories
   const categoryTitle = category.title === 'Video' ? 'Legal Commentary' : category.title;
   
   // Get the category description or create a default one

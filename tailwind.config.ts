@@ -74,17 +74,17 @@ export default {
                 'beast-gray': '#9b9da3', // keeping for backward compatibility
             },
             fontFamily: {
-                sans: ["Roboto", "Inter", ...fontFamily.sans],
-                serif: ["Merriweather", "Georgia", "serif"],
-                heading: ["Roboto Slab", "serif"],
+                sans: ["Roboto", ...fontFamily.sans],
+                serif: ["Roboto", ...fontFamily.sans],
+                heading: ["Roboto", "sans-serif"],
                 body: ["Roboto", "sans-serif"],
-                // keeping old fonts for backward compatibility
-                druk: ['DrukText-Medium', 'sans-serif'],
-                drukit: ['DrukMediumItalic', 'sans-serif'],
-                helvetica: ['Helvetica-Bold', 'sans-serif'],
-                georgia: ['Georgia', 'serif'],
-                // new headline font for the Headlines section
-                headline: ['Bebas Neue', 'sans-serif'],
+                // keeping old fonts for backward compatibility but using Roboto
+                druk: ['Roboto', 'sans-serif'],
+                drukit: ['Roboto', 'sans-serif'],
+                helvetica: ['Roboto', 'sans-serif'],
+                georgia: ['Roboto', 'sans-serif'],
+                // headline font now using Roboto
+                headline: ['Roboto', 'sans-serif'],
             },
             fontSize: {
                 // Enhanced typography scale for better hierarchy

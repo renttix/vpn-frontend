@@ -1,19 +1,19 @@
 import { Metadata } from 'next';
 
 // Base URL for the site
-export const siteUrl = 'https://vpnldn.co.uk';
+export const siteUrl = 'https://www.vpnnews.co.uk';
 
 // Default metadata values
 export const defaultMetadata: Metadata = {
   title: {
-    default: 'VPN News - Video Production News',
+    default: 'VPN News',
     template: '%s | VPN News'
   },
   description: 'Breaking legal news, court reports, and expert analysis on the most important cases and legal developments.',
   keywords: ['legal news', 'court reports', 'crime news', 'UK legal system', 'justice', 'law', 'criminal cases'],
   authors: [{ name: 'VPN News Team' }],
   creator: 'VPN News',
-  publisher: 'Video Production News',
+  publisher: 'VPN News',
   formatDetection: {
     email: false,
     address: false,
@@ -28,7 +28,7 @@ export const defaultMetadata: Metadata = {
     locale: 'en_GB',
     url: siteUrl,
     siteName: 'VPN News',
-    title: 'VPN News - Video Production News',
+    title: 'VPN News',
     description: 'Breaking legal news, court reports, and expert analysis on the most important cases and legal developments.',
     images: [
       {
@@ -42,7 +42,7 @@ export const defaultMetadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'VPN News - Video Production News',
+    title: 'VPN News',
     description: 'Breaking legal news, court reports, and expert analysis on the most important cases and legal developments.',
     site: '@vpnnews',
     creator: '@vpnnews',

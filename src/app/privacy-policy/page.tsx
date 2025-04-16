@@ -1,16 +1,51 @@
 import React from 'react';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import Layout from "@/components/layout/Layout";
+import { client } from "@/lib/sanity.client";
+import { groq } from "next-sanity";
+import { Category } from "@/types/sanity";
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Video Production News',
   description: 'Learn about how Video Production News handles your personal data and privacy.',
 };
 
-export default function PrivacyPolicyPage() {
+// Fetch categories
+async function getCategories(): Promise<Category[]> {
+  const query = groq`*[_type == "category"]{
+    _id,
+    title,
+    slug
+  }`;
+  
+  try {
+    console.log("Fetching categories from Sanity...");
+    const categories = await client.fetch(query, {}, {
+      cache: 'no-store'
+    });
+    console.log("Fetched categories:", categories?.length || 0);
+    return categories || [];
+  } catch (error) {
+    console.error("Failed to fetch categories:", error);
+    // Return default categories to prevent UI failures
+    return [
+      { _id: 'default-news', title: 'News', slug: { current: 'news', _type: 'slug' } },
+      { _id: 'default-crime', title: 'Crime News', slug: { current: 'crime-news', _type: 'slug' } },
+      { _id: 'default-court', title: 'Court News', slug: { current: 'court-news', _type: 'slug' } },
+      { _id: 'default-commentary', title: 'Legal Commentary', slug: { current: 'legal-commentary', _type: 'slug' } }
+    ];
+  }
+}
+
+export default async function PrivacyPolicyPage() {
+  // Fetch categories for the header
+  const categories = await getCategories();
+  
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-3xl mx-auto">
+    <Layout categories={categories}>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-heading font-bold text-vpn-gray dark:text-vpn-gray-dark mb-6">
           Privacy Policy
         </h1>
@@ -159,7 +194,8 @@ export default function PrivacyPolicyPage() {
             </Link>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 }

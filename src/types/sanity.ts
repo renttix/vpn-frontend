@@ -94,4 +94,35 @@ export interface Post {
   wordCount?: number; // Word count of the article
 }
 
+// SearchResult type for search functionality
+export interface SearchResult {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  mainImage?: { asset: { url: string; alt?: string } };
+  author?: { name: string };
+  publishedAt: string;
+  excerpt?: string;
+  categories?: { _id: string; title: string; slug: { current: string } }[];
+}
+
+// VideoPost type for video content
+export interface VideoPost {
+  _id: string;
+  title: string;
+  slug: Slug;
+  thumbnailImage?: SanityImage;
+  videoUrl: string;
+  duration?: string;
+  author?: Author;
+  publishedAt: string;
+  lastUpdatedAt?: string;
+  description?: any; // Portable Text
+  categories?: Category[];
+  tags?: Tag[];
+  status?: string;
+  isBreakingNews?: boolean;
+  relatedPosts?: any[];
+}
+
 // You can add more specific types as needed, e.g., for Portable Text blocks

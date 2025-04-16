@@ -188,15 +188,22 @@ export default function NewsTicker({ className = "" }: NewsTickerProps) {
 
   return (
     <div 
-      className={`bg-vpn-red text-white text-xs sm:text-sm py-1 px-2 sm:px-4 ${className}`}
+      className={`bg-vpn-red text-white text-xs sm:text-sm px-2 sm:px-4 ${className}`}
       role="complementary"
       aria-label="News ticker"
       aria-describedby={tickerStatusId}
+      style={{ height: '32px' }}
     >
-      <div className="container mx-auto flex items-center overflow-hidden">
-        <span className="font-bold mr-1 sm:mr-2 whitespace-nowrap" id={tickerId}>LIVE:</span>
+      <div className="container mx-auto flex items-center overflow-hidden h-full">
+        <span 
+          className="font-bold mr-2 sm:mr-3 whitespace-nowrap flex items-center h-full" 
+          id={tickerId}
+          style={{ lineHeight: '32px' }}
+        >
+          LIVE:
+        </span>
         <div 
-          className="overflow-hidden whitespace-nowrap relative w-full cursor-pointer"
+          className="overflow-hidden whitespace-nowrap relative w-full cursor-pointer flex items-center h-full"
           onClick={handleTickerClick}
           onKeyDown={(e) => {
             // Handle multiple keys for better keyboard accessibility
@@ -212,8 +219,9 @@ export default function NewsTicker({ className = "" }: NewsTickerProps) {
           aria-live="polite"
           aria-atomic="true"
           aria-busy={isLoading}
+          style={{ lineHeight: '32px' }}
         >
-          <span className="animate-marquee inline-block">
+          <span className="animate-marquee inline-block" style={{ lineHeight: '32px' }}>
             {tickerText}
           </span>
         </div>

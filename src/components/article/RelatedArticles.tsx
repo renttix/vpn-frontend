@@ -21,7 +21,7 @@ export default function RelatedArticles({ currentArticleId, relatedPosts }: Rela
 
   return (
     <div className="bg-card border border-border rounded-md p-4">
-      <h3 className="font-headline font-bold text-lg mb-4 text-foreground">Related Stories</h3>
+      <h3 className="font-roboto font-bold text-lg mb-4 text-foreground" style={{ fontFamily: 'Roboto, sans-serif' }}>Related Stories</h3>
       
       <div className="space-y-4">
         {articles.map((article) => {

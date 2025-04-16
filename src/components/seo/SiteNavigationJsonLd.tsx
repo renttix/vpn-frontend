@@ -21,7 +21,7 @@ interface SiteNavigationJsonLdProps {
  */
 export default function SiteNavigationJsonLd({ 
   items, 
-  siteUrl = 'https://vpnnews.com' 
+  siteUrl = 'https://www.vpnnews.co.uk'
 }: SiteNavigationJsonLdProps) {
   // Don't render if no items provided
   if (!items || items.length === 0) {
