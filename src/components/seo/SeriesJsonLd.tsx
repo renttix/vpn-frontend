@@ -1,6 +1,7 @@
 import React from 'react';
 import Script from 'next/script';
 import { Series, Post } from '@/types/sanity';
+import { getBaseUrl, getFullUrl } from '@/lib/urlUtils';
 
 interface SeriesJsonLdProps {
   series: Series;
@@ -51,14 +52,14 @@ export default function SeriesJsonLd({
       "author": article.author ? {
         "@type": "Person",
         "name": article.author.name,
-        "url": article.author.slug ? `https://www.vpnnews.co.uk/author/${article.author.slug.current}` : undefined
+        "url": article.author.slug ? getFullUrl(`author/${article.author.slug.current}`) : undefined
       } : undefined,
       "publisher": {
         "@type": "Organization",
         "name": "Video Production News",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.vpnnews.co.uk/images/logo.png",
+          "url": getFullUrl('images/logo.png'),
           "width": 600,
           "height": 60
         }
@@ -98,7 +99,7 @@ export default function SeriesJsonLd({
  */
 export function formatSeriesArticles(
   articles: Post[],
-  baseUrl: string = 'https://www.vpnnews.co.uk'
+  baseUrl: string = getBaseUrl()
 ): Array<{ title: string; url: string; partNumber: number }> {
   if (!articles || !Array.isArray(articles)) return [];
   

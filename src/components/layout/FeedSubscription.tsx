@@ -1,5 +1,6 @@
 import React from 'react';
 import { RssIcon } from 'lucide-react';
+import { NewsletterForm } from '@/components/forms';
 
 interface FeedSubscriptionProps {
   className?: string;
@@ -17,7 +18,7 @@ export default function FeedSubscription({ className = '' }: FeedSubscriptionPro
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-sm">
         <h3 className="font-heading font-bold text-lg mb-3">Subscribe to Updates</h3>
         <p className="font-body text-sm text-gray-600 dark:text-gray-400 mb-4">
-          Stay updated with our latest news and articles through your favorite feed reader.
+          Stay updated with our latest news and articles through your favorite feed reader or email newsletter.
         </p>
         
         <div className="flex flex-col space-y-2">
@@ -54,7 +55,7 @@ export default function FeedSubscription({ className = '' }: FeedSubscriptionPro
             <p>Add to your favorite reader:</p>
             <div className="flex flex-wrap gap-2 mt-1">
               <a 
-                href="https://feedly.com/i/subscription/feed/https://vpnnews.com/feed.xml" 
+                href="https://feedly.com/i/subscription/feed/https://vpnnews.co.uk/feed.xml" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
@@ -62,7 +63,7 @@ export default function FeedSubscription({ className = '' }: FeedSubscriptionPro
                 Feedly
               </a>
               <a 
-                href="https://www.inoreader.com/?add_feed=https://vpnnews.com/feed.xml" 
+                href="https://www.inoreader.com/?add_feed=https://vpnnews.co.uk/feed.xml" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
@@ -70,7 +71,7 @@ export default function FeedSubscription({ className = '' }: FeedSubscriptionPro
                 Inoreader
               </a>
               <a 
-                href="https://newsblur.com/?url=https://vpnnews.com/feed.xml" 
+                href="https://newsblur.com/?url=https://vpnnews.co.uk/feed.xml" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 px-2 py-1 rounded"
@@ -79,6 +80,16 @@ export default function FeedSubscription({ className = '' }: FeedSubscriptionPro
               </a>
             </div>
           </div>
+        </div>
+        
+        {/* Email Newsletter Subscription */}
+        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <NewsletterForm 
+            title="Email Newsletter"
+            subtitle="Get the latest news delivered to your inbox"
+            compact={true}
+            className="mt-2"
+          />
         </div>
       </div>
     </div>

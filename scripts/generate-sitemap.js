@@ -21,8 +21,8 @@ const client = createClient({
   useCdn: false, // We want fresh data for the sitemap
 });
 
-// Base URL for the site
-const SITE_URL = 'https://www.vpnnews.co.uk';
+// Base URL for the site - use environment variable or fallback to production URL
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.vpnnews.co.uk';
 
 // Static pages to include in the sitemap
 const staticPages = [

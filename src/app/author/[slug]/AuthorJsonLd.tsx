@@ -1,6 +1,7 @@
 import React from 'react';
 import Script from 'next/script';
 import { Author, Post } from '@/types/sanity';
+import { getBaseUrl, getFullUrl } from '@/lib/urlUtils';
 
 interface AuthorJsonLdProps {
   author: Author;
@@ -21,7 +22,7 @@ export default function AuthorJsonLd({ author, authorPosts, url }: AuthorJsonLdP
     "worksFor": {
       "@type": "Organization",
       "name": "VPN News",
-      "url": "https://vpnnews.com"
+      "url": getBaseUrl()
     },
     "knowsAbout": ["news", "journalism", "legal news", "court reporting"],
     "mainEntityOfPage": {
@@ -35,7 +36,7 @@ export default function AuthorJsonLd({ author, authorPosts, url }: AuthorJsonLdP
     jsonLd.author = authorPosts.map(post => ({
       "@type": "Article",
       "headline": post.title || "Untitled Article",
-      "url": `https://vpnnews.com/${post.slug?.current || '#'}`,
+      "url": getFullUrl(post.slug?.current || '#'),
       "datePublished": post.publishedAt || new Date().toISOString()
     }));
   }

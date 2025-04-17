@@ -1,6 +1,7 @@
 import React from 'react';
 import Script from 'next/script';
 import { Category, Tag, Author } from '@/types/sanity';
+import { getBaseUrl, getFullUrl } from '@/lib/urlUtils';
 
 interface BreadcrumbItem {
   name: string;
@@ -55,7 +56,7 @@ export function generateArticleBreadcrumbs(
   const breadcrumbs: BreadcrumbItem[] = [
     {
       name: 'Home',
-      item: 'https://vpnnews.com/',
+      item: `${getBaseUrl()}/`,
       position: 1
     }
   ];
@@ -73,7 +74,7 @@ export function generateArticleBreadcrumbs(
         const parentSlug = primaryCategory.parent.slug?.current || 'category';
         breadcrumbs.push({
           name: primaryCategory.parent.title,
-          item: `https://vpnnews.com/${parentSlug}`,
+          item: getFullUrl(parentSlug),
           position: position++
         });
       }
@@ -83,7 +84,7 @@ export function generateArticleBreadcrumbs(
         const categorySlug = primaryCategory.slug?.current || 'category';
         breadcrumbs.push({
           name: primaryCategory.title,
-          item: `https://vpnnews.com/${categorySlug}`,
+          item: getFullUrl(categorySlug),
           position: position++
         });
       }
@@ -95,7 +96,7 @@ export function generateArticleBreadcrumbs(
           const secondCategorySlug = secondCategory.slug?.current || 'category';
           breadcrumbs.push({
             name: secondCategory.title,
-            item: `https://vpnnews.com/${secondCategorySlug}`,
+            item: getFullUrl(secondCategorySlug),
             position: position++
           });
         }
@@ -110,7 +111,7 @@ export function generateArticleBreadcrumbs(
       const tagSlug = primaryTag.slug?.current || 'tag';
       breadcrumbs.push({
         name: primaryTag.title,
-        item: `https://vpnnews.com/tag/${tagSlug}`,
+        item: getFullUrl(`tag/${tagSlug}`),
         position: position++
       });
     }
@@ -119,7 +120,7 @@ export function generateArticleBreadcrumbs(
   // Add the article itself
   breadcrumbs.push({
     name: articleTitle,
-    item: `https://vpnnews.com/${articleSlug}`,
+    item: getFullUrl(articleSlug),
     image: mainImageUrl, // Add the main image URL if available
     position: position
   });
@@ -132,7 +133,7 @@ export function generateCategoryBreadcrumbs(category: Category): BreadcrumbItem[
   const breadcrumbs = [
     {
       name: 'Home',
-      item: 'https://vpnnews.com/',
+      item: `${getBaseUrl()}/`,
       position: 1
     }
   ];
@@ -142,7 +143,7 @@ export function generateCategoryBreadcrumbs(category: Category): BreadcrumbItem[
   // Add "Categories" section
   breadcrumbs.push({
     name: 'Categories',
-    item: 'https://vpnnews.com/categories',
+    item: getFullUrl('categories'),
     position: position++
   });
   
@@ -151,7 +152,7 @@ export function generateCategoryBreadcrumbs(category: Category): BreadcrumbItem[
     const parentSlug = category.parent.slug?.current || 'category';
     breadcrumbs.push({
       name: category.parent.title,
-      item: `https://vpnnews.com/${parentSlug}`,
+      item: getFullUrl(parentSlug),
       position: position++
     });
   }
@@ -160,7 +161,7 @@ export function generateCategoryBreadcrumbs(category: Category): BreadcrumbItem[
   const categorySlug = category.slug?.current || 'category';
   breadcrumbs.push({
     name: category.title || 'Category',
-    item: `https://vpnnews.com/${categorySlug}`,
+    item: getFullUrl(categorySlug),
     position: position
   });
   
@@ -172,12 +173,12 @@ export function generateAuthorBreadcrumbs(author: Author): BreadcrumbItem[] {
   const breadcrumbs = [
     {
       name: 'Home',
-      item: 'https://vpnnews.com/',
+      item: `${getBaseUrl()}/`,
       position: 1
     },
     {
       name: 'Authors',
-      item: 'https://vpnnews.com/authors',
+      item: getFullUrl('authors'),
       position: 2
     }
   ];
@@ -189,7 +190,7 @@ export function generateAuthorBreadcrumbs(author: Author): BreadcrumbItem[] {
     const roleSlug = author.role.toLowerCase().replace(/\s+/g, '-');
     breadcrumbs.push({
       name: author.role,
-      item: `https://vpnnews.com/authors/${roleSlug}`,
+      item: getFullUrl(`authors/${roleSlug}`),
       position: position++
     });
   }
@@ -198,7 +199,7 @@ export function generateAuthorBreadcrumbs(author: Author): BreadcrumbItem[] {
   if (author.slug?.current) {
     const authorBreadcrumb: BreadcrumbItem = {
       name: author.name || 'Author',
-      item: `https://vpnnews.com/author/${author.slug.current}`,
+      item: getFullUrl(`author/${author.slug.current}`),
       position: position
     };
     
@@ -211,7 +212,7 @@ export function generateAuthorBreadcrumbs(author: Author): BreadcrumbItem[] {
   } else {
     breadcrumbs.push({
       name: author.name || 'Author',
-      item: `https://vpnnews.com/authors`,
+      item: getFullUrl('authors'),
       position: position
     });
   }
@@ -224,7 +225,7 @@ export function generateTagBreadcrumbs(tag: Tag, parentCategory?: Category): Bre
   const breadcrumbs = [
     {
       name: 'Home',
-      item: 'https://vpnnews.com/',
+      item: `${getBaseUrl()}/`,
       position: 1
     }
   ];
@@ -234,7 +235,7 @@ export function generateTagBreadcrumbs(tag: Tag, parentCategory?: Category): Bre
   // Add "Tags" section
   breadcrumbs.push({
     name: 'Tags',
-    item: 'https://vpnnews.com/tags',
+    item: getFullUrl('tags'),
     position: position++
   });
   
@@ -243,7 +244,7 @@ export function generateTagBreadcrumbs(tag: Tag, parentCategory?: Category): Bre
     const parentCategorySlug = parentCategory.slug?.current || 'category';
     breadcrumbs.push({
       name: parentCategory.title,
-      item: `https://vpnnews.com/${parentCategorySlug}`,
+      item: getFullUrl(parentCategorySlug),
       position: position++
     });
   }
@@ -252,7 +253,7 @@ export function generateTagBreadcrumbs(tag: Tag, parentCategory?: Category): Bre
   const tagSlug = tag.slug?.current || 'tag';
   breadcrumbs.push({
     name: tag.title || 'Tag',
-    item: `https://vpnnews.com/tag/${tagSlug}`,
+    item: getFullUrl(`tag/${tagSlug}`),
     position: position
   });
   
@@ -264,17 +265,17 @@ export function generateSearchBreadcrumbs(query: string): BreadcrumbItem[] {
   return [
     {
       name: 'Home',
-      item: 'https://vpnnews.com/',
+      item: `${getBaseUrl()}/`,
       position: 1
     },
     {
       name: 'Search',
-      item: 'https://vpnnews.com/search',
+      item: getFullUrl('search'),
       position: 2
     },
     {
       name: `Results for "${query}"`,
-      item: `https://vpnnews.com/search?q=${encodeURIComponent(query)}`,
+      item: getFullUrl(`search?q=${encodeURIComponent(query)}`),
       position: 3
     }
   ];
@@ -285,7 +286,7 @@ export function generateStaticPageBreadcrumbs(pageTitle: string, pageSlug: strin
   const breadcrumbs = [
     {
       name: 'Home',
-      item: 'https://vpnnews.com/',
+      item: `${getBaseUrl()}/`,
       position: 1
     }
   ];
@@ -296,7 +297,7 @@ export function generateStaticPageBreadcrumbs(pageTitle: string, pageSlug: strin
   if (section && sectionSlug) {
     breadcrumbs.push({
       name: section,
-      item: `https://vpnnews.com/${sectionSlug}`,
+      item: getFullUrl(sectionSlug),
       position: position++
     });
   }
@@ -304,7 +305,7 @@ export function generateStaticPageBreadcrumbs(pageTitle: string, pageSlug: strin
   // Add the page
   breadcrumbs.push({
     name: pageTitle,
-    item: `https://vpnnews.com/${pageSlug}`,
+    item: getFullUrl(pageSlug),
     position: position
   });
   

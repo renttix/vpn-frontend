@@ -9,6 +9,8 @@ import TipReferrer from "../tip/TipReferrer";
 import SiteNavigationJsonLd, { generateNavigationItems } from "../seo/SiteNavigationJsonLd";
 import { useEffect, useState } from "react";
 import { registerServiceWorker } from "@/lib/notification";
+import { UserTracker } from "@/components/hubspot";
+import { getUserEmail } from "@/lib/userIdentification";
 
 // Define Category type (matching the one in page.tsx)
 interface Category {
@@ -94,6 +96,13 @@ export default function Layout({ children, categories }: LayoutProps) { // Destr
       
       {/* Back to Top Button */}
       <BackToTopButton />
+      
+      {/* HubSpot User Tracker - Temporarily disabled due to client-side API key issues */}
+      {/* Uncomment and fix API access before re-enabling
+      {typeof window !== 'undefined' && getUserEmail() && (
+        <UserTracker email={getUserEmail() || ''} />
+      )}
+      */}
     </div>
   );
 }

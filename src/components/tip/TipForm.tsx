@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import TipDisclaimer from "./TipDisclaimer";
 import TipThankYou from "./TipThankYou";
@@ -34,7 +34,14 @@ export default function TipForm() {
   });
   const [error, setError] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { executeReCaptcha } = useGoogleReCaptcha();
+  const recaptchaContainerId = "tip-recaptcha-container";
+  const { setContainer, getRecaptchaToken, resetRecaptcha } = useGoogleReCaptcha();
+  
+  // Initialize reCAPTCHA when component mounts
+  useEffect(() => {
+    // Set the container for reCAPTCHA
+    setContainer(recaptchaContainerId);
+  }, [setContainer]);
 
   // Handle disclaimer acceptance
   const handleDisclaimerAccept = () => {
@@ -70,18 +77,24 @@ export default function TipForm() {
     setError("");
 
     try {
-      // Execute reCAPTCHA
-      let recaptchaToken = "";
-      if (executeReCaptcha) {
-        recaptchaToken = await executeReCaptcha("submit_tip");
+      // Get reCAPTCHA token
+      const recaptchaToken = getRecaptchaToken();
+      
+      // In development mode, allow empty tokens for testing
+      if (!recaptchaToken && process.env.NODE_ENV === 'production') {
+        throw new Error("Please complete the reCAPTCHA verification");
       }
+      
+      // Use a fallback token in development if needed
+      const tokenToUse = recaptchaToken || (process.env.NODE_ENV !== 'production' ? 'dev-token' : '');
 
       // Create form data for submission
       const submissionData = new FormData();
       submissionData.append("email", formData.email);
       submissionData.append("subject", formData.subject);
       submissionData.append("description", formData.description);
-      submissionData.append("recaptchaToken", recaptchaToken);
+      submissionData.append("recaptchaToken", tokenToUse);
+      submissionData.append("recaptchaVersion", "v2");
       
       // Append files
       formData.attachments.forEach((file, index) => {
@@ -105,6 +118,7 @@ export default function TipForm() {
       console.error("Error submitting tip:", err);
       setError(err instanceof Error ? err.message : "An unknown error occurred");
       setFormState(FormState.ERROR);
+      resetRecaptcha();
     }
   };
 
@@ -127,12 +141,12 @@ export default function TipForm() {
     return (
       <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-lg mb-6">
         <h2 className="text-xl font-bold mb-4 text-red-600 dark:text-red-400">
-          Error Submitting Tip
+          Error Submitting Tip/Story
         </h2>
         <p className="mb-4">{error}</p>
         <Button 
           onClick={handleRetry}
-          className="bg-vpn-blue hover:bg-vpn-blue/90 text-white font-medium"
+          className="bg-vpn-blue hover:bg-vpn-blue/90 dark:bg-vpn-blue dark:hover:bg-vpn-blue/90 text-white font-medium"
         >
           Try Again
         </Button>
@@ -142,8 +156,8 @@ export default function TipForm() {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 className="text-3xl font-roboto font-bold text-vpn-gray dark:text-vpn-gray-dark mb-6" style={{ fontFamily: 'Roboto, sans-serif' }}>
-        Submit a Tip
+      <h1 className="text-3xl font-roboto font-bold text-vpn-gray dark:text-gray-100 mb-6" style={{ fontFamily: 'Roboto, sans-serif' }}>
+        Submit a Tip/Story
       </h1>
       
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -324,12 +338,17 @@ export default function TipForm() {
           )}
         </div>
 
+        {/* reCAPTCHA container */}
+        <div className="flex justify-center my-4">
+          <div id={recaptchaContainerId}></div>
+        </div>
+        
         {/* Submit button */}
         <div className="flex justify-end">
           <Button
             type="submit"
             disabled={formState === FormState.SUBMITTING}
-            className="bg-vpn-blue hover:bg-vpn-blue/90 text-white font-medium px-8 py-2"
+            className="bg-vpn-blue hover:bg-vpn-blue/90 dark:bg-vpn-blue dark:hover:bg-vpn-blue/90 text-white font-medium px-8 py-2"
           >
             {formState === FormState.SUBMITTING ? (
               <>
@@ -356,7 +375,7 @@ export default function TipForm() {
                 Submitting...
               </>
             ) : (
-              "Submit Tip"
+              "Submit Tip/Story"
             )}
           </Button>
         </div>

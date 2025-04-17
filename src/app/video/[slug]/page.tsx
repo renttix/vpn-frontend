@@ -149,7 +149,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
       ],
       images: [
         {
-          url: video.thumbnailImage?.asset?.url || 'https://vpnnews.com/images/default-thumbnail.jpg',
+          url: video.thumbnailImage?.asset?.url || 'https://www.vpnnews.co.uk/images/default-thumbnail.jpg',
           width: 1200,
           height: 630,
           alt: video.thumbnailImage?.asset?.alt || video.title,
@@ -164,7 +164,7 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
           video.description.substring(0, 160) : 
           'Watch this video from VPN News' : 
         'Watch this video from VPN News',
-      images: [video.thumbnailImage?.asset?.url || 'https://vpnnews.com/images/default-thumbnail.jpg'],
+      images: [video.thumbnailImage?.asset?.url || 'https://www.vpnnews.co.uk/images/default-thumbnail.jpg'],
     },
   };
 }
@@ -259,12 +259,12 @@ export default async function VideoPage({ params }: any) {
   const videoEmbed = getVideoEmbedUrl(video.videoUrl);
   
   // Generate the page URL for structured data
-  const pageUrl = `https://vpnnews.com/video/${slug}`;
+  const pageUrl = `https://www.vpnnews.co.uk/video/${slug}`;
 
   // Generate breadcrumbs for BreadcrumbJsonLd
   const breadcrumbItems: BreadcrumbItem[] = [
-    { name: 'Home', item: 'https://vpnnews.com', position: 1 },
-    { name: 'Videos', item: 'https://vpnnews.com/category/watch', position: 2 },
+    { name: 'Home', item: 'https://www.vpnnews.co.uk', position: 1 },
+    { name: 'Videos', item: 'https://www.vpnnews.co.uk/category/watch', position: 2 },
     { name: video.title, item: pageUrl, position: 3 }
   ];
 
@@ -296,7 +296,7 @@ export default async function VideoPage({ params }: any) {
       <VideoObjectJsonLd
         name={video.title}
         description={typeof video.description === 'string' ? video.description : 'Watch this video from VPN News'}
-        thumbnailUrl={video.thumbnailImage?.asset?.url || 'https://vpnnews.com/images/default-thumbnail.jpg'}
+        thumbnailUrl={video.thumbnailImage?.asset?.url || 'https://www.vpnnews.co.uk/images/default-thumbnail.jpg'}
         uploadDate={video.publishedAt}
         contentUrl={video.videoUrl}
         embedUrl={videoEmbed?.embedUrl}

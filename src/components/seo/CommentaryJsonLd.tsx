@@ -1,6 +1,7 @@
 import React from 'react';
 import Script from 'next/script';
 import { Category, Post, Author } from '@/types/sanity';
+import { getBaseUrl, getFullUrl } from '@/lib/urlUtils';
 
 interface CommentaryJsonLdProps {
   category: Category;
@@ -32,7 +33,7 @@ export default function CommentaryJsonLd({ category, posts, url, breadcrumbs = [
       "position": index + 1,
       "headline": post.title,
       "description": post.excerpt || `Legal analysis and expert commentary on ${post.title}`,
-      "url": `https://vpnnews.com/${post.slug?.current || ''}`,
+      "url": getFullUrl(post.slug?.current || ''),
       "image": post.mainImage?.asset?.url || "https://cdn.sanity.io/images/g7f0f6rs/production/7c647c54f6f6997b2d1ae4301f5b9bac3587b478-1000x525.jpg",
       "datePublished": post.publishedAt || new Date().toISOString(),
       "dateModified": post.lastUpdatedAt || post.publishedAt || new Date().toISOString(),
@@ -57,11 +58,11 @@ export default function CommentaryJsonLd({ category, posts, url, breadcrumbs = [
       "isPartOf": {
         "@type": "WebSite",
         "name": "VPN News",
-        "url": "https://vpnnews.com"
+        "url": getBaseUrl()
       },
       "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": `https://vpnnews.com/${post.slug?.current || ''}`
+        "@id": getFullUrl(post.slug?.current || '')
       },
       "speakable": {
         "@type": "SpeakableSpecification",
@@ -88,7 +89,7 @@ export default function CommentaryJsonLd({ category, posts, url, breadcrumbs = [
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://vpnnews.com"
+        "item": getBaseUrl()
       },
       {
         "@type": "ListItem",
@@ -174,12 +175,12 @@ export default function CommentaryJsonLd({ category, posts, url, breadcrumbs = [
         "isPartOf": {
           "@type": "WebSite",
           "name": "VPN News",
-          "url": "https://vpnnews.com",
+          "url": getBaseUrl(),
           "potentialAction": {
             "@type": "SearchAction",
             "target": {
               "@type": "EntryPoint",
-              "urlTemplate": "https://vpnnews.com/search?q={search_term_string}"
+              "urlTemplate": `${getBaseUrl()}/search?q={search_term_string}`
             },
             "query-input": "required name=search_term_string"
           }

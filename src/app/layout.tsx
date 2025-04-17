@@ -310,6 +310,18 @@ export default function RootLayout({
         {/* Google AdSense Verification */}
         <meta name="google-adsense-account" content="ca-pub-1954539584146592" />
         
+        {/* Google reCAPTCHA v3 and v2 */}
+        <script 
+          src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
+          async 
+          defer
+        />
+        <script 
+          src="https://www.google.com/recaptcha/api.js"
+          async 
+          defer
+        />
+        
         {/* Add priority hints for browsers that support it */}
         <meta name="priority" content="1.0" />
       </head>

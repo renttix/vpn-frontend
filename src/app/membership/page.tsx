@@ -67,12 +67,12 @@ export default async function MembershipPage() {
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
           <div className="text-center mb-12">
-            <h1 className="text-3xl md:text-5xl font-bold mb-4">Become a VPN News Member</h1>
+            <h1 className="text-3xl md:text-5xl font-bold mb-4 dark:text-gray-100">Become a VPN News Member</h1>
             <p className="text-xl text-vpn-gray dark:text-gray-300 mb-8">
               Support quality journalism and enjoy an enhanced reading experience
             </p>
             <div className="flex justify-center">
-              <Button className="bg-vpn-red hover:bg-vpn-red/90 text-white px-8 py-6 text-lg rounded-md">
+              <Button className="bg-vpn-red hover:bg-vpn-red/90 dark:bg-vpn-red dark:hover:bg-vpn-red/90 text-white px-8 py-6 text-lg rounded-md">
                 Join Now for £{membershipFeeGBP} (${membershipFeeUSD}) per week
               </Button>
             </div>
@@ -168,7 +168,7 @@ export default async function MembershipPage() {
                     </li>
                   </ul>
                   
-                  <Button className="w-full bg-vpn-red hover:bg-vpn-red/90 text-white py-2">
+                  <Button className="w-full bg-vpn-red hover:bg-vpn-red/90 dark:bg-vpn-red dark:hover:bg-vpn-red/90 text-white py-2">
                     Become a Member - £{membershipFeeGBP}/week
                   </Button>
                 </div>
@@ -238,7 +238,7 @@ export default async function MembershipPage() {
             <p className="mb-6">
               Join thousands of readers who enjoy VPN News without advertisements.
             </p>
-            <Button className="bg-white text-vpn-blue hover:bg-gray-100 px-8 py-2 text-lg">
+            <Button className="bg-white text-vpn-blue hover:bg-gray-100 dark:bg-white dark:hover:bg-gray-100 dark:text-vpn-blue px-8 py-2 text-lg">
               Become a Member Today - Just £{membershipFeeGBP}/week
             </Button>
           </div>

@@ -88,11 +88,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       ...metadata,
       alternates: {
         ...metadata.alternates,
-        canonical: `https://vpnnews.com/${article.slug.current}`,
+        canonical: `https://www.vpnnews.co.uk/${article.slug.current}`,
         // Next.js doesn't have a built-in amphtml property, so we'll use types property
         types: {
           ...metadata.alternates?.types,
-          'application/vnd.amp.html': `https://vpnnews.com/amp/${article.slug.current}`,
+          'application/vnd.amp.html': `https://www.vpnnews.co.uk/amp/${article.slug.current}`,
         },
       },
       robots: {
@@ -162,7 +162,7 @@ export default async function AmpPage({ params }: PageProps) {
   
   // Extract FAQs from article content if available
   const faqs = article.body ? extractFaqsFromContent(article.body) : [];
-  const articleUrl = `https://vpnnews.com/${article.slug?.current || slug}`;
+  const articleUrl = `https://www.vpnnews.co.uk/${article.slug?.current || slug}`;
   
   // Format the date in ISO format
   const formatDate = (dateString?: string) => {
@@ -197,7 +197,7 @@ export default async function AmpPage({ params }: PageProps) {
     "author": {
       "@type": "Person",
       "name": authorName,
-      "url": article.author?.slug ? `https://vpnnews.com/author/${article.author.slug.current}` : "https://vpnnews.com/about"
+      "url": article.author?.slug ? `https://www.vpnnews.co.uk/author/${article.author.slug.current}` : "https://www.vpnnews.co.uk/about"
     },
     "publisher": {
       "@type": "Organization",
@@ -233,7 +233,7 @@ export default async function AmpPage({ params }: PageProps) {
       .map(a => ({
         "@type": "Article",
         "headline": a.title,
-        "url": `https://vpnnews.com/${a.slug.current}`,
+        "url": `https://www.vpnnews.co.uk/${a.slug.current}`,
         "position": a.series?.partNumber || 0
       }))
       .sort((a, b) => a.position - b.position);
@@ -242,7 +242,7 @@ export default async function AmpPage({ params }: PageProps) {
     (articleStructuredData as any).isPartOf = {
       "@type": "CreativeWorkSeries",
       "name": seriesRef.title,
-      "url": `https://vpnnews.com/series/${seriesRef.slug.current}`,
+      "url": `https://www.vpnnews.co.uk/series/${seriesRef.slug.current}`,
       "position": partNumber,
       "numberOfItems": seriesRef.totalPlannedParts
     };

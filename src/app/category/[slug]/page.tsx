@@ -11,6 +11,7 @@ import { generateCategoryMetadata } from '@/lib/metadata';
 import CategoryPostsList from '@/components/category/CategoryPostsList';
 import VideoGallery from '@/components/video/VideoGallery';
 import { Category, Post } from '@/types/sanity';
+import { getBaseUrl, getFullUrl } from '@/lib/urlUtils';
 
 // Make this page fully dynamic and disable caching
 export const dynamic = 'force-dynamic';
@@ -225,7 +226,7 @@ export default async function CategoryPage({ params, searchParams }: any) {
   const isWatchCategory = category._id === '821b6fe2-4408-4ea9-8dee-e90f4640c84e';
 
   // Generate the page URL for structured data
-  const pageUrl = `https://vpnnews.com/category/${slug}`;
+  const pageUrl = getFullUrl(`category/${slug}`);
 
   // Helper function to format dates
   const formatDate = (dateString: string) => {
@@ -255,13 +256,13 @@ export default async function CategoryPage({ params, searchParams }: any) {
 
   // Generate breadcrumbs for BreadcrumbJsonLd
   const breadcrumbItems: BreadcrumbItem[] = [
-    { name: 'Home', item: 'https://vpnnews.com', position: 1 },
+    { name: 'Home', item: getBaseUrl(), position: 1 },
     { name: category.title, item: pageUrl, position: 2 }
   ];
   
   // Generate breadcrumbs for CommentaryJsonLd (different format)
   const commentaryBreadcrumbs = [
-    { name: 'Home', url: 'https://vpnnews.com' },
+    { name: 'Home', url: getBaseUrl() },
     { name: category.title, url: pageUrl }
   ];
 

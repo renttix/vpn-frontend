@@ -1,6 +1,7 @@
 import React from 'react';
 import Script from 'next/script';
 import { Category, Post } from '@/types/sanity';
+import { getBaseUrl, getFullUrl } from '@/lib/urlUtils';
 
 interface CategoryJsonLdProps {
   category: Category;
@@ -22,7 +23,7 @@ export default function CategoryJsonLd({ category, posts, url }: CategoryJsonLdP
     "item": {
       "@type": "Article",
       "headline": post.title,
-      "url": `https://vpnnews.com/${post.slug?.current || ''}`,
+      "url": getFullUrl(post.slug?.current || ''),
       "image": post.mainImage?.asset?.url || "https://cdn.sanity.io/images/g7f0f6rs/production/7c647c54f6f6997b2d1ae4301f5b9bac3587b478-1000x525.jpg",
       "datePublished": post.publishedAt || new Date().toISOString(),
       "author": {
@@ -58,7 +59,7 @@ export default function CategoryJsonLd({ category, posts, url }: CategoryJsonLdP
     "isPartOf": {
       "@type": "WebSite",
       "name": "VPN News",
-      "url": "https://vpnnews.com"
+      "url": getBaseUrl()
     }
   };
 

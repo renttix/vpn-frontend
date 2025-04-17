@@ -6,11 +6,25 @@ import { randomUUID } from 'crypto';
 // Function alias to maintain compatibility with existing code
 const uuidv4 = () => randomUUID();
 
-// Verify reCAPTCHA token
-async function verifyRecaptcha(token: string): Promise<boolean> {
-  // If no token is provided, fail verification in production
-  if (!token) {
-    return process.env.NODE_ENV !== 'production';
+// Verify reCAPTCHA token (supports both v2 and v3)
+async function verifyRecaptcha(token: string, version: 'v2' | 'v3' = 'v3'): Promise<boolean> {
+  // Special handling for development mode
+  if (process.env.NODE_ENV !== 'production') {
+    // In development, accept 'dev-token' as a valid token for testing
+    if (token === 'dev-token') {
+      console.log('Using development token for reCAPTCHA verification');
+      return true;
+    }
+    
+    // If no token is provided in development, still allow it
+    if (!token) {
+      console.warn('No reCAPTCHA token provided, but allowing in development mode');
+      return true;
+    }
+  } else if (!token) {
+    // In production, fail if no token is provided
+    console.error('No reCAPTCHA token provided in production');
+    return false;
   }
 
   try {
@@ -28,10 +42,29 @@ async function verifyRecaptcha(token: string): Promise<boolean> {
     );
 
     const data = await response.json();
-    return data.success && data.score >= 0.5;
+    
+    // For reCAPTCHA v2, we only need to check data.success
+    // For reCAPTCHA v3, we need to check both data.success and data.score
+    if (data.success) {
+      // If score is present (v3), check if it meets the threshold
+      if (version === 'v3' && typeof data.score !== 'undefined') {
+        return data.score >= 0.5;
+      }
+      // If no score or v2, just return success
+      return true;
+    }
+    
+    // In development, allow even if verification fails
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('reCAPTCHA verification failed, but allowing in development mode');
+      return true;
+    }
+    
+    return false;
   } catch (error) {
     console.error('reCAPTCHA verification error:', error);
-    return false;
+    // In development, allow even if verification throws an error
+    return process.env.NODE_ENV !== 'production';
   }
 }
 
@@ -52,8 +85,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify reCAPTCHA
-    const isRecaptchaValid = await verifyRecaptcha(recaptchaToken);
+    // Verify reCAPTCHA (default to v2 since we're using v2 now)
+    const recaptchaVersion = formData.get('recaptchaVersion') as 'v2' | 'v3' || 'v2';
+    const isRecaptchaValid = await verifyRecaptcha(recaptchaToken, recaptchaVersion);
     if (!isRecaptchaValid) {
       return NextResponse.json(
         { message: 'reCAPTCHA verification failed' },
@@ -122,9 +156,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, id: result._id });
   } catch (error) {
-    console.error('Error submitting tip:', error);
+    console.error('Error submitting tip/story:', error);
     return NextResponse.json(
-      { message: 'Failed to submit tip' },
+      { message: 'Failed to submit tip/story' },
       { status: 500 }
     );
   }

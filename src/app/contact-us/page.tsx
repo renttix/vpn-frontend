@@ -1,112 +1,138 @@
 import React from 'react';
+import { Metadata } from 'next';
+import { ContactForm } from '@/components/forms';
 import Layout from '@/components/layout/Layout';
-import { groq } from 'next-sanity';
 import { client } from '@/lib/sanity.client';
-import type { Metadata } from 'next';
-import { generateStaticPageMetadata } from '@/lib/metadata';
+import { groq } from 'next-sanity';
+import type { Category } from '@/types/sanity';
 
-// Define metadata for the page
-export const metadata: Metadata = generateStaticPageMetadata(
-  'Contact Us',
-  'Get in touch with the Video Production News team. We welcome your feedback, questions, and news tips.',
-  'contact-us'
-);
+export const metadata: Metadata = {
+  title: 'Contact Us | VPN News',
+  description: 'Get in touch with the VPN News team. We welcome your feedback, questions, and news tips.',
+  keywords: ['contact', 'feedback', 'questions', 'news tips', 'vpn news'],
+  openGraph: {
+    title: 'Contact Us | VPN News',
+    description: 'Get in touch with the VPN News team. We welcome your feedback, questions, and news tips.',
+    url: 'https://www.vpnnews.co.uk/contact-us',
+    siteName: 'VPN News',
+    locale: 'en_GB',
+    type: 'website',
+  },
+};
 
-// Fetch all categories for the header
-async function getAllCategories() {
-  const query = groq`*[_type == "category"]{
-    _id,
-    title,
-    slug
-  }`;
-  
-  return client.fetch(query);
+// Fetch categories for the Layout component
+async function getCategories() {
+  const categoriesQuery = groq`*[_type == "category"]{ _id, title, slug }`;
+  try {
+    const categories = await client.fetch<Category[]>(categoriesQuery);
+    return categories || [];
+  } catch (error) {
+    console.error('Failed to fetch categories:', error);
+    return [];
+  }
 }
 
-export default async function ContactUsPage() {
-  const allCategories = await getAllCategories();
+export default async function ContactPage() {
+  // Fetch categories for the Layout component
+  const categories = await getCategories();
   
   return (
-    <Layout categories={allCategories}>
+    <Layout categories={categories}>
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-heading font-bold text-vpn-blue dark:text-blue-400 mb-6">Contact Us</h1>
+          <h1 className="text-4xl font-heading font-bold text-vpn-gray dark:text-gray-200 mb-6">
+            Contact Us
+          </h1>
           
-          <div className="prose dark:prose-invert max-w-none">
-            <p className="text-lg mb-6">
-              We value your feedback and are always eager to hear from our readers. Whether you have a question, comment, or news tip, we're here to listen.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div className="col-span-2">
+              <ContactForm 
+                title="Send Us a Message"
+                subtitle="Have a question or comment? We'd love to hear from you. Fill out the form below and we'll get back to you as soon as possible."
+              />
+            </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg h-fit">
+              <h2 className="text-xl font-heading font-bold text-vpn-gray dark:text-gray-200 mb-4">
+                Contact Information
+              </h2>
+              
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-bold text-vpn-gray dark:text-gray-300">Email</h3>
+                  <p className="text-vpn-gray-light dark:text-gray-400">
+                    <a href="mailto:contact@vpnnews.co.uk" className="hover:text-vpn-blue dark:hover:text-blue-400">
+                      contact@vpnnews.co.uk
+                    </a>
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="font-bold text-vpn-gray dark:text-gray-300">News Tips</h3>
+                  <p className="text-vpn-gray-light dark:text-gray-400">
+                    Have a news tip or story idea? Submit it through our{' '}
+                    <a href="/submit-tip" className="text-vpn-blue hover:underline dark:text-blue-400">
+                      secure tip form
+                    </a>.
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="font-bold text-vpn-gray dark:text-gray-300">Business Enquiries</h3>
+                  <p className="text-vpn-gray-light dark:text-gray-400">
+                    For advertising and partnership opportunities:{' '}
+                    <a href="mailto:business@vpnnews.co.uk" className="hover:text-vpn-blue dark:hover:text-blue-400">
+                      business@vpnnews.co.uk
+                    </a>
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="font-bold text-vpn-gray dark:text-gray-300">Address</h3>
+                  <p className="text-vpn-gray-light dark:text-gray-400">
+                    VPN News<br />
+                    123 Fleet Street<br />
+                    London, EC4A 2BB<br />
+                    United Kingdom
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg mb-12">
+            <h2 className="text-2xl font-heading font-bold text-vpn-gray dark:text-gray-200 mb-4">
+              Frequently Asked Questions
+            </h2>
+            
+            <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-heading font-bold text-vpn-gray dark:text-gray-200 mb-4">General Inquiries</h2>
-                <p>
-                  For general questions, feedback, or information about VPN News, please contact us at:
-                </p>
-                <p className="mt-4">
-                  <strong>Email:</strong> <a href="mailto:info@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">info@vpnldn.co.uk</a>
-                </p>
-                <p>
-                  <strong>Telephone:</strong> <a href="tel:+442036334699" className="text-vpn-blue dark:text-blue-400 hover:underline">+44 20 3633 4699</a>
+                <h3 className="text-lg font-bold text-vpn-gray dark:text-gray-300 mb-2">
+                  How quickly will I receive a response?
+                </h3>
+                <p className="text-vpn-gray-light dark:text-gray-400">
+                  We aim to respond to all enquiries within 1-2 business days. For urgent matters, please indicate this in the subject line of your message.
                 </p>
               </div>
               
               <div>
-                <h2 className="text-2xl font-heading font-bold text-vpn-gray dark:text-gray-200 mb-4">News Tips</h2>
-                <p>
-                  Have a news tip or story idea? We'd love to hear from you. You can submit tips through our secure platform:
+                <h3 className="text-lg font-bold text-vpn-gray dark:text-gray-300 mb-2">
+                  How can I submit a correction to an article?
+                </h3>
+                <p className="text-vpn-gray-light dark:text-gray-400">
+                  If you've spotted an error in one of our articles, please use this contact form and include "Correction" in the subject line, along with the article URL and details of the correction needed.
                 </p>
-                <p className="mt-4">
-                  <a 
-                    href="https://buymeacoffee.com/videoproductionnews" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="bg-vpn-blue text-white px-4 py-2 rounded-sm hover:bg-opacity-90 inline-block"
-                  >
-                    Submit a Tip
-                  </a>
-                </p>
-                <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
-                  Your identity will be kept confidential unless you specify otherwise.
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-bold text-vpn-gray dark:text-gray-300 mb-2">
+                  How can I pitch a story idea?
+                </h3>
+                <p className="text-vpn-gray-light dark:text-gray-400">
+                  We welcome story ideas from our readers. Please use our contact form with "Story Pitch" in the subject line, or email our editorial team directly at editorial@vpnnews.co.uk.
                 </p>
               </div>
             </div>
-            
-            <div className="mt-12">
-              <h2 className="text-2xl font-heading font-bold text-vpn-gray dark:text-gray-200 mb-4">Postal Address</h2>
-              <address className="not-italic">
-                <p>Video Production News</p>
-                <p>10 South Grove</p>
-                <p>London</p>
-                <p>N6 6BS</p>
-                <p>United Kingdom</p>
-              </address>
-            </div>
-            
-            <div className="mt-12">
-              <h2 className="text-2xl font-heading font-bold text-vpn-gray dark:text-gray-200 mb-4">Advertising & Sponsorship</h2>
-              <p>
-                For information about advertising and sponsorship opportunities with VPN News, please visit our 
-                <a href="/advertising" className="text-vpn-blue dark:text-blue-400 hover:underline mx-1">Advertising</a>
-                and
-                <a href="/sponsorship" className="text-vpn-blue dark:text-blue-400 hover:underline mx-1">Sponsorship</a>
-                pages or contact our business team at:
-              </p>
-              <p className="mt-4">
-                <strong>Email:</strong> <a href="mailto:business@vpnldn.co.uk" className="text-vpn-blue dark:text-blue-400 hover:underline">business@vpnldn.co.uk</a>
-              </p>
-            </div>
-            
-            <div className="mt-12">
-              <h2 className="text-2xl font-heading font-bold text-vpn-gray dark:text-gray-200 mb-4">Response Time</h2>
-              <p>
-                We strive to respond to all inquiries within 48 hours during business days. For urgent matters, please indicate this in your message subject line.
-              </p>
-            </div>
-            
-            <p className="mt-8 text-vpn-gray dark:text-gray-300 italic">
-              Thank you for your interest in VPN News. We look forward to hearing from you.
-            </p>
           </div>
         </div>
       </div>

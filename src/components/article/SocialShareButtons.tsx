@@ -55,7 +55,7 @@ export default function SocialShareButtons({ url, title }: SocialShareButtonsPro
 
   return (
     <div className="flex items-center space-x-2 mt-6 mb-8 border-t border-b border-border py-4">
-      <span className="text-sm font-medium mr-2 text-muted-foreground">Share:</span>
+      <span className="text-sm font-medium mr-2 text-muted-foreground dark:text-gray-300">Share:</span>
       {shareLinks.map((link) => (
         <Button
           key={link.name}
@@ -68,7 +68,7 @@ export default function SocialShareButtons({ url, title }: SocialShareButtonsPro
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Share on ${link.name}`}
-            className="flex items-center"
+            className="flex items-center text-foreground"
           >
             {link.icon}
             {link.name}
@@ -80,7 +80,7 @@ export default function SocialShareButtons({ url, title }: SocialShareButtonsPro
           size="sm"
           onClick={handleGenericShare}
           aria-label="Share"
-          className="flex items-center"
+          className="flex items-center text-foreground"
         >
           <Share2 className="h-4 w-4 mr-2" />
           More

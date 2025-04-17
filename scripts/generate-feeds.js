@@ -20,8 +20,8 @@ const client = createClient({
   useCdn: false, // We want fresh data for the feeds
 });
 
-// Base URL for the site
-const SITE_URL = 'https://www.vpnnews.co.uk';
+// Base URL for the site - use environment variable or fallback to production URL
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.vpnnews.co.uk';
 const SITE_TITLE = 'Video Production News';
 const SITE_DESCRIPTION = 'Breaking legal news, court reports, expert analysis on criminal cases, legal developments, and in-depth coverage of high-profile trials.';
 const SITE_LANGUAGE = 'en';

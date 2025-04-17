@@ -1,6 +1,7 @@
 import React from 'react';
 import Script from 'next/script';
 import { Post, Author, Category } from '@/types/sanity';
+import { getBaseUrl, getFullUrl } from '@/lib/urlUtils';
 
 interface NewsArticleJsonLdProps {
   article: Post;
@@ -181,7 +182,7 @@ export default function NewsArticleJsonLd({ article, url, isGoogleNews = true }:
       "author": {
         "@type": "Person",
         "name": authorName,
-        "url": article.author?.slug?.current ? `https://www.vpnnews.co.uk/author/${article.author.slug.current}` : "https://www.vpnnews.co.uk/about",
+        "url": article.author?.slug?.current ? getFullUrl(`author/${article.author.slug.current}`) : getFullUrl('about'),
         "jobTitle": article.author?.jobTitle || "Journalist",
         "description": article.author?.bio ? "Legal journalist and analyst" : undefined,
         "knowsAbout": categories.length > 0 ? categories : ["Legal News", "Crime Reporting"],
@@ -196,17 +197,17 @@ export default function NewsArticleJsonLd({ article, url, isGoogleNews = true }:
         "width": 600,
         "height": 60
       },
-      "url": "https://www.vpnnews.co.uk",
+      "url": getBaseUrl(),
       "sameAs": [
         "https://twitter.com/vpnnews",
         "https://facebook.com/vpnnews",
         "https://linkedin.com/company/vpnnews"
       ],
       "foundingDate": "2020-01-01",
-      "publishingPrinciples": "https://www.vpnnews.co.uk/editorial-standards",
-      "diversityPolicy": "https://www.vpnnews.co.uk/diversity-policy",
-      "ethicsPolicy": "https://www.vpnnews.co.uk/ethics-policy",
-      "correctionsPolicy": "https://www.vpnnews.co.uk/corrections-policy"
+      "publishingPrinciples": getFullUrl('editorial-standards'),
+      "diversityPolicy": getFullUrl('diversity-policy'),
+      "ethicsPolicy": getFullUrl('ethics-policy'),
+      "correctionsPolicy": getFullUrl('corrections-policy')
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
@@ -292,7 +293,7 @@ export default function NewsArticleJsonLd({ article, url, isGoogleNews = true }:
     jsonLd.timeRequired = `PT${Math.max(1, Math.ceil(wordCount / 200))}M`;
     
       // Add archived URL
-      jsonLd.archivedAt = `https://web.archive.org/web/*/https://www.vpnnews.co.uk/${article.slug?.current || ''}`;
+      jsonLd.archivedAt = `https://web.archive.org/web/*/${getFullUrl(article.slug?.current || '')}`;
       
       // Add thumbnail URL
       if (article.mainImage?.asset?.url) {
@@ -300,7 +301,7 @@ export default function NewsArticleJsonLd({ article, url, isGoogleNews = true }:
       }
     
     // Add reporting principles
-    jsonLd.reportingPrinciples = "https://www.vpnnews.co.uk/reporting-standards";
+    jsonLd.reportingPrinciples = getFullUrl('reporting-standards');
     
     // Add structured data publication date
     jsonLd.sdDatePublished = formatDate(article.publishedAt);
@@ -316,7 +317,7 @@ export default function NewsArticleJsonLd({ article, url, isGoogleNews = true }:
     };
     
     // Add structured data license
-    jsonLd.sdLicense = "https://www.vpnnews.co.uk/content-license";
+    jsonLd.sdLicense = getFullUrl('content-license');
   }
 
     return (

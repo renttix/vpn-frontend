@@ -14,9 +14,9 @@ export default function robots(): MetadataRoute.Robots {
       ],
     },
     sitemap: [
-      'https://vpnnews.com/sitemap.xml',
-      'https://vpnnews.com/news-sitemap.xml',
+      'https://www.vpnnews.co.uk/sitemap.xml',
+      'https://www.vpnnews.co.uk/news-sitemap.xml',
     ],
-    host: 'https://vpnnews.com',
+    host: 'https://www.vpnnews.co.uk',
   };
 }

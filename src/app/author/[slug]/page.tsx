@@ -13,6 +13,7 @@ import BreadcrumbJsonLd, { generateAuthorBreadcrumbs } from "@/components/seo/Br
 import Breadcrumbs from "@/components/ui/Breadcrumbs";
 import type { Author, Post, Category } from "@/types/sanity";
 import { trackAuthorView } from '@/lib/events';
+import { getFullUrl } from '@/lib/urlUtils';
 
 // --- Types ---
 interface PageProps {
@@ -149,7 +150,7 @@ export default async function AuthorPage({ params }: PageProps) {
   };
 
   // Construct the full URL for the author page
-  const authorUrl = `https://vpnnews.com/author/${author.slug?.current || slug}`;
+  const authorUrl = getFullUrl(`author/${author.slug?.current || slug}`);
 
   // Track author view for analytics
   if (typeof window !== 'undefined') {

@@ -51,8 +51,9 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/about" className="text-gray-300 hover:text-white">About</Link></li>
               <li><Link href="/contact-us" className="text-gray-300 hover:text-white">Contact Us</Link></li>
+              <li><Link href="/subscribe" className="text-gray-300 hover:text-white">Subscribe</Link></li>
               <li><a href="https://buymeacoffee.com/videoproductionnews" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">Buy Me A Coffee</a></li>
-              <li><Link href="/submit-tip" className="text-yellow-400 hover:text-yellow-300 font-medium">Submit a Tip</Link></li>
+              <li><Link href="/submit-tip" className="text-yellow-400 hover:text-yellow-300 font-medium">Submit a Tip/Story</Link></li>
             </ul>
           </div>
           <div>
@@ -88,6 +89,7 @@ export default function Footer() {
               <li><Link href="/privacy-policy" className="text-gray-300 hover:text-white">Privacy Policy</Link></li>
               <li><Link href="/cookie-settings" className="text-gray-300 hover:text-white">Cookie Settings</Link></li>
               <li><Link href="/accessibility" className="text-gray-300 hover:text-white">Accessibility</Link></li>
+              <li><Link href="/sitemap.xml" className="text-gray-300 hover:text-white">Sitemap</Link></li>
               <li><Link href="/ethical-journalism-policy" className="text-gray-300 hover:text-white">Ethical Journalism Policy</Link></li>
               <li><Link href="/admin/notifications" className="text-gray-300 hover:text-white">Admin</Link></li>
             </ul>

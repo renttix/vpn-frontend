@@ -18,8 +18,8 @@ export default function TipDisclaimer({ onAccept }: TipDisclaimerProps) {
 
   return (
     <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg mb-6">
-      <h2 className="text-xl font-bold mb-4 text-vpn-gray dark:text-vpn-gray-dark">
-        PLEASE READ BEFORE SUBMITTING A TIP
+      <h2 className="text-xl font-bold mb-4 text-vpn-gray dark:text-gray-100">
+        PLEASE READ BEFORE SUBMITTING A TIP/STORY
       </h2>
       <div className="prose dark:prose-invert max-w-none text-sm">
         <p>
@@ -69,14 +69,14 @@ export default function TipDisclaimer({ onAccept }: TipDisclaimerProps) {
           onChange={(e) => setAccepted(e.target.checked)}
         />
         <label htmlFor="accept-terms" className="ml-2 block text-sm font-medium">
-          By submitting a tip, I confirm I have read, understood, and agreed to the above terms.
+          By submitting a tip/story, I confirm I have read, understood, and agreed to the above terms.
         </label>
       </div>
       <div className="mt-6">
         <Button
           onClick={handleAccept}
           disabled={!accepted}
-          className="w-full bg-vpn-blue hover:bg-vpn-blue/90 text-white font-medium disabled:opacity-50"
+          className="w-full bg-vpn-blue hover:bg-vpn-blue/90 dark:bg-vpn-blue dark:hover:bg-vpn-blue/90 text-white font-medium disabled:opacity-50"
         >
           Continue to Form
         </Button>
