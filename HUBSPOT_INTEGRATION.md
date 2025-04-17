@@ -40,7 +40,7 @@ HUBSPOT_API_KEY=your-private-access-token
 You can use the provided script to add the API key to your `.env` file:
 
 ```bash
-# node frontend/add-hubspot-key.js $HUBSPOT_API_KEY
+node frontend/add-hubspot-key.js $HUBSPOT_API_KEY
 ```
 
 This script will add or update the `HUBSPOT_API_KEY` in your `.env` file while preserving other environment variables.
