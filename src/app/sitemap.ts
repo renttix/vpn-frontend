@@ -23,7 +23,7 @@ interface Category {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Base URL for the site
-  const baseUrl = 'https://vpnnews.com';
+  const baseUrl = 'https://www.vpnnews.co.uk';
   
   // Fetch all posts
   const postsQuery = groq`*[_type == "post" && defined(slug.current)] {
