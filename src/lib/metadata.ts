@@ -33,7 +33,7 @@ export const defaultMetadata: Metadata = {
     images: [
       {
         // Use a Sanity CDN URL for the default image
-        url: 'https://cdn.sanity.io/images/g7f0f6rs/production/7c647c54f6f6997b2d1ae4301f5b9bac3587b478-1000x525.jpg',
+        url: '/images/cover.jpg',
         width: 1000,
         height: 525,
         alt: 'VPN News Logo',
@@ -46,7 +46,7 @@ export const defaultMetadata: Metadata = {
     description: 'Breaking legal news, court reports, and expert analysis on the most important cases and legal developments.',
     site: '@vpnnews',
     creator: '@vpnnews',
-    images: ['https://cdn.sanity.io/images/g7f0f6rs/production/7c647c54f6f6997b2d1ae4301f5b9bac3587b478-1000x525.jpg'],
+    images: ['/images/cover.jpg'],
   },
   robots: {
     index: true,
@@ -69,7 +69,7 @@ export function generateArticleMetadata(article: any): Metadata {
   const title = article.title;
   const description = article.excerpt || `Read the article: ${article.title}`;
   const url = `${siteUrl}/${article.slug.current}`;
-  const imageUrl = article.mainImage?.asset?.url || 'https://cdn.sanity.io/images/g7f0f6rs/production/7c647c54f6f6997b2d1ae4301f5b9bac3587b478-1000x525.jpg';
+  const imageUrl = article.mainImage?.asset?.url || '/images/cover.jpg';
   const publishedTime = article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined;
   const authorName = article.author?.name || 'VPN News Team';
   const authorUrl = article.author?.slug?.current ? `${siteUrl}/author/${article.author.slug.current}` : undefined;
